@@ -1,0 +1,51 @@
+<div class="formula-row" [class.disabled]="!formula().enabled"
+    [class.invalid]="!formula().valid && formula().expression">
+
+    <!-- Color picker -->
+    <input type="color" class="color-picker" [value]="formula().color" (input)="onColorInput($event)"
+        title="Cor da curva" />
+
+    <!-- Toggle enabled -->
+    <button class="btn-icon btn-toggle" [class.active]="formula().enabled" (click)="toggleEnabled.emit()"
+        [title]="formula().enabled ? 'Desativar' : 'Ativar'">
+        {{ formula().enabled ? '👁️' : '👁️‍🗨️' }}
+    </button>
+
+    <!-- Expression input -->
+    <div class="expression-wrapper">
+        <span class="fx-label">f(x) =</span>
+        <input type="text" class="expression-input" [value]="formula().expression" (input)="onExpressionInput($event)"
+            placeholder="ex: sin(x) + x^2" spellcheck="false" autocomplete="off" />
+
+        @if (!formula().valid && formula().expression) {
+        <span class="error-indicator" [title]="formula().errorMessage ?? 'Erro'">
+            ⚠️
+        </span>
+        }
+    </div>
+
+    <!-- Actions -->
+    <div class="row-actions">
+        <button class="btn-icon" (click)="moveUp.emit()" [disabled]="isFirst()" title="Mover para cima">
+            ▲
+        </button>
+
+        <button class="btn-icon" (click)="moveDown.emit()" [disabled]="isLast()" title="Mover para baixo">
+            ▼
+        </button>
+
+        <button class="btn-icon" (click)="duplicate.emit()" title="Duplicar">
+            📋
+        </button>
+
+        <button class="btn-icon btn-danger" (click)="remove.emit()" title="Remover">
+            ✕
+        </button>
+    </div>
+</div>
+
+@if (!formula().valid && formula().expression && formula().errorMessage) {
+<div class="error-message">
+    {{ formula().errorMessage }}
+</div>
+}

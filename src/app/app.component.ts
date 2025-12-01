@@ -1,10 +1,11 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, inject, signal } from '@angular/core';
 import { ConfigService } from './core/services/config.service';
 import { CanvasComponent } from './features/canvas/canvas.component';
 import { PresetsPanelComponent } from './features/presets-panel/presets-panel.component';
 import { ArchitecturePanelComponent } from './features/architecture-panel/architecture-panel.component';
 import { ComparePanelComponent } from './features/compare-panel/compare-panel.component';
 import { ToolbarComponent } from './features/toolbar/toolbar.component';
+import { FormulaPLotterComponent } from './features/formula-plotter/formula-plotter.component';
 
 @Component({
     selector: 'app-root',
@@ -15,6 +16,7 @@ import { ToolbarComponent } from './features/toolbar/toolbar.component';
         ArchitecturePanelComponent,
         ComparePanelComponent,
         ToolbarComponent,
+        FormulaPLotterComponent,
     ],
     templateUrl: './app.component.html',
     styleUrl: './app.component.scss',
@@ -22,8 +24,14 @@ import { ToolbarComponent } from './features/toolbar/toolbar.component';
 export class AppComponent implements OnInit {
     private readonly config = inject(ConfigService);
 
+    protected readonly activeTab = signal<'architecture' | 'formulas' | 'compare'>('architecture');
+
     ngOnInit(): void {
         this.injectCssVariables();
+    }
+
+    protected setActiveTab(tab: 'architecture' | 'formulas' | 'compare'): void {
+        this.activeTab.set(tab);
     }
 
     private injectCssVariables(): void {

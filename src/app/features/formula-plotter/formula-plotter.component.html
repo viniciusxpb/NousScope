@@ -1,0 +1,75 @@
+<div class="formula-plotter">
+    <header class="plotter-header">
+        <h3 class="plotter-title">
+            <span class="icon">📐</span>
+            Fórmulas
+            @if (formulaCount() > 0) {
+            <span class="count">({{ formulaCount() }})</span>
+            }
+        </h3>
+
+        <div class="header-actions">
+            <button class="btn btn-sm btn-ghost" (click)="addExamples()" title="Adicionar exemplos">
+                📚
+            </button>
+
+            @if (formulaCount() > 0) {
+            <button class="btn btn-sm btn-ghost btn-danger" (click)="clearAll()" title="Limpar todas">
+                🗑️
+            </button>
+            }
+        </div>
+    </header>
+
+    <div class="formulas-list">
+        @for (formula of formulas(); track formula.id; let i = $index) {
+        <app-formula-row [formula]="formula" [index]="i" [isFirst]="i === 0" [isLast]="i === formulas().length - 1"
+            (remove)="onRemove(formula.id)" (expressionChange)="onExpressionChange(formula.id, $event)"
+            (colorChange)="onColorChange(formula.id, $event)" (toggleEnabled)="onToggleEnabled(formula.id)"
+            (duplicate)="onDuplicate(formula.id)" (moveUp)="onMoveUp(formula.id)" (moveDown)="onMoveDown(formula.id)" />
+        } @empty {
+        <div class="empty-state">
+            <p>Nenhuma fórmula adicionada</p>
+            <p class="hint">Clique em + para adicionar</p>
+        </div>
+        }
+    </div>
+
+    <footer class="plotter-footer">
+        <button class="btn btn-primary btn-add" (click)="addFormula()">
+            <span class="icon">+</span>
+            Adicionar Fórmula
+        </button>
+    </footer>
+
+    <details class="help-section">
+        <summary>📖 Ajuda - Sintaxe</summary>
+        <div class="help-content">
+            <section>
+                <h4>Operadores</h4>
+                <code>+ - * / ^ %</code>
+            </section>
+
+            <section>
+                <h4>Funções</h4>
+                <code>sin cos tan sqrt abs log exp floor ceil round</code>
+            </section>
+
+            <section>
+                <h4>Constantes</h4>
+                <code>PI E TAU PHI</code>
+            </section>
+
+            <section>
+                <h4>Exemplos</h4>
+                <ul>
+                    <li><code>x^2</code> - Parábola</li>
+                    <li><code>sin(x)</code> - Seno</li>
+                    <li><code>x * cos(x)</code> - GCU</li>
+                    <li><code>1 / (1 + exp(-x))</code> - Sigmoid</li>
+                    <li><code>sqrt(abs(x))</code> - Raiz do absoluto</li>
+                </ul>
+            </section>
+        </div>
+    </details>
+</div>

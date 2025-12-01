@@ -11,11 +11,33 @@
         </main>
 
         <aside class="right-panel">
-            <div class="arch-panel">
-                <app-architecture-panel></app-architecture-panel>
-            </div>
-            <div class="compare-panel">
-                <app-compare-panel></app-compare-panel>
+            <div class="tabs-container">
+                <div class="tabs-header">
+                    <button class="tab-button" [class.active]="activeTab() === 'architecture'"
+                        (click)="setActiveTab('architecture')">
+                        🏗️ Architecture
+                    </button>
+                    <button class="tab-button" [class.active]="activeTab() === 'formulas'"
+                        (click)="setActiveTab('formulas')">
+                        📐 Fórmulas
+                    </button>
+                    <button class="tab-button" [class.active]="activeTab() === 'compare'"
+                        (click)="setActiveTab('compare')">
+                        🔬 Compare
+                    </button>
+                </div>
+
+                <div class="tabs-content">
+                    @if (activeTab() === 'architecture') {
+                    <app-architecture-panel></app-architecture-panel>
+                    }
+                    @if (activeTab() === 'formulas') {
+                    <app-formula-plotter></app-formula-plotter>
+                    }
+                    @if (activeTab() === 'compare') {
+                    <app-compare-panel></app-compare-panel>
+                    }
+                </div>
             </div>
         </aside>
     </div>

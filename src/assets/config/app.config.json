@@ -98,5 +98,19 @@
     "defaultCompareColor": "#ff6b6b",
     "defaultCompareFunc": "x*cos(x)",
     "coordsPrecision": 4
+  },
+  "formulaPlotter": {
+    "maxFormulas": 10,
+    "defaultLineWidth": 2,
+    "defaultColors": [
+      "#ff6b6b",
+      "#4ecdc4",
+      "#ffe66d",
+      "#95e1d3",
+      "#f38181",
+      "#aa96da",
+      "#fcbad3",
+      "#a8d8ea"
+    ]
   }
 }

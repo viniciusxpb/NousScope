@@ -12,6 +12,7 @@ import {
 import { CommonModule } from '@angular/common';
 import { ConfigService } from '../../core/services/config.service';
 import { NetworkService } from '../../core/services/network.service';
+import { FormulaService } from '../formula-plotter/services/formula.service';
 import { CanvasInteractionDirective } from './directives/canvas-interaction.directive';
 
 @Component({
@@ -26,6 +27,7 @@ export class CanvasComponent implements AfterViewInit, OnDestroy {
 
     private readonly config = inject(ConfigService);
     private readonly network = inject(NetworkService);
+    private readonly formulaService = inject(FormulaService);
 
     private ctx!: CanvasRenderingContext2D;
     private animationFrameId?: number;
@@ -38,11 +40,13 @@ export class CanvasComponent implements AfterViewInit, OnDestroy {
     // Derived state for rendering
     private readonly layers = this.network.layers;
     private readonly showNetwork = this.network.showNetwork;
+    private readonly plottedFormulas = this.formulaService.plottedFormulas;
 
     // Re-render when network or view changes
     private readonly renderEffect = effect(() => {
         this.layers();
         this.showNetwork();
+        this.plottedFormulas();
         this.scale();
         this.offsetX();
         this.offsetY();
@@ -115,6 +119,9 @@ export class CanvasComponent implements AfterViewInit, OnDestroy {
 
         // Draw Axis
         this.drawAxis(width, height);
+
+        // Draw Formulas
+        this.drawFormulas(width, height);
     }
 
     private drawGrid(width: number, height: number): void {
@@ -299,5 +306,72 @@ export class CanvasComponent implements AfterViewInit, OnDestroy {
         const totalHeight = (totalNodes - 1) * nodeSpacing;
         const startY = centerY - totalHeight / 2;
         return startY + nodeIndex * nodeSpacing;
+    }
+
+    private drawFormulas(width: number, height: number): void {
+        const formulas = this.plottedFormulas();
+
+        for (const formula of formulas) {
+            this.drawFunction(
+                formula.fn,
+                formula.color,
+                this.config.canvas.lineWidth.compare
+            );
+        }
+    }
+
+    private drawFunction(
+        fn: (x: number) => number,
+        color: string,
+        lineWidth: number
+    ): void {
+        const ctx = this.ctx;
+        const { width, height } = ctx.canvas;
+        const density = this.config.canvas.sampleDensity;
+
+        ctx.strokeStyle = color;
+        ctx.lineWidth = lineWidth;
+        ctx.lineCap = 'round';
+        ctx.lineJoin = 'round';
+        ctx.beginPath();
+
+        let started = false;
+
+        for (let sx = 0; sx <= width; sx += density) {
+            const x = this.screenToMathX(sx);
+            const y = fn(x);
+
+            if (!isFinite(y)) {
+                started = false;
+                continue;
+            }
+
+            const sy = this.mathToScreenY(y);
+
+            // Pular pontos muito fora da tela
+            if (sy < -1000 || sy > height + 1000) {
+                started = false;
+                continue;
+            }
+
+            if (!started) {
+                ctx.moveTo(sx, sy);
+                started = true;
+            } else {
+                ctx.lineTo(sx, sy);
+            }
+        }
+
+        ctx.stroke();
+    }
+
+    private screenToMathX(sx: number): number {
+        const centerX = this.ctx.canvas.width / 2;
+        return (sx - centerX - this.offsetX()) / this.scale();
+    }
+
+    private mathToScreenY(y: number): number {
+        const centerY = this.ctx.canvas.height / 2;
+        return centerY - y * this.scale() + this.offsetY();
     }
 }

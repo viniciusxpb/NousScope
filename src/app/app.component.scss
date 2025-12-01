@@ -29,21 +29,56 @@
 }
 
 .right-panel {
-    flex: 0 0 320px;
-    border-left: 1px solid var(--color-grid);
-    background: var(--color-panel);
+    flex: 0 0 auto;
+    width: 300px;
     display: flex;
     flex-direction: column;
-}
-
-.arch-panel {
-    flex: 1;
-    overflow: hidden;
-    border-bottom: 1px solid var(--color-grid);
-}
-
-.compare-panel {
-    flex: 0 0 auto;
-    max-height: 40%;
+    gap: var(--space-md);
     overflow-y: auto;
+}
+
+.tabs-container {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.tabs-header {
+    display: flex;
+    gap: 2px;
+    background: var(--color-background);
+    border-radius: var(--radius-md) var(--radius-md) 0 0;
+    padding: var(--space-xs);
+}
+
+.tab-button {
+    flex: 1;
+    padding: var(--space-sm) var(--space-md);
+    background: transparent;
+    border: none;
+    border-radius: var(--radius-sm);
+    color: var(--color-textMuted);
+    font-size: 0.9em;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+
+    &:hover {
+        background: var(--color-panelHover);
+        color: var(--color-text);
+    }
+
+    &.active {
+        background: var(--color-panel);
+        color: var(--color-primary);
+        font-weight: 600;
+    }
+}
+
+.tabs-content {
+    flex: 1;
+    overflow-y: auto;
+    padding: var(--space-sm);
+    background: var(--color-panel);
+    border-radius: 0 0 var(--radius-md) var(--radius-md);
 }
