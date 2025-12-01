@@ -1,0 +1,39 @@
+.toolbar {
+    display: flex;
+    justify-content: space-between;
+    padding: var(--space-sm) var(--space-md);
+    background: var(--color-panel);
+    border-top: 1px solid var(--color-grid);
+}
+
+.group {
+    display: flex;
+    gap: var(--space-sm);
+}
+
+button {
+    background: var(--color-panel-hover);
+    border: 1px solid var(--color-grid);
+    color: var(--color-text);
+    padding: 6px 12px;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    font-family: var(--font-primary);
+    font-size: 0.9rem;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+
+    &:hover {
+        background: var(--color-primary);
+        color: var(--color-background);
+        border-color: var(--color-primary);
+    }
+
+    &.active {
+        background: rgba(0, 217, 255, 0.1);
+        border-color: var(--color-primary);
+        color: var(--color-primary);
+    }
+}

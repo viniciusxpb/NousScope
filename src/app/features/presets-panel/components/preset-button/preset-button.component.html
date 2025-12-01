@@ -1,0 +1,4 @@
+<button class="preset-btn" (click)="select.emit(preset())">
+    <div class="title">{{ preset().title }}</div>
+    <div class="arch">{{ preset().arch.join(' → ') }}</div>
+</button>

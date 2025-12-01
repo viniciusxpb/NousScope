@@ -1,0 +1,34 @@
+<div class="panel">
+    <div class="panel-header">
+        <h2>Compare</h2>
+        <label class="switch">
+            <input type="checkbox" [checked]="showCompare()" (change)="toggleCompare()">
+            <span class="slider"></span>
+        </label>
+    </div>
+
+    <div class="content" [class.disabled]="!showCompare()">
+        <div class="control-group">
+            <label>Target Function</label>
+            <select [ngModel]="compareFunc()" (ngModelChange)="updateFunc($event)">
+                @for (func of functions; track func.value) {
+                <option [value]="func.value">{{ func.label }}</option>
+                }
+            </select>
+        </div>
+
+        <div class="control-group">
+            <label>Custom Formula</label>
+            <input type="text" [ngModel]="compareFunc()" (ngModelChange)="updateFunc($event)"
+                placeholder="e.g. x * sin(x)">
+        </div>
+
+        <div class="control-group">
+            <label>Color</label>
+            <div class="color-picker">
+                <input type="color" [ngModel]="compareColor()" (ngModelChange)="compareColor.set($event)">
+                <span class="color-value">{{ compareColor() }}</span>
+            </div>
+        </div>
+    </div>
+</div>

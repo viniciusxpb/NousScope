@@ -1,0 +1,17 @@
+<div class="panel">
+    <div class="panel-header">
+        <h2>Architecture</h2>
+        <div class="stats">
+            <span>{{ architectureString() }}</span>
+            <span class="badge">{{ totalNeurons() }} neurons</span>
+        </div>
+    </div>
+
+    <div class="layers-list">
+        @for (layer of layers(); track layer.id) {
+        <app-layer-card [layer]="layer"></app-layer-card>
+        }
+
+        <app-quick-add (add)="onAddLayer()"></app-quick-add>
+    </div>
+</div>

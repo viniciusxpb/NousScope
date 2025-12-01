@@ -1,0 +1,43 @@
+<div class="panel">
+    <div class="panel-header">
+        <h2>Presets</h2>
+    </div>
+
+    @if (selectedPreset()) {
+    <div class="description-container">
+        <app-preset-description [preset]="selectedPreset()!"></app-preset-description>
+    </div>
+    }
+
+    <div class="presets-grid">
+        <div class="category">
+            <h3>Basic</h3>
+            <div class="buttons">
+                @for (preset of presets.basic | keyvalue; track preset.key) {
+                <app-preset-button [preset]="preset.value" (select)="onPresetSelect($event)">
+                </app-preset-button>
+                }
+            </div>
+        </div>
+
+        <div class="category">
+            <h3>Classic</h3>
+            <div class="buttons">
+                @for (preset of presets.classic | keyvalue; track preset.key) {
+                <app-preset-button [preset]="preset.value" (select)="onPresetSelect($event)">
+                </app-preset-button>
+                }
+            </div>
+        </div>
+
+        <div class="category">
+            <h3>Salto Viniciano</h3>
+            <div class="buttons">
+                @for (preset of presets.salto | keyvalue; track preset.key) {
+                <app-preset-button [preset]="preset.value" (select)="onPresetSelect($event)">
+                </app-preset-button>
+                }
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,39 @@
+{
+    "bwt": {
+        "id": "bwt",
+        "title": "🦘 BWT (Bounded Weight Transform)",
+        "formula": "y = w·x / (|b| + ε)",
+        "arch": [
+            1,
+            4,
+            4,
+            1
+        ],
+        "activations": [
+            "gcu",
+            "gcu",
+            "linear"
+        ],
+        "description": "Experimento com divisão por bias pequeno. A GCU (x·cos(x)) permite explorar regiões instáveis.",
+        "danger": "⚠️ Instabilidade numérica quando |b| → 0",
+        "insight": "A rede aprende a EVITAR instabilidade via backprop - desafio fundamental do Salto Viniciano."
+    },
+    "twinSnakes": {
+        "id": "twin-snakes",
+        "title": "🐍🐍 Twin Snakes",
+        "formula": "PP = (conf_solid + conf_liquid) / 2",
+        "arch": [
+            1,
+            8,
+            4,
+            1
+        ],
+        "activations": [
+            "gcu",
+            "gcu",
+            "linear"
+        ],
+        "description": "Técnica validada de OOD Detection: dois modelos com pesos W e -W. AUROC 0.94!",
+        "insight": "💡 SOLID usa W, LIQUID usa -W. Em dados conhecidos, ambos concordam. Em OOD, discordam."
+    }
+}

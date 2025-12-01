@@ -1,0 +1,22 @@
+<div class="toolbar">
+    <div class="group">
+        <button (click)="randomize()" title="Randomize Weights">
+            🎲 Randomize
+        </button>
+        <button (click)="toggleNetwork()" [class.active]="showNetwork()" title="Toggle Network View">
+            🕸️ Network
+        </button>
+    </div>
+
+    <div class="group">
+        <button (click)="resetView()" title="Reset View">
+            ⟲ Reset
+        </button>
+        <button (click)="zoomOut()" title="Zoom Out">
+            -
+        </button>
+        <button (click)="zoomIn()" title="Zoom In">
+            +
+        </button>
+    </div>
+</div>
