@@ -30,10 +30,10 @@ export class CanvasComponent implements AfterViewInit, OnDestroy {
     private ctx!: CanvasRenderingContext2D;
     private animationFrameId?: number;
 
-    // Viewport state
-    private readonly scale = signal(50);
-    private readonly offsetX = signal(0);
-    private readonly offsetY = signal(0);
+    // Viewport state (public for display in template)
+    readonly scale = signal(50);
+    readonly offsetX = signal(0);
+    readonly offsetY = signal(0);
 
     // Derived state for rendering
     private readonly layers = this.network.layers;
@@ -118,15 +118,186 @@ export class CanvasComponent implements AfterViewInit, OnDestroy {
     }
 
     private drawGrid(width: number, height: number): void {
-        // TODO: Implement grid drawing
+        const ctx = this.ctx;
+        const scale = this.scale();
+        const offsetX = this.offsetX();
+        const offsetY = this.offsetY();
+
+        ctx.strokeStyle = this.config.theme.colors.grid;
+        ctx.lineWidth = 1;
+        ctx.setLineDash([2, 4]);
+
+        const step = 50; // Grid step in pixels
+        const startX = Math.floor(-offsetX / step) * step;
+        const startY = Math.floor(-offsetY / step) * step;
+
+        // Vertical lines
+        for (let x = startX; x < width; x += step) {
+            const screenX = x + offsetX;
+            if (screenX >= 0 && screenX <= width) {
+                ctx.beginPath();
+                ctx.moveTo(screenX, 0);
+                ctx.lineTo(screenX, height);
+                ctx.stroke();
+            }
+        }
+
+        // Horizontal lines
+        for (let y = startY; y < height; y += step) {
+            const screenY = y + offsetY;
+            if (screenY >= 0 && screenY <= height) {
+                ctx.beginPath();
+                ctx.moveTo(0, screenY);
+                ctx.lineTo(width, screenY);
+                ctx.stroke();
+            }
+        }
+
+        ctx.setLineDash([]);
     }
 
     private drawAxis(width: number, height: number): void {
-        // TODO: Implement axis drawing
+        const ctx = this.ctx;
+        const offsetX = this.offsetX();
+        const offsetY = this.offsetY();
+
+        const centerX = width / 2 + offsetX;
+        const centerY = height / 2 + offsetY;
+
+        ctx.strokeStyle = this.config.theme.colors.axis;
+        ctx.lineWidth = 2;
+
+        // X axis
+        ctx.beginPath();
+        ctx.moveTo(0, centerY);
+        ctx.lineTo(width, centerY);
+        ctx.stroke();
+
+        // Y axis
+        ctx.beginPath();
+        ctx.moveTo(centerX, 0);
+        ctx.lineTo(centerX, height);
+        ctx.stroke();
+
+        // Draw arrow heads
+        const arrowSize = 10;
+
+        // X axis arrow
+        ctx.beginPath();
+        ctx.moveTo(width - arrowSize, centerY - arrowSize / 2);
+        ctx.lineTo(width, centerY);
+        ctx.lineTo(width - arrowSize, centerY + arrowSize / 2);
+        ctx.stroke();
+
+        // Y axis arrow
+        ctx.beginPath();
+        ctx.moveTo(centerX - arrowSize / 2, arrowSize);
+        ctx.lineTo(centerX, 0);
+        ctx.lineTo(centerX + arrowSize / 2, arrowSize);
+        ctx.stroke();
     }
 
     private drawNetwork(width: number, height: number): void {
-        // TODO: Implement network visualization
-        // This requires calculating node positions
+        const ctx = this.ctx;
+        const layers = this.layers();
+
+        if (layers.length === 0) return;
+
+        const centerX = width / 2;
+        const centerY = height / 2;
+
+        // Calculate layout
+        const layerSpacing = 150;
+        const totalWidth = (layers.length - 1) * layerSpacing;
+        const startX = centerX - totalWidth / 2;
+
+        // Draw connections first (behind nodes)
+        for (let i = 0; i < layers.length - 1; i++) {
+            const currentLayer = layers[i];
+            const nextLayer = layers[i + 1];
+
+            const x1 = startX + i * layerSpacing + this.offsetX();
+            const x2 = startX + (i + 1) * layerSpacing + this.offsetX();
+
+            for (let n1 = 0; n1 < currentLayer.neurons; n1++) {
+                const y1 = this.getNodeY(n1, currentLayer.neurons, centerY) + this.offsetY();
+
+                for (let n2 = 0; n2 < nextLayer.neurons; n2++) {
+                    const y2 = this.getNodeY(n2, nextLayer.neurons, centerY) + this.offsetY();
+
+                    // Get weight value (skip if weights undefined)
+                    if (!nextLayer.weights) continue;
+                    const weight = nextLayer.weights[n2][n1];
+                    const alpha = Math.min(Math.abs(weight), 1);
+                    const color = weight > 0
+                        ? `rgba(0, 217, 255, ${alpha * 0.6})`
+                        : `rgba(255, 107, 107, ${alpha * 0.6})`;
+
+                    ctx.strokeStyle = color;
+                    ctx.lineWidth = Math.abs(weight) * 2 + 0.5;
+                    ctx.beginPath();
+                    ctx.moveTo(x1, y1);
+                    ctx.lineTo(x2, y2);
+                    ctx.stroke();
+                }
+            }
+        }
+
+        // Draw nodes
+        for (let i = 0; i < layers.length; i++) {
+            const layer = layers[i];
+            const x = startX + i * layerSpacing + this.offsetX();
+
+            // Determine layer color
+            const color = i === 0
+                ? this.config.theme.colors.layerInput
+                : i === layers.length - 1
+                    ? this.config.theme.colors.layerOutput
+                    : this.config.theme.colors.layerHidden;
+
+            for (let n = 0; n < layer.neurons; n++) {
+                const y = this.getNodeY(n, layer.neurons, centerY) + this.offsetY();
+
+                // Draw node circle
+                ctx.fillStyle = color;
+                ctx.beginPath();
+                ctx.arc(x, y, 12, 0, Math.PI * 2);
+                ctx.fill();
+
+                // Draw border
+                ctx.strokeStyle = this.config.theme.colors.panel;
+                ctx.lineWidth = 2;
+                ctx.stroke();
+
+                // Draw bias value inside if not input layer
+                if (i > 0 && layer.biases) {
+                    ctx.fillStyle = this.config.theme.colors.background;
+                    ctx.font = '10px monospace';
+                    ctx.textAlign = 'center';
+                    ctx.textBaseline = 'middle';
+                    const biasText = layer.biases[n].toFixed(1);
+                    ctx.fillText(biasText, x, y);
+                }
+            }
+
+            // Draw layer label
+            const y = this.getNodeY(layer.neurons - 1, layer.neurons, centerY) + this.offsetY() + 30;
+            ctx.fillStyle = this.config.theme.colors.text;
+            ctx.font = '12px monospace';
+            ctx.textAlign = 'center';
+            ctx.fillText(
+                i === 0 ? 'Input' : i === layers.length - 1 ? 'Output' : `Hidden ${i}`,
+                x,
+                y
+            );
+            ctx.fillText(`(${layer.neurons})`, x, y + 15);
+        }
+    }
+
+    private getNodeY(nodeIndex: number, totalNodes: number, centerY: number): number {
+        const nodeSpacing = 60;
+        const totalHeight = (totalNodes - 1) * nodeSpacing;
+        const startY = centerY - totalHeight / 2;
+        return startY + nodeIndex * nodeSpacing;
     }
 }

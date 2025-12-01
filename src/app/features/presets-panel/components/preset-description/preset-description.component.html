@@ -2,5 +2,13 @@
     <h3>{{ preset().title }}</h3>
     <p class="desc">{{ preset().description }}</p>
 
-    <!-- TODO: Add specific fields for Classic/Salto presets using type guards or optional chaining -->
+    @if (preset().formula) {
+    <div class="formula">Formula: <code>{{ preset().formula }}</code></div>
+    }
+    @if (preset().danger) {
+    <div class="danger">⚠️ {{ preset().danger }}</div>
+    }
+    @if (preset().insight) {
+    <div class="insight">💡 {{ preset().insight }}</div>
+    }
 </div>

@@ -6,6 +6,13 @@ export interface PresetBase {
     description?: string;
     arch: number[];
     activations: ActivationType[];
+    // Optional fields from SaltoPreset and ClassicPreset
+    formula?: string;
+    danger?: string;
+    insight?: string;
+    year?: string;
+    diagram?: string;
+    funFact?: string;
 }
 
 export interface BasicPreset extends PresetBase { }

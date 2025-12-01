@@ -1,7 +1,8 @@
 <div class="canvas-container" appCanvasInteraction (pan)="onPan($event)" (zoom)="onZoom($event)">
   <canvas #canvas></canvas>
-  
+
   <div class="overlay-info">
-    <!-- TODO: Add coordinates info -->
+    <div>Scale: {{ scale() | number:'1.0-1' }}x</div>
+    <div>Offset: ({{ offsetX() | number:'1.0-0' }}, {{ offsetY() | number:'1.0-0' }})</div>
   </div>
 </div>
