@@ -94,6 +94,25 @@
     --size-handle: 4px;
 }
 
+/* Theme variations */
+:root[data-canvas-theme="white"] {
+    --color-canvasBg: #ffffff;
+    --color-grid: #cccccc;
+    --color-axis: #333333;
+    --color-axisLabel: #333333;
+    --color-neuron: #333333;
+    --color-neuronStroke: #000000;
+}
+
+:root[data-canvas-theme="black"] {
+    --color-canvasBg: #0f0f23;
+    --color-grid: #1a1a3e;
+    --color-axis: #4a5568;
+    --color-axisLabel: #a0aec0;
+    --color-neuron: #a0aec0;
+    --color-neuronStroke: #e2e8f0;
+}
+
 html,
 body {
     margin: 0;

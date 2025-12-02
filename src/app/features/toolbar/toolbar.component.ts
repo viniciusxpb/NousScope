@@ -23,7 +23,7 @@ export class ToolbarComponent {
     readonly showSettings = signal(false);
 
     // Theme presets
-    readonly themePreset = signal<'white' | 'black' | 'custom'>('black');
+    readonly themePreset = this.canvasConfig.themePreset;
 
     // Canvas colors from service
     readonly canvasBgColor = this.canvasConfig.backgroundColor;
@@ -50,10 +50,11 @@ export class ToolbarComponent {
     }
 
     resetAll(): void {
-        // Limpa TUDO: rede, fórmulas, visualização
+        // Limpa TUDO: rede, fórmulas, visualização E CONFIGURAÇÕES
         this.network.buildFromArch([1, 1]); // Rede mínima
         this.formulaService.clearAll(); // Limpa todas as fórmulas
         this.plot.resetView(); // Reseta visualização
+        this.canvasConfig.resetConfig(); // Reseta configurações do canvas (tema)
     }
 
     toggleSettings(): void {
@@ -61,22 +62,7 @@ export class ToolbarComponent {
     }
 
     onThemePresetChange(preset: 'white' | 'black' | 'custom'): void {
-        this.themePreset.set(preset);
-
-        if (preset === 'white') {
-            this.canvasConfig.setBackgroundColor('#ffffff');
-            this.canvasConfig.setGridColor('#cccccc');
-            // Também definir cores de texto/label escuros
-            document.documentElement.style.setProperty('--color-axis', '#333333');
-            document.documentElement.style.setProperty('--color-axisLabel', '#333333');
-        } else if (preset === 'black') {
-            this.canvasConfig.setBackgroundColor('#0f0f23');
-            this.canvasConfig.setGridColor('#1a1a3e');
-            // Cores claras para fundo escuro
-            document.documentElement.style.setProperty('--color-axis', '#4a5568');
-            document.documentElement.style.setProperty('--color-axisLabel', '#a0aec0');
-        }
-        // Se for 'custom', não faz nada - usuário usa os color pickers
+        this.canvasConfig.setThemePreset(preset);
     }
 
     onThemeSelectChange(event: Event): void {
@@ -95,12 +81,10 @@ export class ToolbarComponent {
     }
 
     onCanvasBgChange(color: string): void {
-        this.themePreset.set('custom'); // Auto-switch to custom
         this.canvasConfig.setBackgroundColor(color);
     }
 
     onGridColorChange(color: string): void {
-        this.themePreset.set('custom'); // Auto-switch to custom
         this.canvasConfig.setGridColor(color);
     }
 }

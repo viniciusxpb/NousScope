@@ -57,11 +57,41 @@
     z-index: 1000;
     min-width: var(--width-md);
 
-    h4 {
-        margin: 0 0 var(--space-md);
-        color: var(--color-primary);
-        font-size: var(--font-size-md);
-        font-weight: 600;
+    .panel-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: var(--space-md);
+
+        h4 {
+            margin: 0;
+            color: var(--color-primary);
+            font-size: var(--font-size-md);
+            font-weight: 600;
+        }
+
+        .close-btn {
+            width: var(--size-icon-lg);
+            height: var(--size-icon-lg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: transparent;
+            border: 1px solid var(--color-grid);
+            border-radius: var(--radius-sm);
+            color: var(--color-text);
+            cursor: pointer;
+            font-size: var(--font-size-xl);
+            line-height: 1;
+            padding: 0;
+            transition: all 0.2s ease;
+
+            &:hover {
+                background: var(--color-error-bg);
+                border-color: var(--color-error);
+                color: var(--color-error);
+            }
+        }
     }
 
     .setting-row {

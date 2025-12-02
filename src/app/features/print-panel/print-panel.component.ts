@@ -23,6 +23,13 @@ export class PrintPanelComponent {
     readonly cropBoxHeight = computed(() => this.cropBox().height);
 
     toggleCropBox(): void {
+        if (!this.showCropBox()) {
+            // Ao abrir, inicializar com base no tamanho do canvas
+            const canvas = document.querySelector('canvas');
+            if (canvas) {
+                this.printService.initializeCropBox(canvas.width, canvas.height);
+            }
+        }
         this.printService.toggleCropBox();
     }
 

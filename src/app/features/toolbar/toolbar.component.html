@@ -28,7 +28,10 @@
 
     @if (showSettings()) {
     <div class="settings-panel">
-        <h4>Configurações do Canvas</h4>
+        <div class="panel-header">
+            <h4>Configurações do Canvas</h4>
+            <button class="close-btn" (click)="toggleSettings()" title="Fechar">×</button>
+        </div>
 
         <div class="setting-row">
             <label>Tema</label>

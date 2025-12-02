@@ -24,6 +24,18 @@ export class PrintService {
         this.showCropBox.update(v => !v);
     }
 
+    /**
+     * Inicializa o crop box baseado no tamanho do canvas
+     */
+    initializeCropBox(canvasWidth: number, canvasHeight: number): void {
+        const width = Math.max(100, canvasWidth - 40); // 20px de cada lado
+        const height = Math.max(100, canvasHeight - 40);
+        const x = (canvasWidth - width) / 2; // Centralizar
+        const y = (canvasHeight - height) / 2;
+
+        this.cropBox.set({ x, y, width, height });
+    }
+
     updateCropBox(box: Partial<CropBox>): void {
         this.cropBox.update(current => ({ ...current, ...box }));
     }
