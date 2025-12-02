@@ -1,4 +1,4 @@
-# 🧠 NousScope
+# NousScope
 
 **NousScope** is an interactive neural network visualization and playground tool built with **Angular**. It allows users to design, visualize, and analyze neural network architectures in real-time.
 
@@ -6,31 +6,34 @@
 ![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white)
 ![License](https://img.shields.io/badge/License-MIT-green.svg?style=for-the-badge)
 
-## ✨ Features
+## Live Demo
+[**Click here to view the live application**](https://viniciusxpb.github.io/NousScope/)
 
-- **🏗️ Architecture Builder**:
+## Features
+
+- **Architecture Builder**:
   - Create and manage multiple neural networks simultaneously.
   - Add/remove hidden layers and customize neuron counts.
   - Select activation functions (Sigmoid, ReLU, Tanh, etc.) per layer or globally.
   - Collapsible network cards for easy management.
 
-- **🎨 Interactive Canvas**:
+- **Interactive Canvas**:
   - Real-time visualization of network structures (nodes and connections).
   - Visual representation of weights and biases.
   - **Network Output Plotting**: See the function your network is approximating in real-time.
   - Zoom and Pan capabilities for detailed inspection.
 
-- **📉 Formula Plotter & Comparison**:
+- **Formula Plotter & Comparison**:
   - Plot mathematical formulas to visualize target functions.
   - Compare network outputs against known functions (e.g., `sin(x)`, `x^2`).
   - Syntax highlighting and error checking for formulas.
 
-- **🎛️ Presets & Controls**:
+- **Presets & Controls**:
   - Save and load network configurations.
   - Randomize weights to explore different initialization states.
   - Visual animation of the forward pass cycle.
 
-## 🚀 Getting Started
+## Getting Started
 
 ### Prerequisites
 
@@ -57,7 +60,7 @@
    ```
    Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
 
-## 🛠️ Build & Deploy
+## Build & Deploy
 
 To build the project for production:
 
@@ -75,7 +78,7 @@ This project is configured for automatic deployment to GitHub Pages using `angul
 ng deploy --base-href=/NousScope/
 ```
 
-## 🤝 Contributing
+## Contributing
 
 Contributions are welcome! Please feel free to submit a Pull Request.
 
@@ -85,6 +88,6 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 4. Push to the branch (`git push origin feature/AmazingFeature`)
 5. Open a Pull Request
 
-## 📄 License
+## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
