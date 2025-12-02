@@ -26,7 +26,8 @@
         <app-formula-row [formula]="formula" [index]="i" [isFirst]="i === 0" [isLast]="i === formulas().length - 1"
             (remove)="onRemove(formula.id)" (expressionChange)="onExpressionChange(formula.id, $event)"
             (colorChange)="onColorChange(formula.id, $event)" (toggleEnabled)="onToggleEnabled(formula.id)"
-            (duplicate)="onDuplicate(formula.id)" (moveUp)="onMoveUp(formula.id)" (moveDown)="onMoveDown(formula.id)" />
+            (toggleLocked)="onToggleLocked(formula.id)" (duplicate)="onDuplicate(formula.id)"
+            (moveUp)="onMoveUp(formula.id)" (moveDown)="onMoveDown(formula.id)" />
         } @empty {
         <div class="empty-state">
             <p>Nenhuma fórmula adicionada</p>

@@ -1,4 +1,4 @@
-import { Injectable, inject, signal, computed } from '@angular/core';
+import { Injectable, inject, signal, computed, effect } from '@angular/core';
 import { Formula, PlottedFormula } from '../../../core/models/formula.model';
 import { MathParserService } from '../../../core/services/math-parser.service';
 
@@ -8,8 +8,9 @@ import { MathParserService } from '../../../core/services/math-parser.service';
 @Injectable({ providedIn: 'root' })
 export class FormulaService {
     private readonly parser = inject(MathParserService);
+    private readonly STORAGE_KEY = 'NOUSSCOPE_FORMULAS';
 
-    private readonly _formulas = signal<Formula[]>([]);
+    private readonly _formulas = signal<Formula[]>(this.loadFromStorage());
     private nextId = 1;
 
     // Cores padrão para novas fórmulas (rotaciona)
@@ -25,6 +26,42 @@ export class FormulaService {
     ];
 
     public readonly formulas = this._formulas.asReadonly();
+
+    constructor() {
+        // Inicializar nextId baseado nas fórmulas carregadas
+        const maxId = this._formulas().reduce((max, f) => {
+            const match = f.id.match(/formula-(\d+)/);
+            return match ? Math.max(max, parseInt(match[1], 10)) : max;
+        }, 0);
+        this.nextId = maxId + 1;
+
+        // Salvar automaticamente quando houver mudanças
+        effect(() => {
+            this.saveToStorage(this._formulas());
+        });
+    }
+
+    /**
+     * Carrega fórmulas do localStorage.
+     */
+    private loadFromStorage(): Formula[] {
+        const saved = localStorage.getItem(this.STORAGE_KEY);
+        if (saved) {
+            try {
+                return JSON.parse(saved);
+            } catch (e) {
+                console.error('Erro ao carregar fórmulas', e);
+            }
+        }
+        return [];
+    }
+
+    /**
+     * Salva fórmulas no localStorage.
+     */
+    private saveToStorage(formulas: Formula[]): void {
+        localStorage.setItem(this.STORAGE_KEY, JSON.stringify(formulas));
+    }
 
     /**
      * Fórmulas válidas e habilitadas, prontas para plotagem.
@@ -61,6 +98,7 @@ export class FormulaService {
             expression,
             color: this.defaultColors[colorIndex],
             enabled: true,
+            locked: false,
             valid: parseResult.success,
             errorMessage: parseResult.error,
         };
@@ -72,6 +110,9 @@ export class FormulaService {
      * Remove uma fórmula por ID.
      */
     removeFormula(id: string): void {
+        const formula = this._formulas().find(f => f.id === id);
+        if (formula?.locked) return; // Não remove se estiver travada
+
         this._formulas.update(formulas => formulas.filter(f => f.id !== id));
     }
 
@@ -79,6 +120,9 @@ export class FormulaService {
      * Atualiza a expressão de uma fórmula.
      */
     updateExpression(id: string, expression: string): void {
+        const formula = this._formulas().find(f => f.id === id);
+        if (formula?.locked) return; // Não edita se estiver travada
+
         const parseResult = this.parser.parse(expression);
 
         this._formulas.update(formulas =>
@@ -110,6 +154,15 @@ export class FormulaService {
     }
 
     /**
+     * Toggle locked de uma fórmula.
+     */
+    toggleLocked(id: string): void {
+        this._formulas.update(formulas =>
+            formulas.map(f => f.id === id ? { ...f, locked: !f.locked } : f)
+        );
+    }
+
+    /**
      * Habilita/desabilita uma fórmula.
      */
     setEnabled(id: string, enabled: boolean): void {
@@ -119,10 +172,10 @@ export class FormulaService {
     }
 
     /**
-     * Remove todas as fórmulas.
+     * Remove todas as fórmulas (exceto as travadas).
      */
     clearAll(): void {
-        this._formulas.set([]);
+        this._formulas.update(formulas => formulas.filter(f => f.locked));
     }
 
     /**

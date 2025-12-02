@@ -5,6 +5,7 @@ export interface Formula {
     expression: string;
     color: string;
     enabled: boolean;
+    locked: boolean;
     valid: boolean;
     errorMessage?: string;
 }

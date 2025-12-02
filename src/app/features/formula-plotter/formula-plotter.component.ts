@@ -48,6 +48,10 @@ export class FormulaPLotterComponent {
         this.formulaService.toggleEnabled(id);
     }
 
+    protected onToggleLocked(id: string): void {
+        this.formulaService.toggleLocked(id);
+    }
+
     protected onDuplicate(id: string): void {
         this.formulaService.duplicateFormula(id);
     }

@@ -22,6 +22,7 @@ export class FormulaRowComponent {
     public readonly expressionChange = output<string>();
     public readonly colorChange = output<string>();
     public readonly toggleEnabled = output<void>();
+    public readonly toggleLocked = output<void>();
     public readonly duplicate = output<void>();
     public readonly moveUp = output<void>();
     public readonly moveDown = output<void>();
