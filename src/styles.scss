@@ -49,6 +49,7 @@
     --radius-full: 9999px;
 
     /* Spacing */
+    --space-xxs: 2px;
     --space-xs: 4px;
     --space-sm: 8px;
     --space-md: 16px;
@@ -81,6 +82,16 @@
     --width-md: 200px;
     --width-lg: 300px;
     --width-xl: 400px;
+
+    /* Component sizes (icons, buttons, etc) */
+    --size-icon-sm: 16px;
+    --size-icon-md: 24px;
+    --size-icon-lg: 28px;
+    --size-icon-xl: 32px;
+    --size-button-sm: 20px;
+    --size-button-md: 32px;
+    --size-button-lg: 40px;
+    --size-handle: 4px;
 }
 
 html,

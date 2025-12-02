@@ -63,11 +63,27 @@
             <section>
                 <h4>Exemplos</h4>
                 <ul>
-                    <li><code>x^2</code> - Parábola</li>
-                    <li><code>sin(x)</code> - Seno</li>
-                    <li><code>x * cos(x)</code> - GCU</li>
-                    <li><code>1 / (1 + exp(-x))</code> - Sigmoid</li>
-                    <li><code>sqrt(abs(x))</code> - Raiz do absoluto</li>
+                    <li>
+                        <code class="clickable" (click)="addExampleFormula('x^2')">x^2</code>
+                        - Parábola
+                    </li>
+                    <li>
+                        <code class="clickable" (click)="addExampleFormula('sin(x)')">sin(x)</code>
+                        - Seno
+                    </li>
+                    <li>
+                        <code class="clickable" (click)="addExampleFormula('x * cos(x)')">x * cos(x)</code>
+                        - GCU
+                    </li>
+                    <li>
+                        <code class="clickable"
+                            (click)="addExampleFormula('1 / (1 + exp(-x))')">1 / (1 + exp(-x))</code>
+                        - Sigmoid
+                    </li>
+                    <li>
+                        <code class="clickable" (click)="addExampleFormula('sqrt(abs(x))')">sqrt(abs(x))</code>
+                        - Raiz do absoluto
+                    </li>
                 </ul>
             </section>
         </div>

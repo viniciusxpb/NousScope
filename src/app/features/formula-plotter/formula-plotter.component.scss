@@ -133,6 +133,17 @@
 
                     code {
                         color: var(--color-warning);
+
+                        &.clickable {
+                            cursor: pointer;
+                            text-decoration: underline;
+                            text-decoration-style: dotted;
+
+                            &:hover {
+                                color: var(--color-primary);
+                                text-decoration-style: solid;
+                            }
+                        }
                     }
                 }
             }

@@ -36,7 +36,7 @@
 .control-group {
     display: flex;
     flex-direction: column;
-    gap: 4px;
+    gap: var(--space-xs);
 
     label {
         font-size: 0.75rem;
@@ -48,7 +48,7 @@
         background: var(--color-input-bg);
         border: 1px solid var(--color-input-border);
         color: var(--color-text);
-        padding: 8px;
+        padding: var(--space-sm);
         border-radius: var(--radius-sm);
         font-family: var(--font-mono);
         width: 100%;
@@ -68,8 +68,8 @@
     input[type="color"] {
         background: none;
         border: none;
-        width: 32px;
-        height: 32px;
+        width: var(--size-icon-xl);
+        height: var(--size-icon-xl);
         cursor: pointer;
         padding: 0;
     }
@@ -85,8 +85,8 @@
 .switch {
     position: relative;
     display: inline-block;
-    width: 40px;
-    height: 20px;
+    width: var(--size-button-lg);
+    height: var(--size-button-sm);
 
     input {
         opacity: 0;
@@ -103,15 +103,15 @@
         bottom: 0;
         background-color: var(--color-input-bg);
         transition: .4s;
-        border-radius: 20px;
+        border-radius: var(--radius-full);
 
         &:before {
             position: absolute;
             content: "";
-            height: 16px;
-            width: 16px;
-            left: 2px;
-            bottom: 2px;
+            height: var(--size-icon-sm);
+            width: var(--size-icon-sm);
+            left: var(--space-xxs);
+            bottom: var(--space-xxs);
             background-color: var(--color-text-muted);
             transition: .4s;
             border-radius: 50%;

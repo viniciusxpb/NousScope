@@ -59,4 +59,8 @@ export class FormulaPLotterComponent {
     protected onMoveDown(id: string): void {
         this.formulaService.moveDown(id);
     }
+
+    protected addExampleFormula(expression: string): void {
+        this.formulaService.addFormula(expression);
+    }
 }

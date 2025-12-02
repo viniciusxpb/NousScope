@@ -27,8 +27,8 @@
 }
 
 .color-picker {
-    width: 28px;
-    height: 28px;
+    width: var(--size-icon-lg);
+    height: var(--size-icon-lg);
     padding: 0;
     border: 2px solid var(--color-inputBorder);
     border-radius: var(--radius-sm);
@@ -36,7 +36,7 @@
     background: none;
 
     &::-webkit-color-swatch-wrapper {
-        padding: 2px;
+        padding: var(--space-xxs);
     }
 
     &::-webkit-color-swatch {
@@ -102,7 +102,7 @@
 
 .row-actions {
     display: flex;
-    gap: 2px;
+    gap: var(--space-xxs);
     opacity: 0;
     transition: opacity 0.2s ease;
 
@@ -115,8 +115,8 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 24px;
-    height: 24px;
+    width: var(--size-icon-md);
+    height: var(--size-icon-md);
     padding: 0;
     border: none;
     border-radius: var(--radius-xs);

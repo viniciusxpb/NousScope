@@ -38,7 +38,7 @@
 }
 
 .resize-handle {
-    width: 4px;
+    width: var(--size-handle);
     background: transparent;
     cursor: col-resize;
     position: relative;
@@ -68,7 +68,7 @@
 
 .tabs-header {
     display: flex;
-    gap: 2px;
+    gap: var(--space-xxs);
     background: var(--color-background);
     border-radius: var(--radius-md) var(--radius-md) 0 0;
     padding: var(--space-xs);
@@ -88,7 +88,7 @@
     cursor: pointer;
     transition: all 0.2s ease;
     white-space: nowrap;
-    min-width: 36px;
+    min-width: var(--size-icon-xl);
 
     .tab-icon {
         font-size: var(--font-size-xl);
