@@ -1,0 +1,145 @@
+{
+    "perceptron": {
+        "id": "perceptron",
+        "arch": [
+            1,
+            1
+        ],
+        "activations": [
+            "linear"
+        ],
+        "title": "🧠 Perceptron",
+        "year": "Frank Rosenblatt, 1958 - Cornell",
+        "diagram": "x ──[w]──→ y = wx + b",
+        "description": "O avô de todas as redes neurais! Um único neurônio que só consegue aprender funções lineares.",
+        "funFact": "💡 O Perceptron original era uma MÁQUINA FÍSICA com potenciômetros como pesos!"
+    },
+    "xor": {
+        "id": "xor",
+        "arch": [
+            1,
+            2,
+            1
+        ],
+        "activations": [
+            "relu",
+            "linear"
+        ],
+        "title": "⚡ XOR Network",
+        "year": "Minsky & Papert, 1969",
+        "diagram": "x ──→[2]──→ y",
+        "description": "A rede que provou que um perceptron simples não resolve XOR. Precisamos de camadas ocultas!",
+        "funFact": "💡 O livro de Minsky causou o primeiro 'AI Winter' - uma década de descrença em redes neurais."
+    },
+    "cybenko": {
+        "id": "cybenko",
+        "arch": [
+            1,
+            4,
+            1
+        ],
+        "activations": [
+            "sigmoid",
+            "linear"
+        ],
+        "title": "🌊 Universal Approximator",
+        "year": "George Cybenko, 1989",
+        "diagram": "x ──→[4σ]──→ y",
+        "description": "Teorema da Aproximação Universal: uma camada oculta com sigmoide pode aproximar QUALQUER função contínua!",
+        "funFact": "💡 O teorema não diz QUANTOS neurônios você precisa - só que é possível!"
+    },
+    "wide": {
+        "id": "wide",
+        "arch": [
+            1,
+            256,
+            1
+        ],
+        "activations": [
+            "relu",
+            "linear"
+        ],
+        "title": "📏 Wide Network [256]",
+        "year": "Arquitetura Moderna",
+        "diagram": "x ──→[256]──→ y",
+        "description": "Redes largas têm muita capacidade expressiva mas podem overfittar facilmente.",
+        "funFact": "💡 Lottery Ticket Hypothesis: redes largas contêm sub-redes menores que funcionam tão bem!"
+    },
+    "deep": {
+        "id": "deep",
+        "arch": [
+            1,
+            4,
+            4,
+            4,
+            4,
+            4,
+            4,
+            4,
+            4,
+            1
+        ],
+        "activations": [
+            "relu",
+            "relu",
+            "relu",
+            "relu",
+            "relu",
+            "relu",
+            "relu",
+            "relu",
+            "linear"
+        ],
+        "title": "📚 Deep Network [8×4]",
+        "year": "Deep Learning Era, 2010s",
+        "diagram": "x ──→[4]──→[4]──→...──→[4]──→ y",
+        "description": "Profundidade permite composição hierárquica de features, mas pode sofrer de vanishing gradients.",
+        "funFact": "💡 ResNets resolveram vanishing gradients com skip connections!"
+    },
+    "pyramid": {
+        "id": "pyramid",
+        "arch": [
+            1,
+            8,
+            4,
+            2,
+            1
+        ],
+        "activations": [
+            "relu",
+            "relu",
+            "relu",
+            "linear"
+        ],
+        "title": "🔺 Pyramid",
+        "year": "Encoder Architecture",
+        "diagram": "x ──→[8]──→[4]──→[2]──→ y",
+        "description": "Arquitetura encoder: comprime informação progressivamente. Comum em autoencoders.",
+        "funFact": "💡 Funciona como um 'funil' que extrai features cada vez mais abstratas."
+    },
+    "hourglass": {
+        "id": "hourglass",
+        "arch": [
+            1,
+            2,
+            4,
+            8,
+            4,
+            2,
+            1
+        ],
+        "activations": [
+            "relu",
+            "relu",
+            "relu",
+            "relu",
+            "relu",
+            "linear"
+        ],
+        "title": "⏳ Hourglass",
+        "year": "Autoencoder Architecture",
+        "diagram": "x ──→[2]──→[4]──→[8]──→[4]──→[2]──→ y",
+        "description": "Expande para capturar detalhes, depois comprime. Usado em U-Nets para segmentação.",
+        "funFact": "💡 U-Net revolucionou segmentação médica com skip connections no hourglass!"
+    }
+}

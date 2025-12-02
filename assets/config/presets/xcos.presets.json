@@ -1,0 +1,16 @@
+{
+    "gcu_basic": {
+        "id": "gcu_basic",
+        "arch": [
+            1,
+            4,
+            1
+        ],
+        "activations": [
+            "gcu",
+            "linear"
+        ],
+        "title": "GCU Basic",
+        "description": "Testing x*cos(x) activation."
+    }
+}

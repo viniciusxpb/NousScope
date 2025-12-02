@@ -1,0 +1,28 @@
+{
+    "empty": {
+        "id": "empty",
+        "arch": [
+            1,
+            1
+        ],
+        "activations": [
+            "linear"
+        ],
+        "title": "Empty Network",
+        "description": "A clean slate."
+    },
+    "simple": {
+        "id": "simple",
+        "arch": [
+            1,
+            2,
+            1
+        ],
+        "activations": [
+            "relu",
+            "linear"
+        ],
+        "title": "Simple MLP",
+        "description": "Basic 1-2-1 architecture."
+    }
+}
