@@ -51,23 +51,22 @@ export class CanvasComponent implements AfterViewInit, OnDestroy {
     private readonly layers = this.network.layers;
     private readonly showNetwork = this.network.showNetwork;
     private readonly plottedFormulas = this.formulaService.plottedFormulas;
-    private readonly compareFunction = this.compareService.parsedFunction;
-    private readonly compareColor = this.compareService.compareColor;
+    private readonly plottedCompareFormulas = this.compareService.plottedFormulas;
 
     // Re-render when network or view changes
     private readonly renderEffect = effect(() => {
+        // Dependencies that trigger re-render
         this.layers();
         this.showNetwork();
         this.plottedFormulas();
+        this.plottedCompareFormulas();
         this.scale();
         this.offsetX();
         this.offsetY();
-        // React to canvas color changes
+        this.canvasConfig.themePreset();
         this.canvasConfig.backgroundColor();
         this.canvasConfig.gridColor();
         this.canvasConfig.textColor();
-        this.compareFunction();
-        this.compareColor();
         this.requestRender();
     });
 
@@ -373,47 +372,49 @@ export class CanvasComponent implements AfterViewInit, OnDestroy {
     }
 
     private drawCompare(width: number, height: number): void {
-        const fn = this.compareFunction();
-        if (!fn) return;
-
+        const formulas = this.plottedCompareFormulas();
+        
         const ctx = this.ctx;
         const density = this.config.canvas.sampleDensity;
 
-        ctx.strokeStyle = this.compareColor();
-        ctx.lineWidth = 2;
         ctx.setLineDash([5, 5]); // Dashed line for comparison
         ctx.lineCap = 'round';
         ctx.lineJoin = 'round';
-        ctx.beginPath();
+        ctx.lineWidth = 2;
 
-        let started = false;
+        for (const formula of formulas) {
+            ctx.strokeStyle = formula.color;
+            ctx.beginPath();
 
-        for (let sx = 0; sx <= width; sx += density) {
-            const x = this.screenToMathX(sx);
-            const y = fn(x);
+            let started = false;
 
-            if (!isFinite(y)) {
-                started = false;
-                continue;
+            for (let sx = 0; sx <= width; sx += density) {
+                const x = this.screenToMathX(sx);
+                const y = formula.fn(x);
+
+                if (!isFinite(y)) {
+                    started = false;
+                    continue;
+                }
+
+                const sy = this.mathToScreenY(y);
+
+                // Pular pontos muito fora da tela
+                if (sy < -1000 || sy > height + 1000) {
+                    started = false;
+                    continue;
+                }
+
+                if (!started) {
+                    ctx.moveTo(sx, sy);
+                    started = true;
+                } else {
+                    ctx.lineTo(sx, sy);
+                }
             }
-
-            const sy = this.mathToScreenY(y);
-
-            // Pular pontos muito fora da tela
-            if (sy < -1000 || sy > height + 1000) {
-                started = false;
-                continue;
-            }
-
-            if (!started) {
-                ctx.moveTo(sx, sy);
-                started = true;
-            } else {
-                ctx.lineTo(sx, sy);
-            }
+            ctx.stroke();
         }
 
-        ctx.stroke();
         ctx.setLineDash([]); // Reset dash
     }
 

@@ -1,34 +1,42 @@
 <div class="panel">
     <div class="panel-header">
-        <h2>Compare</h2>
-        <label class="switch">
-            <input type="checkbox" [checked]="showCompare()" (change)="toggleCompare()">
-            <span class="slider"></span>
-        </label>
+        <h2>
+            <span class="icon">🔬</span>
+            Compare
+            @if (formulas().length > 0) {
+            <span class="count">({{ formulas().length }})</span>
+            }
+        </h2>
+        <div class="header-actions">
+            @if (formulas().length > 0) {
+            <button class="btn-icon btn-danger" (click)="clearAll()" title="Limpar todas">
+                🗑️
+            </button>
+            }
+        </div>
     </div>
 
-    <div class="content" [class.disabled]="!showCompare()">
-        <div class="control-group">
-            <label>Target Function</label>
-            <select [ngModel]="compareFunc()" (ngModelChange)="updateFunc($event)">
-                @for (func of functions; track func.value) {
-                <option [value]="func.value">{{ func.label }}</option>
-                }
-            </select>
-        </div>
-
-        <div class="control-group">
-            <label>Custom Formula</label>
-            <input type="text" [ngModel]="compareFunc()" (ngModelChange)="updateFunc($event)"
-                placeholder="e.g. x * sin(x)">
-        </div>
-
-        <div class="control-group">
-            <label>Color</label>
-            <div class="color-picker">
-                <input type="color" [ngModel]="compareColor()" (ngModelChange)="compareColor.set($event)">
-                <span class="color-value">{{ compareColor() }}</span>
+    <div class="content">
+        <div class="formulas-list">
+            @for (formula of formulas(); track formula.id; let i = $index) {
+            <app-formula-row [formula]="formula" [index]="i" [isFirst]="i === 0" [isLast]="i === formulas().length - 1"
+                (remove)="onRemove(formula.id)" (expressionChange)="onExpressionChange(formula.id, $event)"
+                (colorChange)="onColorChange(formula.id, $event)" (toggleEnabled)="onToggleEnabled(formula.id)"
+                (toggleLocked)="onToggleLocked(formula.id)" (duplicate)="onDuplicate(formula.id)"
+                (moveUp)="onMoveUp(formula.id)" (moveDown)="onMoveDown(formula.id)" />
+            } @empty {
+            <div class="empty-state">
+                <p>Nenhuma função de comparação</p>
+                <p class="hint">Adicione funções alvo para comparar com a rede</p>
             </div>
+            }
+        </div>
+
+        <div class="panel-footer">
+            <button class="btn btn-primary btn-add" (click)="addFormula()">
+                <span class="icon">+</span>
+                Adicionar Função
+            </button>
         </div>
     </div>
 </div>

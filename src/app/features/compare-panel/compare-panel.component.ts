@@ -2,40 +2,57 @@ import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { CompareService } from '../../core/services/compare.service';
+import { FormulaRowComponent } from '../formula-plotter/components/formula-row/formula-row.component';
 
 @Component({
     selector: 'app-compare-panel',
     standalone: true,
-    imports: [CommonModule, FormsModule],
+    imports: [CommonModule, FormsModule, FormulaRowComponent],
     templateUrl: './compare-panel.component.html',
     styleUrl: './compare-panel.component.scss',
 })
 export class ComparePanelComponent {
     private readonly compareService = inject(CompareService);
 
-    // Bind to service signals
-    readonly compareFunc = this.compareService.compareFunc;
-    readonly compareColor = this.compareService.compareColor;
-    readonly showCompare = this.compareService.showCompare;
+    readonly formulas = this.compareService.formulas;
 
-    // Predefined functions
-    readonly functions = [
-        { label: 'x * cos(x)', value: 'x*cos(x)' },
-        { label: 'sin(x)', value: 'sin(x)' },
-        { label: 'tanh(x)', value: 'tanh(x)' },
-        { label: 'x^2', value: 'x^2' },
-        { label: 'step(x)', value: 'x > 0 ? 1 : 0' },
-    ];
-
-    updateFunc(value: string): void {
-        this.compareService.updateFunc(value);
+    addFormula(): void {
+        this.compareService.addFormula();
     }
 
-    updateColor(value: string): void {
-        this.compareService.updateColor(value);
+    onRemove(id: string): void {
+        this.compareService.removeFormula(id);
     }
 
-    toggleCompare(): void {
-        this.compareService.toggleCompare();
+    onExpressionChange(id: string, expression: string): void {
+        this.compareService.updateExpression(id, expression);
+    }
+
+    onColorChange(id: string, color: string): void {
+        this.compareService.updateColor(id, color);
+    }
+
+    onToggleEnabled(id: string): void {
+        this.compareService.toggleEnabled(id);
+    }
+
+    onToggleLocked(id: string): void {
+        this.compareService.toggleLocked(id);
+    }
+
+    onDuplicate(id: string): void {
+        this.compareService.duplicateFormula(id);
+    }
+
+    onMoveUp(id: string): void {
+        this.compareService.moveUp(id);
+    }
+
+    onMoveDown(id: string): void {
+        this.compareService.moveDown(id);
+    }
+
+    clearAll(): void {
+        this.compareService.clearAll();
     }
 }
