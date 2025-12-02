@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { NetworkService } from '../../core/services/network.service';
 import { PlotService } from '../../core/services/plot.service';
-import { ConfigService } from '../../core/services/config.service';
+import { CanvasConfigService } from '../../core/services/canvas-config.service';
 
 @Component({
     selector: 'app-toolbar',
@@ -15,14 +15,17 @@ import { ConfigService } from '../../core/services/config.service';
 export class ToolbarComponent {
     private readonly network = inject(NetworkService);
     private readonly plot = inject(PlotService);
-    private readonly config = inject(ConfigService);
+    private readonly canvasConfig = inject(CanvasConfigService);
 
     readonly showNetwork = this.network.showNetwork;
     readonly showSettings = signal(false);
 
-    // Canvas colors
-    canvasBgColor = signal(this.config.theme.colors.canvasBg);
-    gridColor = signal(this.config.theme.colors.grid);
+    // Theme presets
+    readonly themePreset = signal<'white' | 'black' | 'custom'>('black');
+
+    // Canvas colors from service
+    readonly canvasBgColor = this.canvasConfig.backgroundColor;
+    readonly gridColor = this.canvasConfig.gridColor;
 
     randomize(): void {
         this.network.randomizeWeights();
@@ -48,15 +51,26 @@ export class ToolbarComponent {
         this.showSettings.update(v => !v);
     }
 
+    onThemePresetChange(preset: 'white' | 'black' | 'custom'): void {
+        this.themePreset.set(preset);
+
+        if (preset === 'white') {
+            this.canvasConfig.setBackgroundColor('#ffffff');
+            this.canvasConfig.setGridColor('#e0e0e0');
+        } else if (preset === 'black') {
+            this.canvasConfig.setBackgroundColor('#0f0f23');
+            this.canvasConfig.setGridColor('#1a1a3e');
+        }
+        // Se for 'custom', não faz nada - usuário usa os color pickers
+    }
+
     onCanvasBgChange(color: string): void {
-        this.canvasBgColor.set(color);
-        this.config.theme.colors.canvasBg = color;
-        document.documentElement.style.setProperty('--color-canvasBg', color);
+        this.themePreset.set('custom'); // Auto-switch to custom
+        this.canvasConfig.setBackgroundColor(color);
     }
 
     onGridColorChange(color: string): void {
-        this.gridColor.set(color);
-        this.config.theme.colors.grid = color;
-        document.documentElement.style.setProperty('--color-grid', color);
+        this.themePreset.set('custom'); // Auto-switch to custom
+        this.canvasConfig.setGridColor(color);
     }
 }

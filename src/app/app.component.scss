@@ -84,14 +84,14 @@
     border: none;
     border-radius: var(--radius-sm);
     color: var(--color-textMuted);
-    font-size: 0.9em;
+    font-size: var(--font-size-md);
     cursor: pointer;
     transition: all 0.2s ease;
     white-space: nowrap;
     min-width: 36px;
 
     .tab-icon {
-        font-size: 1.2em;
+        font-size: var(--font-size-xl);
         display: block;
     }
 

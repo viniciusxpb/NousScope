@@ -24,7 +24,7 @@ canvas {
   background: var(--color-overlay-dark);
   padding: var(--space-xs) var(--space-sm);
   border-radius: var(--radius-sm);
-  font-size: 0.85em;
+  font-size: var(--font-size-sm);
   color: var(--color-text);
   font-family: var(--font-mono);
   pointer-events: none;

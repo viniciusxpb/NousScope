@@ -13,6 +13,7 @@ import { CommonModule } from '@angular/common';
 import { ConfigService } from '../../core/services/config.service';
 import { NetworkService } from '../../core/services/network.service';
 import { FormulaService } from '../formula-plotter/services/formula.service';
+import { CanvasConfigService } from '../../core/services/canvas-config.service';
 import { CanvasInteractionDirective } from './directives/canvas-interaction.directive';
 
 @Component({
@@ -28,6 +29,7 @@ export class CanvasComponent implements AfterViewInit, OnDestroy {
     private readonly config = inject(ConfigService);
     private readonly network = inject(NetworkService);
     private readonly formulaService = inject(FormulaService);
+    private readonly canvasConfig = inject(CanvasConfigService);
 
     private ctx!: CanvasRenderingContext2D;
     private animationFrameId?: number;
@@ -50,6 +52,9 @@ export class CanvasComponent implements AfterViewInit, OnDestroy {
         this.scale();
         this.offsetX();
         this.offsetY();
+        // React to canvas color changes
+        this.canvasConfig.backgroundColor();
+        this.canvasConfig.gridColor();
         this.requestRender();
     });
 

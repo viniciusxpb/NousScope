@@ -66,6 +66,21 @@
     --color-error-bg-hover: rgba(255, 71, 87, 0.2);
     --color-primary-bg: rgba(0, 217, 255, 0.1);
     --color-overlay-dark: rgba(0, 0, 0, 0.7);
+
+    /* Font sizes */
+    --font-size-xs: 0.75em;
+    --font-size-sm: 0.85em;
+    --font-size-md: 0.9em;
+    --font-size-base: 1em;
+    --font-size-lg: 1.1em;
+    --font-size-xl: 1.2em;
+
+    /* Widths */
+    --width-xs: 60px;
+    --width-sm: 120px;
+    --width-md: 200px;
+    --width-lg: 300px;
+    --width-xl: 400px;
 }
 
 html,

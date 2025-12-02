@@ -28,14 +28,28 @@
         <h4>Canvas Settings</h4>
 
         <div class="setting-row">
-            <label>Background Color</label>
-            <input type="color" [value]="canvasBgColor()" (input)="onCanvasBgChange($any($event.target).value)" />
+            <label>Tema</label>
+            <select [value]="themePreset()" (change)="onThemePresetChange($any($event.target).value)"
+                class="theme-select">
+                <option value="white">⚪ Branco</option>
+                <option value="black">⚫ Preto</option>
+                <option value="custom">🎨 Custom</option>
+            </select>
         </div>
 
-        <div class="setting-row">
-            <label>Grid Color</label>
-            <input type="color" [value]="gridColor()" (input)="onGridColorChange($any($event.target).value)" />
+        @if (themePreset() === 'custom') {
+        <div class="custom-colors">
+            <div class="setting-row">
+                <label>Background</label>
+                <input type="color" [value]="canvasBgColor()" (input)="onCanvasBgChange($any($event.target).value)" />
+            </div>
+
+            <div class="setting-row">
+                <label>Grid</label>
+                <input type="color" [value]="gridColor()" (input)="onGridColorChange($any($event.target).value)" />
+            </div>
         </div>
+        }
     </div>
     }
 </div>
