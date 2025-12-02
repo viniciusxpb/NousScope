@@ -168,10 +168,31 @@ export class CanvasComponent implements AfterViewInit, OnDestroy {
             // Draw Formulas
             this.drawFormulas(width, height);
 
+            // Draw Network Outputs
+            this.drawNetworkOutputs(width, height);
+
             // Draw Compare Function
             this.drawCompare(width, height);
         } catch (error) {
             console.error('Error rendering canvas:', error);
+        }
+    }
+
+    private drawNetworkOutputs(width: number, height: number): void {
+        const networks = this.network.networks();
+        
+        for (const net of networks) {
+            if (!net.visible) continue;
+
+            // Create a wrapper function for the network forward pass
+            const fn = (x: number) => this.network.forward(x, net.layers);
+            
+            // Draw it using the network's color
+            this.drawFunction(
+                fn, 
+                net.color, 
+                this.config.canvas.lineWidth.network // You might want to add this config or use a fixed value
+            );
         }
     }
 

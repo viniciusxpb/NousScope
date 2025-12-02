@@ -4,63 +4,80 @@
             <span class="icon">🏗️</span>
             Architecture
         </h2>
-        <div class="header-actions">
-            <button class="btn-icon" (click)="toggleVisibility()" [title]="showNetwork() ? 'Ocultar Rede' : 'Mostrar Rede'">
-                {{ showNetwork() ? '👁️' : '👁‍🗨️' }}
-            </button>
-        </div>
     </div>
 
-    <!-- Network Selector -->
-    <div class="network-tabs">
+    <div class="networks-list">
         @for (net of networks(); track net.id) {
-        <div class="network-tab" [class.active]="activeNetworkId() === net.id" (click)="setActiveNetwork(net.id)" [style.--network-color]="net.color">
-            <span class="color-dot"></span>
-            <span class="name">{{ net.name }}</span>
-            @if (networks().length > 1) {
-            <button class="btn-close" (click)="removeNetwork(net.id); $event.stopPropagation()">×</button>
+        <div class="network-card" [class.expanded]="isExpanded(net.id)" [style.--network-color]="net.color">
+            <div class="card-header" (click)="toggleExpand(net.id)">
+                <div class="header-content">
+                    <span class="color-dot"></span>
+                    <span class="name">{{ net.name }}</span>
+                    <span class="stats">
+                        {{ net.layers.length }} layers • {{ net.layers.length - 2 }} hidden
+                    </span>
+                </div>
+                <div class="header-actions">
+                    <button class="btn-icon" (click)="toggleVisibility(net.id); $event.stopPropagation()"
+                        [title]="net.visible ? 'Ocultar Rede' : 'Mostrar Rede'">
+                        {{ net.visible ? '👁️' : '👁‍🗨️' }}
+                    </button>
+                    @if (networks().length > 1) {
+                    <button class="btn-icon danger" (click)="removeNetwork(net.id); $event.stopPropagation()" title="Remover Rede">
+                        🗑️
+                    </button>
+                    }
+                    <span class="chevron">▼</span>
+                </div>
+            </div>
+
+            @if (isExpanded(net.id)) {
+            <div class="card-body">
+                <!-- Global Controls -->
+                <div class="global-controls">
+                    <div class="control-group">
+                        <label>Ativação Global</label>
+                        <select (change)="setGlobalActivation($any($event.target).value, net.id)">
+                            <option value="" disabled selected>Selecionar...</option>
+                            @for (act of activationOptions; track act) {
+                            <option [value]="act">{{ act | titlecase }}</option>
+                            }
+                        </select>
+                    </div>
+
+                    <div class="actions-row">
+                        <button class="btn btn-sm btn-secondary" (click)="randomizeWeights(net.id)" title="Randomizar Pesos">
+                            🎲 Randomizar
+                        </button>
+                        <button class="btn btn-sm btn-primary" (click)="runVisualCycle(net.id)" [disabled]="isAnimating()">
+                            {{ isAnimating() ? '⏳ ...' : '▶️ Ciclo' }}
+                        </button>
+                    </div>
+                </div>
+
+                <div class="layers-list">
+                    @for (layer of net.layers; track layer.id; let i = $index) {
+                    <app-layer-card [layer]="layer" [index]="i" [isFirst]="i === 0" [isLast]="i === net.layers.length - 1"
+                        (remove)="removeLayer(layer.id)" (neuronsChange)="updateNeurons(layer.id, $event)"
+                        (activationChange)="updateActivation(layer.id, $event)" />
+                    }
+                </div>
+
+                <div class="card-footer">
+                    <button class="btn btn-primary btn-add" (click)="addHiddenLayer(net.id)">
+                        <span class="icon">+</span>
+                        Adicionar Camada Oculta
+                    </button>
+                </div>
+            </div>
             }
         </div>
         }
-        <button class="btn-add-net" (click)="addNetwork()" title="Nova Rede">+</button>
     </div>
 
-    <div class="content">
-        <!-- Global Controls -->
-        <div class="global-controls">
-            <div class="control-group">
-                <label>Ativação Global</label>
-                <select (change)="setGlobalActivation($any($event.target).value)">
-                    <option value="" disabled selected>Selecionar...</option>
-                    @for (act of activationOptions; track act) {
-                    <option [value]="act">{{ act | titlecase }}</option>
-                    }
-                </select>
-            </div>
-            
-            <div class="actions-row">
-                <button class="btn btn-sm btn-secondary" (click)="randomizeWeights()" title="Randomizar Pesos">
-                    🎲 Randomizar
-                </button>
-                <button class="btn btn-sm btn-primary" (click)="runVisualCycle()" [disabled]="isAnimating()">
-                    {{ isAnimating() ? '⏳ Rodando...' : '▶️ Ciclo Visual' }}
-                </button>
-            </div>
-        </div>
-
-        <div class="layers-list">
-            @for (layer of layers(); track layer.id; let i = $index) {
-            <app-layer-card [layer]="layer" [index]="i" [isFirst]="i === 0" [isLast]="i === layers().length - 1"
-                (remove)="removeLayer(layer.id)" (neuronsChange)="updateNeurons(layer.id, $event)"
-                (activationChange)="updateActivation(layer.id, $event)" />
-            }
-        </div>
-
-        <div class="panel-footer">
-            <button class="btn btn-primary btn-add" (click)="addHiddenLayer()">
-                <span class="icon">+</span>
-                Adicionar Camada Oculta
-            </button>
-        </div>
+    <div class="panel-footer-main">
+        <button class="btn-add-net" (click)="addNetwork()">
+            + Nova Rede
+        </button>
     </div>
 </div>

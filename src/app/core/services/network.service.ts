@@ -114,8 +114,8 @@ export class NetworkService {
         }
     }
 
-    toggleNetworkVisibility(): void {
-        const id = this._activeNetworkId();
+    toggleNetworkVisibility(networkId?: string): void {
+        const id = networkId || this._activeNetworkId();
         this._networks.update(nets => 
             nets.map(n => n.id === id ? { ...n, visible: !n.visible } : n)
         );
@@ -123,15 +123,15 @@ export class NetworkService {
 
     // --- Layer Management (Operates on Active Network) ---
 
-    addHiddenLayer(): void {
-        const netId = this._activeNetworkId();
-        const network = this.activeNetwork();
+    addHiddenLayer(networkId?: string): void {
+        const id = networkId || this._activeNetworkId();
+        const network = this._networks().find(n => n.id === id);
         if (!network) return;
 
         const { defaultHiddenNeurons, defaultActivation, maxLayers } = this.config.network;
         if (network.layers.length >= maxLayers) return;
 
-        this.updateActiveNetworkLayers(layers => {
+        this.updateNetworkLayers(id, layers => {
             const outputIndex = layers.length - 1;
             const prevNeurons = layers[outputIndex - 1].neurons;
 
@@ -161,7 +161,11 @@ export class NetworkService {
     }
 
     removeLayer(layerId: number): void {
-        this.updateActiveNetworkLayers(layers => {
+        // Find network containing the layer
+        const network = this._networks().find(n => n.layers.some(l => l.id === layerId));
+        if (!network) return;
+
+        this.updateNetworkLayers(network.id, layers => {
             const index = layers.findIndex(l => l.id === layerId);
             if (index <= 0 || index >= layers.length - 1) return layers;
 
@@ -179,10 +183,13 @@ export class NetworkService {
     }
 
     updateNeurons(layerId: number, count: number): void {
+        const network = this._networks().find(n => n.layers.some(l => l.id === layerId));
+        if (!network) return;
+
         const { minNeurons, maxNeurons } = this.config.network;
         const clamped = Math.max(minNeurons, Math.min(maxNeurons, count));
 
-        this.updateActiveNetworkLayers(layers => {
+        this.updateNetworkLayers(network.id, layers => {
             const index = layers.findIndex(l => l.id === layerId);
             if (index < 0) return layers;
 
@@ -229,23 +236,30 @@ export class NetworkService {
             };
         });
 
-        this.updateActiveNetworkLayers(() => layers);
+        this.updateNetworkLayers(this._activeNetworkId(), () => layers);
     }
 
     updateActivation(layerId: number, activation: ActivationType): void {
-        this.updateActiveNetworkLayers(layers =>
+        const network = this._networks().find(n => n.layers.some(l => l.id === layerId));
+        if (!network) return;
+
+        this.updateNetworkLayers(network.id, layers =>
             layers.map(l => l.id === layerId ? { ...l, activation } : l)
         );
     }
 
-    setGlobalActivation(activation: ActivationType): void {
-        this.updateActiveNetworkLayers(layers =>
+    setGlobalActivation(activation: ActivationType, networkId?: string): void {
+        const id = networkId || this._activeNetworkId();
+        this.updateNetworkLayers(id, layers =>
             layers.map(l => l.type === 'hidden' ? { ...l, activation } : l)
         );
     }
 
     updateWeight(layerId: number, neuronIdx: number, weightIdx: number, value: number): void {
-        this.updateActiveNetworkLayers(layers =>
+        const network = this._networks().find(n => n.layers.some(l => l.id === layerId));
+        if (!network) return;
+
+        this.updateNetworkLayers(network.id, layers =>
             layers.map(l => {
                 if (l.id !== layerId || !l.weights) return l;
                 const newWeights = l.weights.map((row, n) =>
@@ -257,7 +271,10 @@ export class NetworkService {
     }
 
     updateBias(layerId: number, neuronIdx: number, value: number): void {
-        this.updateActiveNetworkLayers(layers =>
+        const network = this._networks().find(n => n.layers.some(l => l.id === layerId));
+        if (!network) return;
+
+        this.updateNetworkLayers(network.id, layers =>
             layers.map(l => {
                 if (l.id !== layerId || !l.biases) return l;
                 const newBiases = l.biases.map((b, i) => i === neuronIdx ? value : b);
@@ -266,8 +283,9 @@ export class NetworkService {
         );
     }
 
-    randomizeWeights(): void {
-        this.updateActiveNetworkLayers(layers =>
+    randomizeWeights(networkId?: string): void {
+        const id = networkId || this._activeNetworkId();
+        this.updateNetworkLayers(id, layers =>
             layers.map((l, i) => {
                 if (i === 0) return l;
                 const prevNeurons = layers[i - 1].neurons;
@@ -282,11 +300,18 @@ export class NetworkService {
 
     // --- Visual Cycle ---
 
-    async visualizeCycle(): Promise<void> {
+    async visualizeCycle(networkId?: string): Promise<void> {
         if (this._isAnimating()) return;
 
+        const id = networkId || this._activeNetworkId();
+        const network = this._networks().find(n => n.id === id);
+        if (!network) return;
+
+        // Optionally set as active if we want to focus on it
+        // this.setActiveNetwork(id);
+
         this._isAnimating.set(true);
-        const layers = this.layers();
+        const layers = network.layers;
         
         // Reset
         this._animationStep.set(0);
@@ -305,8 +330,8 @@ export class NetworkService {
 
     // --- Forward Pass ---
 
-    forward(x: number): number {
-        const layers = this.layers();
+    forward(x: number, networkLayers?: Layer[]): number {
+        const layers = networkLayers || this.layers();
         let values = [x];
 
         for (let i = 1; i < layers.length; i++) {
@@ -329,10 +354,9 @@ export class NetworkService {
 
     // --- Helpers ---
 
-    private updateActiveNetworkLayers(updater: (layers: Layer[]) => Layer[]): void {
-        const id = this._activeNetworkId();
+    private updateNetworkLayers(networkId: string, updater: (layers: Layer[]) => Layer[]): void {
         this._networks.update(nets => 
-            nets.map(n => n.id === id ? { ...n, layers: updater(n.layers) } : n)
+            nets.map(n => n.id === networkId ? { ...n, layers: updater(n.layers) } : n)
         );
     }
 

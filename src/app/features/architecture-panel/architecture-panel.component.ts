@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { NetworkService } from '../../core/services/network.service';
@@ -18,12 +18,31 @@ export class ArchitecturePanelComponent {
 
     readonly networks = this.networkService.networks;
     readonly activeNetworkId = this.networkService.activeNetworkId;
-    readonly activeNetwork = this.networkService.activeNetwork;
-    readonly layers = this.networkService.layers;
-    readonly showNetwork = this.networkService.showNetwork;
     readonly isAnimating = this.networkService.isAnimating;
-
+    
     readonly activationOptions = Object.keys(ACTIVATIONS) as ActivationType[];
+
+    // Local state for expanded cards
+    expandedNetworks = new Set<string>();
+
+    private readonly _expandEffect = effect(() => {
+        const nets = this.networks();
+        if (nets.length > 0 && this.expandedNetworks.size === 0) {
+            this.expandedNetworks.add(nets[0].id);
+        }
+    });
+
+    toggleExpand(id: string): void {
+        if (this.expandedNetworks.has(id)) {
+            this.expandedNetworks.delete(id);
+        } else {
+            this.expandedNetworks.add(id);
+        }
+    }
+
+    isExpanded(id: string): boolean {
+        return this.expandedNetworks.has(id);
+    }
 
     // Network Management
     addNetwork(): void {
@@ -34,17 +53,13 @@ export class ArchitecturePanelComponent {
         this.networkService.removeNetwork(id);
     }
 
-    setActiveNetwork(id: string): void {
-        this.networkService.setActiveNetwork(id);
-    }
-
-    toggleVisibility(): void {
-        this.networkService.toggleNetworkVisibility();
+    toggleVisibility(id: string): void {
+        this.networkService.toggleNetworkVisibility(id);
     }
 
     // Layer Management
-    addHiddenLayer(): void {
-        this.networkService.addHiddenLayer();
+    addHiddenLayer(networkId: string): void {
+        this.networkService.addHiddenLayer(networkId);
     }
 
     removeLayer(id: number): void {
@@ -59,16 +74,16 @@ export class ArchitecturePanelComponent {
         this.networkService.updateActivation(id, activation);
     }
 
-    randomizeWeights(): void {
-        this.networkService.randomizeWeights();
+    randomizeWeights(networkId: string): void {
+        this.networkService.randomizeWeights(networkId);
     }
 
-    // Global Actions
-    setGlobalActivation(activation: ActivationType): void {
-        this.networkService.setGlobalActivation(activation);
+    // Global Actions (Per Network)
+    setGlobalActivation(activation: ActivationType, networkId: string): void {
+        this.networkService.setGlobalActivation(activation, networkId);
     }
 
-    runVisualCycle(): void {
-        this.networkService.visualizeCycle();
+    runVisualCycle(networkId: string): void {
+        this.networkService.visualizeCycle(networkId);
     }
 }
