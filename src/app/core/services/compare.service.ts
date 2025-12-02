@@ -8,7 +8,7 @@ export class CompareService {
     private readonly STORAGE_KEY = 'NOUSSCOPE_COMPARE';
 
     private readonly _formulas = signal<Formula[]>(this.loadFromStorage());
-    private nextId = 1;
+    private nextId = this.initializeNextId();
 
     // Cores padrão para funções de comparação (tons mais frios/distintos)
     private readonly defaultColors = [
@@ -21,18 +21,16 @@ export class CompareService {
 
     public readonly formulas = this._formulas.asReadonly();
 
-    constructor() {
-        // Inicializar nextId
-        const maxId = this._formulas().reduce((max, f) => {
+    // Persistência automática
+    private readonly _saveEffect = effect(() => {
+        this.saveToStorage(this._formulas());
+    });
+
+    private initializeNextId(): number {
+        return this._formulas().reduce((max, f) => {
             const match = f.id.match(/compare-(\d+)/);
             return match ? Math.max(max, parseInt(match[1], 10)) : max;
-        }, 0);
-        this.nextId = maxId + 1;
-
-        // Persistência automática
-        effect(() => {
-            this.saveToStorage(this._formulas());
-        });
+        }, 0) + 1;
     }
 
     private loadFromStorage(): Formula[] {

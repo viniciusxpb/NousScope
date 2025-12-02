@@ -34,7 +34,7 @@ export class ToolbarComponent {
     }
 
     toggleNetwork(): void {
-        this.network.toggleNetwork();
+        this.network.toggleNetworkVisibility();
     }
 
     resetView(): void {

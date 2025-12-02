@@ -1,4 +1,4 @@
-import { Injectable, signal } from '@angular/core';
+import { Injectable, signal, effect } from '@angular/core';
 import { inject } from '@angular/core';
 import { ConfigService } from './config.service';
 
@@ -7,78 +7,35 @@ import { ConfigService } from './config.service';
  * Usa Signals para reatividade.
  */
 @Injectable({ providedIn: 'root' })
+interface CanvasConfig {
+    themePreset?: 'white' | 'black' | 'custom';
+    backgroundColor?: string;
+    gridColor?: string;
+    textColor?: string;
+}
+
+@Injectable({ providedIn: 'root' })
 export class CanvasConfigService {
     private readonly config = inject(ConfigService);
     private readonly STORAGE_KEY = 'NOUSSCOPE_CANVAS_CONFIG';
 
-    // Canvas colors as signals
-    public readonly backgroundColor = signal(this.config.theme.colors.canvasBg);
-    public readonly gridColor = signal(this.config.theme.colors.grid);
-    public readonly textColor = signal(this.config.theme.colors.text);
-    public readonly themePreset = signal<'white' | 'black' | 'custom'>('black');
+    // Load saved config once
+    private readonly savedConfig = this.loadFromStorage();
 
-    constructor() {
-        this.loadFromStorage();
-    }
+    // Canvas colors as signals (initialized from saved or default)
+    public readonly backgroundColor = signal(this.savedConfig?.backgroundColor ?? this.config.theme.colors.canvasBg);
+    public readonly gridColor = signal(this.savedConfig?.gridColor ?? this.config.theme.colors.grid);
+    public readonly textColor = signal(this.savedConfig?.textColor ?? this.config.theme.colors.text);
+    public readonly themePreset = signal<'white' | 'black' | 'custom'>(this.savedConfig?.themePreset ?? 'black');
 
-    /**
-     * Carrega configurações salvas.
-     */
-    private loadFromStorage(): void {
-        const saved = localStorage.getItem(this.STORAGE_KEY);
-        if (saved) {
-            try {
-                const data = JSON.parse(saved);
-                if (data.themePreset) this.themePreset.set(data.themePreset);
-                if (data.backgroundColor) this.backgroundColor.set(data.backgroundColor);
-                if (data.gridColor) this.gridColor.set(data.gridColor);
-                if (data.textColor) this.textColor.set(data.textColor);
+    // Effect to apply theme and save config automatically
+    private readonly _syncEffect = effect(() => {
+        const preset = this.themePreset();
+        const bg = this.backgroundColor();
+        const grid = this.gridColor();
+        const text = this.textColor();
 
-                // Aplicar tema visualmente
-                this.applyTheme(this.themePreset(), this.backgroundColor(), this.gridColor());
-            } catch (e) {
-                console.error('Erro ao carregar config do canvas', e);
-            }
-        }
-    }
-
-    /**
-     * Salva configurações atuais.
-     */
-    private saveToStorage(): void {
-        const data = {
-            themePreset: this.themePreset(),
-            backgroundColor: this.backgroundColor(),
-            gridColor: this.gridColor(),
-            textColor: this.textColor()
-        };
-        localStorage.setItem(this.STORAGE_KEY, JSON.stringify(data));
-    }
-
-    /**
-     * Define o preset de tema e aplica as cores correspondentes.
-     */
-    setThemePreset(preset: 'white' | 'black' | 'custom'): void {
-        this.themePreset.set(preset);
-
-        if (preset === 'white') {
-            this.setBackgroundColor('#ffffff', false);
-            this.setGridColor('#cccccc', false);
-            this.setTextColor('#333333', false);
-        } else if (preset === 'black') {
-            this.setBackgroundColor('#0f0f23', false);
-            this.setGridColor('#1a1a3e', false);
-            this.setTextColor('#eeeeee', false);
-        }
-
-        this.applyTheme(preset, this.backgroundColor(), this.gridColor());
-        this.saveToStorage();
-    }
-
-    /**
-     * Aplica as variáveis CSS e atributos baseados no tema.
-     */
-    private applyTheme(preset: string, bg: string, grid: string): void {
+        // Apply Theme
         if (preset === 'white') {
             document.documentElement.setAttribute('data-canvas-theme', 'white');
         } else if (preset === 'black') {
@@ -89,68 +46,70 @@ export class CanvasConfigService {
 
         document.documentElement.style.setProperty('--color-canvasBg', bg);
         document.documentElement.style.setProperty('--color-grid', grid);
+
+        // Sync with ConfigService (legacy support)
+        this.config.theme.colors.canvasBg = bg;
+        this.config.theme.colors.grid = grid;
+
+        // Save to Storage
+        const data: CanvasConfig = {
+            themePreset: preset,
+            backgroundColor: bg,
+            gridColor: grid,
+            textColor: text
+        };
+        localStorage.setItem(this.STORAGE_KEY, JSON.stringify(data));
+    });
+
+    private loadFromStorage(): CanvasConfig | null {
+        const saved = localStorage.getItem(this.STORAGE_KEY);
+        if (saved) {
+            try {
+                return JSON.parse(saved) as CanvasConfig;
+            } catch (e) {
+                console.error('Erro ao carregar config do canvas', e);
+            }
+        }
+        return null;
     }
 
-    /**
-     * Atualiza a cor de fundo do canvas.
-     */
-    setBackgroundColor(color: string, save = true): void {
+    setThemePreset(preset: 'white' | 'black' | 'custom'): void {
+        // Update signals, effect will handle the rest
+        if (preset === 'white') {
+            this.backgroundColor.set('#ffffff');
+            this.gridColor.set('#cccccc');
+            this.textColor.set('#333333');
+        } else if (preset === 'black') {
+            this.backgroundColor.set('#0f0f23');
+            this.gridColor.set('#1a1a3e');
+            this.textColor.set('#eeeeee');
+        }
+        this.themePreset.set(preset);
+    }
+
+    setBackgroundColor(color: string): void {
         this.backgroundColor.set(color);
-        this.config.theme.colors.canvasBg = color;
-
-        if (this.themePreset() === 'custom') {
-            this.applyTheme('custom', color, this.gridColor());
-        }
-
-        if (save) {
-            if (this.themePreset() !== 'custom') {
-                this.themePreset.set('custom');
-                this.applyTheme('custom', color, this.gridColor());
-            }
-            this.saveToStorage();
+        if (this.themePreset() !== 'custom') {
+            this.themePreset.set('custom');
         }
     }
 
-    /**
-     * Atualiza a cor das grades.
-     */
-    setGridColor(color: string, save = true): void {
+    setGridColor(color: string): void {
         this.gridColor.set(color);
-        this.config.theme.colors.grid = color;
-
-        if (this.themePreset() === 'custom') {
-            this.applyTheme('custom', this.backgroundColor(), color);
-        }
-
-        if (save) {
-            if (this.themePreset() !== 'custom') {
-                this.themePreset.set('custom');
-                this.applyTheme('custom', this.backgroundColor(), color);
-            }
-            this.saveToStorage();
+        if (this.themePreset() !== 'custom') {
+            this.themePreset.set('custom');
         }
     }
 
-    /**
-     * Atualiza a cor do texto no canvas.
-     */
-    setTextColor(color: string, save = true): void {
+    setTextColor(color: string): void {
         this.textColor.set(color);
-
-        if (save) {
-            if (this.themePreset() !== 'custom') {
-                this.themePreset.set('custom');
-            }
-            this.saveToStorage();
+        if (this.themePreset() !== 'custom') {
+            this.themePreset.set('custom');
         }
     }
 
-    /**
-     * Reseta as configurações para o padrão.
-     */
     resetConfig(): void {
         localStorage.removeItem(this.STORAGE_KEY);
-        // Voltar para o padrão (black)
         this.setThemePreset('black');
     }
 }

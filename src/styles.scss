@@ -147,3 +147,108 @@ body {
 ::-webkit-scrollbar-thumb:hover {
     background: var(--color-textMuted);
 }
+
+/* Global Button Styles */
+.btn {
+    padding: var(--space-xs) var(--space-sm);
+    border: none;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    font-size: var(--font-size-md);
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-xs);
+    font-family: var(--font-primary);
+
+    &:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+    }
+}
+
+.btn-sm {
+    padding: var(--space-xs);
+    font-size: var(--font-size-sm);
+}
+
+.btn-primary {
+    background: var(--color-primary);
+    color: var(--color-textDark);
+    font-weight: 500;
+
+    &:hover:not(:disabled) {
+        background: var(--color-primaryHover);
+    }
+}
+
+.btn-secondary {
+    background: var(--color-grid);
+    color: var(--color-text);
+
+    &:hover:not(:disabled) {
+        background: var(--color-inputBorder);
+    }
+}
+
+.btn-danger {
+    background: var(--color-error-bg);
+    color: var(--color-error);
+
+    &:hover:not(:disabled) {
+        background: var(--color-error-bg-hover);
+    }
+}
+
+.btn-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: var(--size-icon-md);
+    height: var(--size-icon-md);
+    padding: 0;
+    border: none;
+    border-radius: var(--radius-xs);
+    background: transparent;
+    color: var(--color-textMuted);
+    font-size: var(--font-size-md);
+    cursor: pointer;
+    transition: all 0.15s ease;
+
+    &:hover:not(:disabled) {
+        background: var(--color-panelHover);
+        color: var(--color-text);
+    }
+
+    &:disabled {
+        opacity: 0.3;
+        cursor: not-allowed;
+    }
+
+    &.btn-danger:hover:not(:disabled) {
+        background: var(--color-error-bg-hover);
+        color: var(--color-error);
+    }
+}
+
+.btn-add {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-xs);
+    background: var(--color-primary);
+    color: var(--color-textDark);
+    padding: var(--space-sm);
+    font-weight: 500;
+
+    &:hover:not(:disabled) {
+        background: var(--color-primaryHover);
+    }
+
+    .icon {
+        font-size: var(--font-size-xl);
+        font-weight: bold;
+    }
+}

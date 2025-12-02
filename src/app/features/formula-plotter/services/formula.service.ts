@@ -11,7 +11,7 @@ export class FormulaService {
     private readonly STORAGE_KEY = 'NOUSSCOPE_FORMULAS';
 
     private readonly _formulas = signal<Formula[]>(this.loadFromStorage());
-    private nextId = 1;
+    private nextId = this.initializeNextId();
 
     // Cores padrão para novas fórmulas (rotaciona)
     private readonly defaultColors = [
@@ -27,18 +27,16 @@ export class FormulaService {
 
     public readonly formulas = this._formulas.asReadonly();
 
-    constructor() {
-        // Inicializar nextId baseado nas fórmulas carregadas
-        const maxId = this._formulas().reduce((max, f) => {
+    // Salvar automaticamente quando houver mudanças
+    private readonly _saveEffect = effect(() => {
+        this.saveToStorage(this._formulas());
+    });
+
+    private initializeNextId(): number {
+        return this._formulas().reduce((max, f) => {
             const match = f.id.match(/formula-(\d+)/);
             return match ? Math.max(max, parseInt(match[1], 10)) : max;
-        }, 0);
-        this.nextId = maxId + 1;
-
-        // Salvar automaticamente quando houver mudanças
-        effect(() => {
-            this.saveToStorage(this._formulas());
-        });
+        }, 0) + 1;
     }
 
     /**

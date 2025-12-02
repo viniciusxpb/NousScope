@@ -1,7 +1,6 @@
-import { Component, input, inject, computed } from '@angular/core';
+import { Component, input, output, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { NetworkService } from '../../../../core/services/network.service';
 import { Layer, ActivationType } from '../../../../core/models/layer.model';
 import { ACTIVATION_OPTIONS } from '../../../../core/constants/activations.constants';
 
@@ -14,8 +13,13 @@ import { ACTIVATION_OPTIONS } from '../../../../core/constants/activations.const
 })
 export class LayerCardComponent {
     readonly layer = input.required<Layer>();
+    readonly index = input.required<number>();
+    readonly isFirst = input<boolean>(false);
+    readonly isLast = input<boolean>(false);
 
-    private readonly network = inject(NetworkService);
+    readonly remove = output<void>();
+    readonly neuronsChange = output<number>();
+    readonly activationChange = output<ActivationType>();
 
     readonly activationOptions = ACTIVATION_OPTIONS;
 
@@ -23,22 +27,17 @@ export class LayerCardComponent {
     readonly isOutput = computed(() => this.layer().type === 'output');
     readonly canRemove = computed(() => !this.isInput() && !this.isOutput());
 
-    updateNeurons(count: number): void {
-        this.network.updateNeurons(this.layer().id, count);
-    }
-
-    updateActivation(event: Event): void {
-        const select = event.target as HTMLSelectElement;
-        // Cast to ActivationType because we know it's a valid activation type from the options
-        this.network.updateActivation(this.layer().id, select.value as ActivationType);
-    }
-
     onNeuronsInput(event: Event): void {
         const value = +(event.target as HTMLInputElement).value;
-        this.updateNeurons(value);
+        this.neuronsChange.emit(value);
     }
 
-    remove(): void {
-        this.network.removeLayer(this.layer().id);
+    onActivationChange(event: Event): void {
+        const select = event.target as HTMLSelectElement;
+        this.activationChange.emit(select.value as ActivationType);
+    }
+
+    onRemove(): void {
+        this.remove.emit();
     }
 }

@@ -1,17 +1,66 @@
 <div class="panel">
     <div class="panel-header">
-        <h2>Architecture</h2>
-        <div class="stats">
-            <span>{{ architectureString() }}</span>
-            <span class="badge">{{ totalNeurons() }} neurons</span>
+        <h2>
+            <span class="icon">🏗️</span>
+            Architecture
+        </h2>
+        <div class="header-actions">
+            <button class="btn-icon" (click)="toggleVisibility()" [title]="showNetwork() ? 'Ocultar Rede' : 'Mostrar Rede'">
+                {{ showNetwork() ? '👁️' : '👁‍🗨️' }}
+            </button>
         </div>
     </div>
 
-    <div class="layers-list">
-        @for (layer of layers(); track layer.id) {
-        <app-layer-card [layer]="layer"></app-layer-card>
+    <!-- Network Selector -->
+    <div class="network-tabs">
+        @for (net of networks(); track net.id) {
+        <div class="network-tab" [class.active]="activeNetworkId() === net.id" (click)="setActiveNetwork(net.id)" [style.--network-color]="net.color">
+            <span class="color-dot"></span>
+            <span class="name">{{ net.name }}</span>
+            @if (networks().length > 1) {
+            <button class="btn-close" (click)="removeNetwork(net.id); $event.stopPropagation()">×</button>
+            }
+        </div>
         }
+        <button class="btn-add-net" (click)="addNetwork()" title="Nova Rede">+</button>
+    </div>
 
-        <app-quick-add (add)="onAddLayer()"></app-quick-add>
+    <div class="content">
+        <!-- Global Controls -->
+        <div class="global-controls">
+            <div class="control-group">
+                <label>Ativação Global</label>
+                <select (change)="setGlobalActivation($any($event.target).value)">
+                    <option value="" disabled selected>Selecionar...</option>
+                    @for (act of activationOptions; track act) {
+                    <option [value]="act">{{ act | titlecase }}</option>
+                    }
+                </select>
+            </div>
+            
+            <div class="actions-row">
+                <button class="btn btn-sm btn-secondary" (click)="randomizeWeights()" title="Randomizar Pesos">
+                    🎲 Randomizar
+                </button>
+                <button class="btn btn-sm btn-primary" (click)="runVisualCycle()" [disabled]="isAnimating()">
+                    {{ isAnimating() ? '⏳ Rodando...' : '▶️ Ciclo Visual' }}
+                </button>
+            </div>
+        </div>
+
+        <div class="layers-list">
+            @for (layer of layers(); track layer.id; let i = $index) {
+            <app-layer-card [layer]="layer" [index]="i" [isFirst]="i === 0" [isLast]="i === layers().length - 1"
+                (remove)="removeLayer(layer.id)" (neuronsChange)="updateNeurons(layer.id, $event)"
+                (activationChange)="updateActivation(layer.id, $event)" />
+            }
+        </div>
+
+        <div class="panel-footer">
+            <button class="btn btn-primary btn-add" (click)="addHiddenLayer()">
+                <span class="icon">+</span>
+                Adicionar Camada Oculta
+            </button>
+        </div>
     </div>
 </div>

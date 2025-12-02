@@ -1,23 +1,25 @@
 <div class="layer-card" [class.input]="isInput()" [class.output]="isOutput()">
-    <div class="header">
-        <span class="type">{{ layer().type }}</span>
+    <div class="card-header">
+        <span class="layer-type">
+            {{ isInput() ? 'Input' : isOutput() ? 'Output' : 'Hidden Layer' }}
+        </span>
         @if (canRemove()) {
-        <button class="remove-btn" (click)="remove()" title="Remove Layer">×</button>
+        <button class="btn-remove" (click)="onRemove()" title="Remover camada">×</button>
         }
     </div>
 
-    <div class="controls">
+    <div class="card-content">
         <div class="control-group">
-            <label>Neurons</label>
-            <input type="number" [value]="layer().neurons" (input)="onNeuronsInput($event)" min="1" max="256">
+            <label>Neurônios</label>
+            <input type="number" [value]="layer().neurons" (input)="onNeuronsInput($event)" min="1" max="32">
         </div>
 
         @if (!isInput()) {
         <div class="control-group">
-            <label>Activation</label>
-            <select [value]="layer().activation" (change)="updateActivation($event)">
-                @for (opt of activationOptions; track opt.value) {
-                <option [value]="opt.value">{{ opt.label }}</option>
+            <label>Ativação</label>
+            <select [value]="layer().activation" (change)="onActivationChange($event)">
+                @for (option of activationOptions; track option.value) {
+                <option [value]="option.value">{{ option.label }}</option>
                 }
             </select>
         </div>
