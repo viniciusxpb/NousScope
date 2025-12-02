@@ -22,7 +22,7 @@
 
     &.invalid {
         border-color: var(--color-error);
-        background: rgba(255, 71, 87, 0.1);
+        background: var(--color-error-bg);
     }
 }
 
@@ -137,7 +137,7 @@
     }
 
     &.btn-danger:hover:not(:disabled) {
-        background: rgba(255, 71, 87, 0.2);
+        background: var(--color-error-bg-hover);
         color: var(--color-error);
     }
 }
@@ -146,7 +146,7 @@
     margin-top: var(--space-xs);
     margin-left: calc(28px + var(--space-xs) + 24px + var(--space-xs));
     padding: var(--space-xs) var(--space-sm);
-    background: rgba(255, 71, 87, 0.1);
+    background: var(--color-error-bg);
     border-radius: var(--radius-sm);
     color: var(--color-error);
     font-size: 0.8em;

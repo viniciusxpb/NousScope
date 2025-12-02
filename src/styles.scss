@@ -1,9 +1,71 @@
-/* Global Styles */
+/* Global Styles e Variáveis CSS */
+
+/* Todas as variáveis CSS do projeto (injetadas via AppComponent + constantes) */
 :root {
+    /* Core colors */
     --color-background: #1a1a2e;
     --color-text: #eeeeee;
-    --font-primary: system-ui, -apple-system, sans-serif;
-    --font-mono: monospace;
+    --color-panel: #16213e;
+    --color-panelHover: #1a2744;
+    --color-canvasBg: #0f0f23;
+
+    /* Brand colors */
+    --color-primary: #00d9ff;
+    --color-primaryHover: #00b8d9;
+    --color-secondary: #ff6b6b;
+    --color-secondaryHover: #ff5252;
+
+    /* Semantic colors */
+    --color-success: #2ed573;
+    --color-warning: #ffa502;
+    --color-error: #ff4757;
+
+    /* Text colors */
+    --color-textMuted: #888888;
+    --color-textDark: #333333;
+
+    /* UI elements */
+    --color-grid: #1a1a3e;
+    --color-axis: #444444;
+    --color-inputBg: #0d1117;
+    --color-inputBorder: #333333;
+    --color-inputFocus: #00d9ff;
+
+    /* Layer colors */
+    --color-layerInput: #2ed573;
+    --color-layerHidden: #ffa502;
+    --color-layerOutput: #ff6b6b;
+
+    /* Fonts */
+    --font-primary: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    --font-mono: 'JetBrains Mono', 'Fira Code', 'Courier New', monospace;
+
+    /* Border radius */
+    --radius-xs: 2px;
+    --radius-sm: 4px;
+    --radius-md: 6px;
+    --radius-lg: 8px;
+    --radius-xl: 12px;
+    --radius-full: 9999px;
+
+    /* Spacing */
+    --space-xs: 4px;
+    --space-sm: 8px;
+    --space-md: 16px;
+    --space-lg: 24px;
+    --space-xl: 32px;
+    --space-xxl: 48px;
+
+    /* Shadows */
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
+    --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.4);
+    --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.5);
+
+    /* Semi-transparent colors (alpha variants) */
+    --color-error-bg: rgba(255, 71, 87, 0.1);
+    --color-error-bg-hover: rgba(255, 71, 87, 0.2);
+    --color-primary-bg: rgba(0, 217, 255, 0.1);
+    --color-overlay-dark: rgba(0, 0, 0, 0.7);
 }
 
 html,
@@ -38,5 +100,5 @@ body {
 }
 
 ::-webkit-scrollbar-thumb:hover {
-    background: var(--color-text-muted);
+    background: var(--color-textMuted);
 }

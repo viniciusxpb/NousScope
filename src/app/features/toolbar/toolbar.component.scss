@@ -32,7 +32,7 @@ button {
     }
 
     &.active {
-        background: rgba(0, 217, 255, 0.1);
+        background: var(--color-primary-bg);
         border-color: var(--color-primary);
         color: var(--color-primary);
     }

@@ -5,7 +5,7 @@
   overflow: hidden;
   background-color: var(--color-canvas-bg);
   cursor: grab;
-  
+
   &:active {
     cursor: grabbing;
   }
@@ -19,13 +19,13 @@ canvas {
 
 .overlay-info {
   position: absolute;
-  bottom: var(--space-md);
-  right: var(--space-md);
-  background: rgba(0, 0, 0, 0.7);
-  padding: var(--space-sm) var(--space-md);
-  border-radius: var(--radius-md);
-  color: var(--color-text-muted);
+  top: var(--space-sm);
+  right: var(--space-sm);
+  background: var(--color-overlay-dark);
+  padding: var(--space-xs) var(--space-sm);
+  border-radius: var(--radius-sm);
+  font-size: 0.85em;
+  color: var(--color-text);
   font-family: var(--font-mono);
-  font-size: 12px;
   pointer-events: none;
 }

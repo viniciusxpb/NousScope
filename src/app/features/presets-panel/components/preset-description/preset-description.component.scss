@@ -33,12 +33,12 @@
     }
 
     .danger {
-        background: rgba(255, 71, 87, 0.1);
+        background: var(--color-error-bg);
         border-left: 3px solid var(--color-error);
     }
 
     .insight {
-        background: rgba(0, 217, 255, 0.1);
+        background: var(--color-primary-bg);
         border-left: 3px solid var(--color-primary);
     }
 }
