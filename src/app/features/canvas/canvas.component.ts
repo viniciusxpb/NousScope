@@ -61,6 +61,7 @@ export class CanvasComponent implements AfterViewInit, OnDestroy {
         // React to canvas color changes
         this.canvasConfig.backgroundColor();
         this.canvasConfig.gridColor();
+        this.canvasConfig.textColor();
         this.requestRender();
     });
 
@@ -327,7 +328,7 @@ export class CanvasComponent implements AfterViewInit, OnDestroy {
 
             // Draw layer label
             const y = this.getNodeY(layer.neurons - 1, layer.neurons, centerY) + this.offsetY() + 30;
-            ctx.fillStyle = this.config.theme.colors.text;
+            ctx.fillStyle = this.canvasConfig.textColor();
             ctx.font = '12px monospace';
             ctx.textAlign = 'center';
             ctx.fillText(

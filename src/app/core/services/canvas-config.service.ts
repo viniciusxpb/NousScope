@@ -14,6 +14,7 @@ export class CanvasConfigService {
     // Canvas colors as signals
     public readonly backgroundColor = signal(this.config.theme.colors.canvasBg);
     public readonly gridColor = signal(this.config.theme.colors.grid);
+    public readonly textColor = signal(this.config.theme.colors.text);
     public readonly themePreset = signal<'white' | 'black' | 'custom'>('black');
 
     constructor() {
@@ -31,6 +32,7 @@ export class CanvasConfigService {
                 if (data.themePreset) this.themePreset.set(data.themePreset);
                 if (data.backgroundColor) this.backgroundColor.set(data.backgroundColor);
                 if (data.gridColor) this.gridColor.set(data.gridColor);
+                if (data.textColor) this.textColor.set(data.textColor);
 
                 // Aplicar tema visualmente
                 this.applyTheme(this.themePreset(), this.backgroundColor(), this.gridColor());
@@ -47,7 +49,8 @@ export class CanvasConfigService {
         const data = {
             themePreset: this.themePreset(),
             backgroundColor: this.backgroundColor(),
-            gridColor: this.gridColor()
+            gridColor: this.gridColor(),
+            textColor: this.textColor()
         };
         localStorage.setItem(this.STORAGE_KEY, JSON.stringify(data));
     }
@@ -61,9 +64,11 @@ export class CanvasConfigService {
         if (preset === 'white') {
             this.setBackgroundColor('#ffffff', false);
             this.setGridColor('#cccccc', false);
+            this.setTextColor('#333333', false);
         } else if (preset === 'black') {
             this.setBackgroundColor('#0f0f23', false);
             this.setGridColor('#1a1a3e', false);
+            this.setTextColor('#eeeeee', false);
         }
 
         this.applyTheme(preset, this.backgroundColor(), this.gridColor());
@@ -121,6 +126,20 @@ export class CanvasConfigService {
             if (this.themePreset() !== 'custom') {
                 this.themePreset.set('custom');
                 this.applyTheme('custom', this.backgroundColor(), color);
+            }
+            this.saveToStorage();
+        }
+    }
+
+    /**
+     * Atualiza a cor do texto no canvas.
+     */
+    setTextColor(color: string, save = true): void {
+        this.textColor.set(color);
+
+        if (save) {
+            if (this.themePreset() !== 'custom') {
+                this.themePreset.set('custom');
             }
             this.saveToStorage();
         }
