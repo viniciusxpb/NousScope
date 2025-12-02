@@ -150,35 +150,42 @@ export class CanvasRendererComponent implements AfterViewInit, OnChanges, OnDest
         const scale = this.scale;
         const offsetX = this.offsetX;
         const offsetY = this.offsetY;
+        const centerX = width / 2 + offsetX;
+        const centerY = height / 2 + offsetY;
 
         ctx.strokeStyle = this.config.theme.colors.grid;
         ctx.lineWidth = 1;
         ctx.setLineDash([2, 4]);
 
-        const step = 50; // Grid step in pixels
-        const startX = Math.floor(-offsetX / step) * step;
-        const startY = Math.floor(-offsetY / step) * step;
+        // Calculate visible range in math coordinates
+        const minX = this.screenToMathX(0);
+        const maxX = this.screenToMathX(width);
+        const minY = this.screenToMathY(height); // Y is inverted
+        const maxY = this.screenToMathY(0);
+
+        // Determine step size based on scale
+        const step = this.getStepSize(scale);
+
+        // Snap start to step
+        const startX = Math.floor(minX / step) * step;
+        const startY = Math.floor(minY / step) * step;
 
         // Vertical lines
-        for (let x = startX; x < width; x += step) {
-            const screenX = x + offsetX;
-            if (screenX >= 0 && screenX <= width) {
-                ctx.beginPath();
-                ctx.moveTo(screenX, 0);
-                ctx.lineTo(screenX, height);
-                ctx.stroke();
-            }
+        for (let x = startX; x <= maxX; x += step) {
+            const screenX = x * scale + centerX;
+            ctx.beginPath();
+            ctx.moveTo(screenX, 0);
+            ctx.lineTo(screenX, height);
+            ctx.stroke();
         }
 
         // Horizontal lines
-        for (let y = startY; y < height; y += step) {
-            const screenY = y + offsetY;
-            if (screenY >= 0 && screenY <= height) {
-                ctx.beginPath();
-                ctx.moveTo(0, screenY);
-                ctx.lineTo(width, screenY);
-                ctx.stroke();
-            }
+        for (let y = startY; y <= maxY; y += step) {
+            const screenY = centerY - y * scale;
+            ctx.beginPath();
+            ctx.moveTo(0, screenY);
+            ctx.lineTo(width, screenY);
+            ctx.stroke();
         }
 
         ctx.setLineDash([]);
@@ -223,6 +230,90 @@ export class CanvasRendererComponent implements AfterViewInit, OnChanges, OnDest
         ctx.lineTo(centerX, 0);
         ctx.lineTo(centerX + arrowSize / 2, arrowSize);
         ctx.stroke();
+        
+        // Draw labels
+        this.drawAxisLabels(width, height, centerX, centerY);
+    }
+
+    private drawAxisLabels(width: number, height: number, centerX: number, centerY: number): void {
+        const ctx = this.ctx;
+        const scale = this.scale;
+        
+        ctx.fillStyle = this.config.theme.colors.axis;
+        ctx.font = '12px monospace';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'top';
+
+        // Calculate visible range
+        const minX = this.screenToMathX(0);
+        const maxX = this.screenToMathX(width);
+        const minY = this.screenToMathY(height);
+        const maxY = this.screenToMathY(0);
+
+        const step = this.getStepSize(scale);
+
+        // X Axis Labels
+        const startX = Math.floor(minX / step) * step;
+        for (let x = startX; x <= maxX; x += step) {
+            if (Math.abs(x) < step / 10) continue; // Skip 0 (origin)
+            
+            const screenX = x * scale + centerX;
+            // Draw tick
+            ctx.beginPath();
+            ctx.moveTo(screenX, centerY - 5);
+            ctx.lineTo(screenX, centerY + 5);
+            ctx.stroke();
+
+            // Draw label
+            ctx.fillText(x.toString(), screenX, centerY + 8);
+        }
+
+        // Y Axis Labels
+        ctx.textAlign = 'right';
+        ctx.textBaseline = 'middle';
+        const startY = Math.floor(minY / step) * step;
+        for (let y = startY; y <= maxY; y += step) {
+            if (Math.abs(y) < step / 10) continue; // Skip 0
+            
+            const screenY = centerY - y * scale;
+            
+            // Draw tick
+            ctx.beginPath();
+            ctx.moveTo(centerX - 5, screenY);
+            ctx.lineTo(centerX + 5, screenY);
+            ctx.stroke();
+
+            // Draw label
+            ctx.fillText(y.toString(), centerX - 8, screenY);
+        }
+        
+        // Draw Origin (0,0)
+        ctx.textAlign = 'right';
+        ctx.textBaseline = 'top';
+        ctx.fillText('0', centerX - 5, centerY + 5);
+    }
+
+    private getStepSize(scale: number): number {
+        // Target about 50-100 pixels per step
+        const targetPixels = 50;
+        const rawStep = targetPixels / scale;
+        
+        // Find nearest nice step (1, 2, 5, 10, etc.)
+        const magnitude = Math.pow(10, Math.floor(Math.log10(rawStep)));
+        const normalizedStep = rawStep / magnitude;
+        
+        let step;
+        if (normalizedStep < 1.5) step = 1;
+        else if (normalizedStep < 3.5) step = 2;
+        else if (normalizedStep < 7.5) step = 5;
+        else step = 10;
+        
+        return step * magnitude;
+    }
+
+    private screenToMathY(sy: number): number {
+        const centerY = this.ctx.canvas.height / 2 + this.offsetY;
+        return (centerY - sy) / this.scale;
     }
 
     private drawNetwork(width: number, height: number): void {
