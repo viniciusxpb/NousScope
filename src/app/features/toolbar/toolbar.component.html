@@ -1,31 +1,31 @@
 <div class="toolbar">
     <div class="group">
-        <button (click)="randomize()" title="Randomize Weights">
-            🎲 Randomize
+        <button (click)="randomize()" title="Aleatorizar Pesos">
+            🎲 Aleatorizar
         </button>
-        <button (click)="toggleNetwork()" [class.active]="showNetwork()" title="Toggle Network View">
-            🕸️ Network
+        <button (click)="toggleNetwork()" [class.active]="showNetwork()" title="Mostrar/Ocultar Rede">
+            🕸️ Rede
         </button>
     </div>
 
     <div class="group">
-        <button (click)="resetView()" title="Reset View">
-            ⟲ Reset
+        <button (click)="resetView()" title="Resetar Visualização">
+            ⟲ Resetar
         </button>
-        <button (click)="zoomOut()" title="Zoom Out">
+        <button (click)="zoomOut()" title="Diminuir Zoom">
             -
         </button>
-        <button (click)="zoomIn()" title="Zoom In">
+        <button (click)="zoomIn()" title="Aumentar Zoom">
             +
         </button>
-        <button (click)="toggleSettings()" [class.active]="showSettings()" title="Canvas Settings">
+        <button (click)="toggleSettings()" [class.active]="showSettings()" title="Configurações do Canvas">
             ⚙️
         </button>
     </div>
 
     @if (showSettings()) {
     <div class="settings-panel">
-        <h4>Canvas Settings</h4>
+        <h4>Configurações do Canvas</h4>
 
         <div class="setting-row">
             <label>Tema</label>
@@ -33,19 +33,19 @@
                 class="theme-select">
                 <option value="white">⚪ Branco</option>
                 <option value="black">⚫ Preto</option>
-                <option value="custom">🎨 Custom</option>
+                <option value="custom">🎨 Personalizado</option>
             </select>
         </div>
 
         @if (themePreset() === 'custom') {
         <div class="custom-colors">
             <div class="setting-row">
-                <label>Background</label>
+                <label>Fundo</label>
                 <input type="color" [value]="canvasBgColor()" (input)="onCanvasBgChange($any($event.target).value)" />
             </div>
 
             <div class="setting-row">
-                <label>Grid</label>
+                <label>Grade</label>
                 <input type="color" [value]="gridColor()" (input)="onGridColorChange($any($event.target).value)" />
             </div>
         </div>

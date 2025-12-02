@@ -29,3 +29,60 @@ canvas {
   font-family: var(--font-mono);
   pointer-events: none;
 }
+
+.crop-box-overlay {
+  position: absolute;
+  border: 3px dashed var(--color-primary);
+  background: rgba(0, 217, 255, 0.05);
+  cursor: move;
+  z-index: 100;
+
+  .crop-handle {
+    position: absolute;
+    width: var(--size-icon-sm);
+    height: var(--size-icon-sm);
+    background: var(--color-primary);
+    border: 2px solid var(--color-background);
+    cursor: nwse-resize;
+
+    &.crop-handle-nw {
+      top: calc(-1 * var(--space-sm));
+      left: calc(-1 * var(--space-sm));
+      cursor: nwse-resize;
+    }
+
+    &.crop-handle-ne {
+      top: calc(-1 * var(--space-sm));
+      right: calc(-1 * var(--space-sm));
+      cursor: nesw-resize;
+    }
+
+    &.crop-handle-sw {
+      bottom: calc(-1 * var(--space-sm));
+      left: calc(-1 * var(--space-sm));
+      cursor: nesw-resize;
+    }
+
+    &.crop-handle-se {
+      bottom: calc(-1 * var(--space-sm));
+      right: calc(-1 * var(--space-sm));
+      cursor: nwse-resize;
+    }
+  }
+
+  .crop-info {
+    position: absolute;
+    bottom: calc(-1 * var(--space-xl));
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--color-primary);
+    color: var(--color-background);
+    padding: var(--space-xs) var(--space-sm);
+    border-radius: var(--radius-sm);
+    font-size: var(--font-size-sm);
+    font-family: var(--font-mono);
+    font-weight: 600;
+    white-space: nowrap;
+    pointer-events: none;
+  }
+}

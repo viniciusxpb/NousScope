@@ -37,6 +37,12 @@
                         <span class="tab-label">Compare</span>
                         }
                     </button>
+                    <button class="tab-button" [class.active]="activeTab() === 'print'" (click)="setActiveTab('print')">
+                        <span class="tab-icon">🖨️</span>
+                        @if (activeTab() === 'print') {
+                        <span class="tab-label">Print</span>
+                        }
+                    </button>
                 </div>
 
                 <div class="tabs-content">
@@ -48,6 +54,9 @@
                     }
                     @if (activeTab() === 'compare') {
                     <app-compare-panel></app-compare-panel>
+                    }
+                    @if (activeTab() === 'print') {
+                    <app-print-panel></app-print-panel>
                     }
                 </div>
             </div>

@@ -1,0 +1,32 @@
+<div class="print-panel">
+    <header class="panel-header">
+        <h3>🖨️ Exportar Imagem</h3>
+    </header>
+
+    <div class="panel-content">
+        <div class="control-group">
+            <button class="btn btn-primary" (click)="toggleCropBox()" [class.active]="showCropBox()">
+                {{ showCropBox() ? '✓ Área Selecionada' : '📐 Selecionar Área' }}
+            </button>
+        </div>
+
+        @if (showCropBox()) {
+        <div class="info-box">
+            <p><strong>Dimensões:</strong></p>
+            <p>{{ cropBoxWidth() }} × {{ cropBoxHeight() }} px</p>
+        </div>
+
+        <div class="control-group">
+            <button class="btn btn-success" (click)="exportImage()">
+                💾 Baixar Imagem
+            </button>
+        </div>
+        }
+
+        <div class="help-text">
+            <p>📌 Clique em "Selecionar Área" para mostrar o quadrado de seleção no canvas</p>
+            <p>🖱️ Arraste as bordas para ajustar o tamanho</p>
+            <p>💾 Clique em "Baixar Imagem" para exportar</p>
+        </div>
+    </div>
+</div>

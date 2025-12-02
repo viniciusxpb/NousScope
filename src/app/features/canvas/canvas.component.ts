@@ -14,6 +14,7 @@ import { ConfigService } from '../../core/services/config.service';
 import { NetworkService } from '../../core/services/network.service';
 import { FormulaService } from '../formula-plotter/services/formula.service';
 import { CanvasConfigService } from '../../core/services/canvas-config.service';
+import { PrintService } from '../../core/services/print.service';
 import { CanvasInteractionDirective } from './directives/canvas-interaction.directive';
 
 @Component({
@@ -30,6 +31,7 @@ export class CanvasComponent implements AfterViewInit, OnDestroy {
     private readonly network = inject(NetworkService);
     private readonly formulaService = inject(FormulaService);
     private readonly canvasConfig = inject(CanvasConfigService);
+    private readonly printService = inject(PrintService);
 
     private ctx!: CanvasRenderingContext2D;
     private animationFrameId?: number;
@@ -38,6 +40,10 @@ export class CanvasComponent implements AfterViewInit, OnDestroy {
     readonly scale = signal(50);
     readonly offsetX = signal(0);
     readonly offsetY = signal(0);
+
+    // Crop box for export (from PrintService)
+    readonly showCropBox = this.printService.showCropBox;
+    readonly cropBox = this.printService.cropBox;
 
     // Derived state for rendering
     private readonly layers = this.network.layers;
@@ -87,6 +93,33 @@ export class CanvasComponent implements AfterViewInit, OnDestroy {
             // This is a simplified zoom, can be improved
             return newScale;
         });
+    }
+
+    onCropBoxMouseDown(event: MouseEvent): void {
+        // Implementação básica - apenas drag do box inteiro por enquanto
+        event.stopPropagation();
+        const startX = event.clientX;
+        const startY = event.clientY;
+        const box = this.cropBox();
+        const startBoxX = box.x;
+        const startBoxY = box.y;
+
+        const onMouseMove = (e: MouseEvent) => {
+            const dx = e.clientX - startX;
+            const dy = e.clientY - startY;
+            this.printService.updateCropBox({
+                x: startBoxX + dx,
+                y: startBoxY + dy
+            });
+        };
+
+        const onMouseUp = () => {
+            document.removeEventListener('mousemove', onMouseMove);
+            document.removeEventListener('mouseup', onMouseUp);
+        };
+
+        document.addEventListener('mousemove', onMouseMove);
+        document.addEventListener('mouseup', onMouseUp);
     }
 
     private resizeCanvas(): void {

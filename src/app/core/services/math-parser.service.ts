@@ -81,19 +81,20 @@ export class MathParserService {
             .replace(/\bpi\b/gi, `(${Math.PI})`)
             .replace(/\be\b/gi, `(${Math.E})`)
             .replace(/\btau\b/gi, `(${Math.PI * 2})`)
-            .replace(/\bphi\b/gi, `(${(1 + Math.sqrt(5)) / 2})`)
-            // Multiplicação implícita: 2x -> 2*x, x( -> x*(
-            .replace(/(\d)([a-z])/gi, '$1*$2')
-            .replace(/(\d)\(/g, '$1*(')
-            .replace(/\)(\d)/g, ')*$1')
-            .replace(/\)([a-z])/gi, ')*$1')
-            .replace(/([a-z])\(/gi, '$1*(');
+            .replace(/\bphi\b/gi, `(${(1 + Math.sqrt(5)) / 2})`);
 
-        // Substituir funções por Math.fn
+        // Substituir funções ANTES da multiplicação implícita
         for (const fnName of Object.keys(this.functions)) {
             const regex = new RegExp(`\\b${fnName}\\b`, 'gi');
             result = result.replace(regex, `Math.${fnName}`);
         }
+
+        // Multiplicação implícita: 2x -> 2*x, mas NÃO em funções já substituídas
+        result = result
+            .replace(/(\d)([a-z])/gi, '$1*$2')
+            .replace(/(\d)\(/g, '$1*(')
+            .replace(/\)(\d)/g, ')*$1')
+            .replace(/\)([a-z])/gi, ')*$1');
 
         return result;
     }

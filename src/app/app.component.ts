@@ -6,6 +6,7 @@ import { ArchitecturePanelComponent } from './features/architecture-panel/archit
 import { ComparePanelComponent } from './features/compare-panel/compare-panel.component';
 import { ToolbarComponent } from './features/toolbar/toolbar.component';
 import { FormulaPLotterComponent } from './features/formula-plotter/formula-plotter.component';
+import { PrintPanelComponent } from './features/print-panel/print-panel.component';
 
 @Component({
     selector: 'app-root',
@@ -17,6 +18,7 @@ import { FormulaPLotterComponent } from './features/formula-plotter/formula-plot
         ComparePanelComponent,
         ToolbarComponent,
         FormulaPLotterComponent,
+        PrintPanelComponent,
     ],
     templateUrl: './app.component.html',
     styleUrl: './app.component.scss',
@@ -24,7 +26,7 @@ import { FormulaPLotterComponent } from './features/formula-plotter/formula-plot
 export class AppComponent implements OnInit {
     private readonly config = inject(ConfigService);
 
-    protected readonly activeTab = signal<'architecture' | 'formulas' | 'compare'>('architecture');
+    protected readonly activeTab = signal<'architecture' | 'formulas' | 'compare' | 'print'>('architecture');
     protected readonly rightPanelWidth = signal<number>(320);
     private isResizing = false;
     private startX = 0;
@@ -34,7 +36,7 @@ export class AppComponent implements OnInit {
         this.injectCssVariables();
     }
 
-    protected setActiveTab(tab: 'architecture' | 'formulas' | 'compare'): void {
+    protected setActiveTab(tab: 'architecture' | 'formulas' | 'compare' | 'print'): void {
         this.activeTab.set(tab);
     }
 

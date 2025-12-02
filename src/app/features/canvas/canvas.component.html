@@ -1,6 +1,19 @@
 <div class="canvas-container" appCanvasInteraction (pan)="onPan($event)" (zoom)="onZoom($event)">
   <canvas #canvas></canvas>
 
+  @if (showCropBox()) {
+  <div class="crop-box-overlay" [style.left.px]="cropBox().x" [style.top.px]="cropBox().y"
+    [style.width.px]="cropBox().width" [style.height.px]="cropBox().height" (mousedown)="onCropBoxMouseDown($event)">
+    <div class="crop-handle crop-handle-nw" data-handle="nw"></div>
+    <div class="crop-handle crop-handle-ne" data-handle="ne"></div>
+    <div class="crop-handle crop-handle-sw" data-handle="sw"></div>
+    <div class="crop-handle crop-handle-se" data-handle="se"></div>
+    <div class="crop-info">
+      {{ cropBox().width }} × {{ cropBox().height }} px
+    </div>
+  </div>
+  }
+
   <div class="overlay-info">
     <div>Scale: {{ scale() | number:'1.0-1' }}x</div>
     <div>Offset: ({{ offsetX() | number:'1.0-0' }}, {{ offsetY() | number:'1.0-0' }})</div>
