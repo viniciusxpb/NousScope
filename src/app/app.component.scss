@@ -30,11 +30,34 @@
 
 .right-panel {
     flex: 0 0 auto;
-    width: 300px;
     display: flex;
     flex-direction: column;
     gap: var(--space-md);
     overflow-y: auto;
+    border-left: 1px solid var(--color-grid);
+}
+
+.resize-handle {
+    width: 4px;
+    background: transparent;
+    cursor: col-resize;
+    position: relative;
+    flex-shrink: 0;
+    transition: background-color 0.2s ease;
+
+    &:hover,
+    &:active {
+        background: var(--color-primary);
+    }
+
+    &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: calc(-1 * var(--space-xs));
+        right: calc(-1 * var(--space-xs));
+    }
 }
 
 .tabs-container {
@@ -52,8 +75,11 @@
 }
 
 .tab-button {
-    flex: 1;
-    padding: var(--space-sm) var(--space-md);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-xs);
+    padding: var(--space-sm);
     background: transparent;
     border: none;
     border-radius: var(--radius-sm);
@@ -62,6 +88,16 @@
     cursor: pointer;
     transition: all 0.2s ease;
     white-space: nowrap;
+    min-width: 36px;
+
+    .tab-icon {
+        font-size: 1.2em;
+        display: block;
+    }
+
+    .tab-label {
+        display: block;
+    }
 
     &:hover {
         background: var(--color-panelHover);
@@ -72,6 +108,8 @@
         background: var(--color-panel);
         color: var(--color-primary);
         font-weight: 600;
+        padding: var(--space-sm) var(--space-md);
+        flex: 1;
     }
 }
 

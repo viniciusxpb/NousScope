@@ -1,4 +1,4 @@
-import { Component, OnInit, inject, signal } from '@angular/core';
+import { Component, OnInit, inject, signal, HostListener } from '@angular/core';
 import { ConfigService } from './core/services/config.service';
 import { CanvasComponent } from './features/canvas/canvas.component';
 import { PresetsPanelComponent } from './features/presets-panel/presets-panel.component';
@@ -25,6 +25,10 @@ export class AppComponent implements OnInit {
     private readonly config = inject(ConfigService);
 
     protected readonly activeTab = signal<'architecture' | 'formulas' | 'compare'>('architecture');
+    protected readonly rightPanelWidth = signal<number>(320);
+    private isResizing = false;
+    private startX = 0;
+    private startWidth = 0;
 
     ngOnInit(): void {
         this.injectCssVariables();
@@ -32,6 +36,33 @@ export class AppComponent implements OnInit {
 
     protected setActiveTab(tab: 'architecture' | 'formulas' | 'compare'): void {
         this.activeTab.set(tab);
+    }
+
+    protected onResizeStart(event: MouseEvent): void {
+        event.preventDefault();
+        this.isResizing = true;
+        this.startX = event.clientX;
+        this.startWidth = this.rightPanelWidth();
+        document.body.style.cursor = 'col-resize';
+        document.body.style.userSelect = 'none';
+    }
+
+    @HostListener('document:mousemove', ['$event'])
+    onMouseMove(event: MouseEvent): void {
+        if (!this.isResizing) return;
+
+        const deltaX = this.startX - event.clientX;
+        const newWidth = Math.max(250, Math.min(600, this.startWidth + deltaX));
+        this.rightPanelWidth.set(newWidth);
+    }
+
+    @HostListener('document:mouseup')
+    onMouseUp(): void {
+        if (this.isResizing) {
+            this.isResizing = false;
+            document.body.style.cursor = '';
+            document.body.style.userSelect = '';
+        }
     }
 
     private injectCssVariables(): void {

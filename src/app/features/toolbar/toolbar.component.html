@@ -18,5 +18,24 @@
         <button (click)="zoomIn()" title="Zoom In">
             +
         </button>
+        <button (click)="toggleSettings()" [class.active]="showSettings()" title="Canvas Settings">
+            ⚙️
+        </button>
     </div>
+
+    @if (showSettings()) {
+    <div class="settings-panel">
+        <h4>Canvas Settings</h4>
+
+        <div class="setting-row">
+            <label>Background Color</label>
+            <input type="color" [value]="canvasBgColor()" (input)="onCanvasBgChange($any($event.target).value)" />
+        </div>
+
+        <div class="setting-row">
+            <label>Grid Color</label>
+            <input type="color" [value]="gridColor()" (input)="onGridColorChange($any($event.target).value)" />
+        </div>
+    </div>
+    }
 </div>

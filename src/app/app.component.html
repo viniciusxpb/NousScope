@@ -10,20 +10,32 @@
             <app-canvas></app-canvas>
         </main>
 
-        <aside class="right-panel">
+        <div class="resize-handle" (mousedown)="onResizeStart($event)" title="Arrastar para redimensionar">
+        </div>
+
+        <aside class="right-panel" [style.width.px]="rightPanelWidth()">
             <div class="tabs-container">
                 <div class="tabs-header">
                     <button class="tab-button" [class.active]="activeTab() === 'architecture'"
                         (click)="setActiveTab('architecture')">
-                        🏗️ Architecture
+                        <span class="tab-icon">🏗️</span>
+                        @if (activeTab() === 'architecture') {
+                        <span class="tab-label">Architecture</span>
+                        }
                     </button>
                     <button class="tab-button" [class.active]="activeTab() === 'formulas'"
                         (click)="setActiveTab('formulas')">
-                        📐 Fórmulas
+                        <span class="tab-icon">📐</span>
+                        @if (activeTab() === 'formulas') {
+                        <span class="tab-label">Fórmulas</span>
+                        }
                     </button>
                     <button class="tab-button" [class.active]="activeTab() === 'compare'"
                         (click)="setActiveTab('compare')">
-                        🔬 Compare
+                        <span class="tab-icon">🔬</span>
+                        @if (activeTab() === 'compare') {
+                        <span class="tab-label">Compare</span>
+                        }
                     </button>
                 </div>
 
