@@ -27,47 +27,7 @@ import { PlottedFormula } from '../../../../core/models/formula.model';
             </div>
         </div>
     `,
-    styles: [`
-        .graph-wrapper {
-            position: relative;
-            width: 100%;
-            height: 100%;
-        }
-        
-        app-canvas-renderer {
-            width: 100%;
-            height: 100%;
-            display: block;
-        }
-
-        .controls {
-            position: absolute;
-            bottom: 10px;
-            right: 10px;
-            display: flex;
-            gap: 5px;
-            opacity: 0;
-            transition: opacity 0.2s;
-        }
-
-        .graph-wrapper:hover .controls {
-            opacity: 1;
-        }
-
-        button {
-            background: rgba(255, 255, 255, 0.9);
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            padding: 4px 8px;
-            cursor: pointer;
-            font-size: 14px;
-            
-            &:hover {
-                background: #fff;
-                border-color: #999;
-            }
-        }
-    `]
+    styleUrl: './embedded-graph.component.scss'
 })
 export class EmbeddedGraphComponent {
     @Input() config!: RendererConfig;
