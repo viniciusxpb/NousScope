@@ -6,7 +6,6 @@ import { ConfigService } from './config.service';
  * Serviço para gerenciar configurações visuais do canvas.
  * Usa Signals para reatividade.
  */
-@Injectable({ providedIn: 'root' })
 interface CanvasConfig {
     themePreset?: 'white' | 'black' | 'custom';
     backgroundColor?: string;
