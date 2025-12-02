@@ -92,13 +92,28 @@ export class CanvasComponent implements AfterViewInit, OnDestroy {
 
     onZoom(event: { factor: number; x: number; y: number }): void {
         const { minScale, maxScale } = this.config.canvas;
+        const currentScale = this.scale();
+        const newScale = Math.max(minScale, Math.min(maxScale, currentScale * event.factor));
 
-        this.scale.update(s => {
-            const newScale = Math.max(minScale, Math.min(maxScale, s * event.factor));
-            // Adjust offset to zoom towards mouse pointer
-            // This is a simplified zoom, can be improved
-            return newScale;
-        });
+        if (newScale === currentScale) return;
+
+        const canvas = this.canvasRef.nativeElement;
+        const rect = canvas.getBoundingClientRect();
+        
+        // Mouse position relative to canvas center
+        const mouseX = event.x - rect.width / 2;
+        const mouseY = event.y - rect.height / 2;
+
+        // Calculate new offsets to keep the point under mouse stationary
+        // WorldX = (MouseX - OffsetX) / Scale
+        // MouseX = OffsetX + WorldX * Scale
+        // We want: MouseX = NewOffsetX + WorldX * NewScale
+        // => NewOffsetX = MouseX - WorldX * NewScale
+        // => NewOffsetX = MouseX - ((MouseX - OffsetX) / Scale) * NewScale
+        
+        this.offsetX.update(ox => mouseX - ((mouseX - ox) / currentScale) * newScale);
+        this.offsetY.update(oy => mouseY - ((mouseY - oy) / currentScale) * newScale);
+        this.scale.set(newScale);
     }
 
     onCropBoxMouseDown(event: MouseEvent): void {
