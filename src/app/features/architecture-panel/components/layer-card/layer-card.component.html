@@ -9,8 +9,7 @@
     <div class="controls">
         <div class="control-group">
             <label>Neurons</label>
-            <input type="number" [value]="layer().neurons" (input)="updateNeurons(+$any($event.target).value)" min="1"
-                max="256">
+            <input type="number" [value]="layer().neurons" (input)="onNeuronsInput($event)" min="1" max="256">
         </div>
 
         @if (!isInput()) {

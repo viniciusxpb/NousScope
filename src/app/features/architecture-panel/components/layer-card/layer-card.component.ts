@@ -33,6 +33,11 @@ export class LayerCardComponent {
         this.network.updateActivation(this.layer().id, select.value as ActivationType);
     }
 
+    onNeuronsInput(event: Event): void {
+        const value = +(event.target as HTMLInputElement).value;
+        this.updateNeurons(value);
+    }
+
     remove(): void {
         this.network.removeLayer(this.layer().id);
     }

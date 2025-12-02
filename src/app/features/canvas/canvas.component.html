@@ -3,7 +3,8 @@
 
   @if (showCropBox()) {
   <div class="crop-box-overlay" [style.left.px]="cropBox().x" [style.top.px]="cropBox().y"
-    [style.width.px]="cropBox().width" [style.height.px]="cropBox().height" (mousedown)="onCropBoxMouseDown($event)">
+    [style.width.px]="cropBox().width" [style.height.px]="cropBox().height">
+    <div class="crop-drag-area" (mousedown)="onCropBoxMouseDown($event)"></div>
     <div class="crop-handle crop-handle-nw" data-handle="nw"></div>
     <div class="crop-handle crop-handle-ne" data-handle="ne"></div>
     <div class="crop-handle crop-handle-sw" data-handle="sw"></div>

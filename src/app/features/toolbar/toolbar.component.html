@@ -6,6 +6,9 @@
         <button (click)="toggleNetwork()" [class.active]="showNetwork()" title="Mostrar/Ocultar Rede">
             🕸️ Rede
         </button>
+        <button (click)="resetAll()" title="Limpar tudo e resetar visualização" class="btn-danger">
+            🔄 Limpar Tudo
+        </button>
     </div>
 
     <div class="group">
@@ -29,8 +32,7 @@
 
         <div class="setting-row">
             <label>Tema</label>
-            <select [value]="themePreset()" (change)="onThemePresetChange($any($event.target).value)"
-                class="theme-select">
+            <select [value]="themePreset()" (change)="onThemeSelectChange($event)" class="theme-select">
                 <option value="white">⚪ Branco</option>
                 <option value="black">⚫ Preto</option>
                 <option value="custom">🎨 Personalizado</option>
@@ -41,12 +43,12 @@
         <div class="custom-colors">
             <div class="setting-row">
                 <label>Fundo</label>
-                <input type="color" [value]="canvasBgColor()" (input)="onCanvasBgChange($any($event.target).value)" />
+                <input type="color" [value]="canvasBgColor()" (input)="onBgColorInput($event)" />
             </div>
 
             <div class="setting-row">
                 <label>Grade</label>
-                <input type="color" [value]="gridColor()" (input)="onGridColorChange($any($event.target).value)" />
+                <input type="color" [value]="gridColor()" (input)="onGridColorInput($event)" />
             </div>
         </div>
         }

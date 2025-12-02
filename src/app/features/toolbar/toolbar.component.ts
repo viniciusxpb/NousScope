@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { NetworkService } from '../../core/services/network.service';
 import { PlotService } from '../../core/services/plot.service';
 import { CanvasConfigService } from '../../core/services/canvas-config.service';
+import { FormulaService } from '../formula-plotter/services/formula.service';
 
 @Component({
     selector: 'app-toolbar',
@@ -16,6 +17,7 @@ export class ToolbarComponent {
     private readonly network = inject(NetworkService);
     private readonly plot = inject(PlotService);
     private readonly canvasConfig = inject(CanvasConfigService);
+    private readonly formulaService = inject(FormulaService);
 
     readonly showNetwork = this.network.showNetwork;
     readonly showSettings = signal(false);
@@ -47,6 +49,13 @@ export class ToolbarComponent {
         this.plot.zoomOut();
     }
 
+    resetAll(): void {
+        // Limpa TUDO: rede, fórmulas, visualização
+        this.network.buildFromArch([1, 1]); // Rede mínima
+        this.formulaService.clearAll(); // Limpa todas as fórmulas
+        this.plot.resetView(); // Reseta visualização
+    }
+
     toggleSettings(): void {
         this.showSettings.update(v => !v);
     }
@@ -56,12 +65,33 @@ export class ToolbarComponent {
 
         if (preset === 'white') {
             this.canvasConfig.setBackgroundColor('#ffffff');
-            this.canvasConfig.setGridColor('#e0e0e0');
+            this.canvasConfig.setGridColor('#cccccc');
+            // Também definir cores de texto/label escuros
+            document.documentElement.style.setProperty('--color-axis', '#333333');
+            document.documentElement.style.setProperty('--color-axisLabel', '#333333');
         } else if (preset === 'black') {
             this.canvasConfig.setBackgroundColor('#0f0f23');
             this.canvasConfig.setGridColor('#1a1a3e');
+            // Cores claras para fundo escuro
+            document.documentElement.style.setProperty('--color-axis', '#4a5568');
+            document.documentElement.style.setProperty('--color-axisLabel', '#a0aec0');
         }
         // Se for 'custom', não faz nada - usuário usa os color pickers
+    }
+
+    onThemeSelectChange(event: Event): void {
+        const value = (event.target as HTMLSelectElement).value as 'white' | 'black' | 'custom';
+        this.onThemePresetChange(value);
+    }
+
+    onBgColorInput(event: Event): void {
+        const color = (event.target as HTMLInputElement).value;
+        this.onCanvasBgChange(color);
+    }
+
+    onGridColorInput(event: Event): void {
+        const color = (event.target as HTMLInputElement).value;
+        this.onGridColorChange(color);
     }
 
     onCanvasBgChange(color: string): void {

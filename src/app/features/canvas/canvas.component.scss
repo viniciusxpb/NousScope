@@ -33,9 +33,20 @@ canvas {
 .crop-box-overlay {
   position: absolute;
   border: 3px dashed var(--color-primary);
-  background: rgba(0, 217, 255, 0.05);
-  cursor: move;
+  background: transparent;
+  pointer-events: none;
   z-index: 100;
+
+  .crop-drag-area {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 217, 255, 0.05);
+    pointer-events: auto;
+    cursor: move;
+  }
 
   .crop-handle {
     position: absolute;
@@ -44,6 +55,7 @@ canvas {
     background: var(--color-primary);
     border: 2px solid var(--color-background);
     cursor: nwse-resize;
+    pointer-events: auto;
 
     &.crop-handle-nw {
       top: calc(-1 * var(--space-sm));
