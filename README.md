@@ -1,59 +1,90 @@
-# Nousscope
+# 🧠 NousScope
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 20.3.9.
+**NousScope** is an interactive neural network visualization and playground tool built with **Angular**. It allows users to design, visualize, and analyze neural network architectures in real-time.
 
-## Development server
+![Angular](https://img.shields.io/badge/Angular-DD0031?style=for-the-badge&logo=angular&logoColor=white)
+![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white)
+![License](https://img.shields.io/badge/License-MIT-green.svg?style=for-the-badge)
 
-To start a local development server, run:
+## ✨ Features
 
-```bash
-ng serve
-```
+- **🏗️ Architecture Builder**:
+  - Create and manage multiple neural networks simultaneously.
+  - Add/remove hidden layers and customize neuron counts.
+  - Select activation functions (Sigmoid, ReLU, Tanh, etc.) per layer or globally.
+  - Collapsible network cards for easy management.
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+- **🎨 Interactive Canvas**:
+  - Real-time visualization of network structures (nodes and connections).
+  - Visual representation of weights and biases.
+  - **Network Output Plotting**: See the function your network is approximating in real-time.
+  - Zoom and Pan capabilities for detailed inspection.
 
-## Code scaffolding
+- **📉 Formula Plotter & Comparison**:
+  - Plot mathematical formulas to visualize target functions.
+  - Compare network outputs against known functions (e.g., `sin(x)`, `x^2`).
+  - Syntax highlighting and error checking for formulas.
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+- **🎛️ Presets & Controls**:
+  - Save and load network configurations.
+  - Randomize weights to explore different initialization states.
+  - Visual animation of the forward pass cycle.
 
-```bash
-ng generate component component-name
-```
+## 🚀 Getting Started
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+### Prerequisites
 
-```bash
-ng generate --help
-```
+- **Node.js** (v18+ recommended)
+- **npm** or **yarn**
+- **Angular CLI** (`npm install -g @angular/cli`)
 
-## Building
+### Installation
 
-To build the project run:
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/viniciusxpb/NousScope.git
+   cd NousScope
+   ```
+
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
+
+3. Run the development server:
+   ```bash
+   ng serve
+   ```
+   Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+
+## 🛠️ Build & Deploy
+
+To build the project for production:
 
 ```bash
 ng build
 ```
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+The build artifacts will be stored in the `dist/` directory.
 
-## Running unit tests
+### GitHub Pages Deployment
 
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
-
-```bash
-ng test
-```
-
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
+This project is configured for automatic deployment to GitHub Pages using `angular-cli-ghpages`.
 
 ```bash
-ng e2e
+ng deploy --base-href=/NousScope/
 ```
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+## 🤝 Contributing
 
-## Additional Resources
+Contributions are welcome! Please feel free to submit a Pull Request.
 
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+1. Fork the project
+2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
+
+## 📄 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
