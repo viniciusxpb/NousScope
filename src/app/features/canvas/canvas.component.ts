@@ -15,6 +15,7 @@ import { NetworkService } from '../../core/services/network.service';
 import { FormulaService } from '../formula-plotter/services/formula.service';
 import { CanvasConfigService } from '../../core/services/canvas-config.service';
 import { PrintService } from '../../core/services/print.service';
+import { CompareService } from '../../core/services/compare.service';
 import { CanvasInteractionDirective } from './directives/canvas-interaction.directive';
 
 @Component({
@@ -32,6 +33,7 @@ export class CanvasComponent implements AfterViewInit, OnDestroy {
     private readonly formulaService = inject(FormulaService);
     private readonly canvasConfig = inject(CanvasConfigService);
     private readonly printService = inject(PrintService);
+    private readonly compareService = inject(CompareService);
 
     private ctx!: CanvasRenderingContext2D;
     private animationFrameId?: number;
@@ -49,6 +51,8 @@ export class CanvasComponent implements AfterViewInit, OnDestroy {
     private readonly layers = this.network.layers;
     private readonly showNetwork = this.network.showNetwork;
     private readonly plottedFormulas = this.formulaService.plottedFormulas;
+    private readonly compareFunction = this.compareService.parsedFunction;
+    private readonly compareColor = this.compareService.compareColor;
 
     // Re-render when network or view changes
     private readonly renderEffect = effect(() => {
@@ -62,6 +66,8 @@ export class CanvasComponent implements AfterViewInit, OnDestroy {
         this.canvasConfig.backgroundColor();
         this.canvasConfig.gridColor();
         this.canvasConfig.textColor();
+        this.compareFunction();
+        this.compareColor();
         this.requestRender();
     });
 
@@ -141,26 +147,33 @@ export class CanvasComponent implements AfterViewInit, OnDestroy {
     private render(): void {
         if (!this.ctx) return;
 
-        const width = this.ctx.canvas.width;
-        const height = this.ctx.canvas.height;
+        try {
+            const width = this.ctx.canvas.width;
+            const height = this.ctx.canvas.height;
 
-        // Clear
-        this.ctx.fillStyle = this.config.theme.colors.canvasBg;
-        this.ctx.fillRect(0, 0, width, height);
+            // Clear
+            this.ctx.fillStyle = this.config.theme.colors.canvasBg;
+            this.ctx.fillRect(0, 0, width, height);
 
-        // Draw Grid
-        this.drawGrid(width, height);
+            // Draw Grid
+            this.drawGrid(width, height);
 
-        // Draw Network if enabled
-        if (this.showNetwork()) {
-            this.drawNetwork(width, height);
+            // Draw Network if enabled
+            if (this.showNetwork()) {
+                this.drawNetwork(width, height);
+            }
+
+            // Draw Axis
+            this.drawAxis(width, height);
+
+            // Draw Formulas
+            this.drawFormulas(width, height);
+
+            // Draw Compare Function
+            this.drawCompare(width, height);
+        } catch (error) {
+            console.error('Error rendering canvas:', error);
         }
-
-        // Draw Axis
-        this.drawAxis(width, height);
-
-        // Draw Formulas
-        this.drawFormulas(width, height);
     }
 
     private drawGrid(width: number, height: number): void {
@@ -357,6 +370,51 @@ export class CanvasComponent implements AfterViewInit, OnDestroy {
                 this.config.canvas.lineWidth.compare
             );
         }
+    }
+
+    private drawCompare(width: number, height: number): void {
+        const fn = this.compareFunction();
+        if (!fn) return;
+
+        const ctx = this.ctx;
+        const density = this.config.canvas.sampleDensity;
+
+        ctx.strokeStyle = this.compareColor();
+        ctx.lineWidth = 2;
+        ctx.setLineDash([5, 5]); // Dashed line for comparison
+        ctx.lineCap = 'round';
+        ctx.lineJoin = 'round';
+        ctx.beginPath();
+
+        let started = false;
+
+        for (let sx = 0; sx <= width; sx += density) {
+            const x = this.screenToMathX(sx);
+            const y = fn(x);
+
+            if (!isFinite(y)) {
+                started = false;
+                continue;
+            }
+
+            const sy = this.mathToScreenY(y);
+
+            // Pular pontos muito fora da tela
+            if (sy < -1000 || sy > height + 1000) {
+                started = false;
+                continue;
+            }
+
+            if (!started) {
+                ctx.moveTo(sx, sy);
+                started = true;
+            } else {
+                ctx.lineTo(sx, sy);
+            }
+        }
+
+        ctx.stroke();
+        ctx.setLineDash([]); // Reset dash
     }
 
     private drawFunction(

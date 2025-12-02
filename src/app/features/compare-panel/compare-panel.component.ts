@@ -1,7 +1,7 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { ConfigService } from '../../core/services/config.service';
+import { CompareService } from '../../core/services/compare.service';
 
 @Component({
     selector: 'app-compare-panel',
@@ -11,12 +11,12 @@ import { ConfigService } from '../../core/services/config.service';
     styleUrl: './compare-panel.component.scss',
 })
 export class ComparePanelComponent {
-    private readonly config = inject(ConfigService);
+    private readonly compareService = inject(CompareService);
 
-    // Local state for comparison
-    readonly compareFunc = signal(this.config.ui.defaultCompareFunc);
-    readonly compareColor = signal(this.config.ui.defaultCompareColor);
-    readonly showCompare = signal(true);
+    // Bind to service signals
+    readonly compareFunc = this.compareService.compareFunc;
+    readonly compareColor = this.compareService.compareColor;
+    readonly showCompare = this.compareService.showCompare;
 
     // Predefined functions
     readonly functions = [
@@ -28,10 +28,14 @@ export class ComparePanelComponent {
     ];
 
     updateFunc(value: string): void {
-        this.compareFunc.set(value);
+        this.compareService.updateFunc(value);
+    }
+
+    updateColor(value: string): void {
+        this.compareService.updateColor(value);
     }
 
     toggleCompare(): void {
-        this.showCompare.update(v => !v);
+        this.compareService.toggleCompare();
     }
 }

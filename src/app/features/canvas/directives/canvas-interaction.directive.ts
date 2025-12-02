@@ -64,7 +64,12 @@ export class CanvasInteractionDirective implements OnDestroy, AfterViewInit {
 
     private onWheel(e: WheelEvent): void {
         e.preventDefault();
+        
+        if (e.deltaY === 0) return;
+
+        // Use smaller factor for smoother zoom
         const factor = e.deltaY > 0 ? 0.9 : 1.1;
+        
         const rect = this.element.nativeElement.getBoundingClientRect();
         const x = e.clientX - rect.left;
         const y = e.clientY - rect.top;
