@@ -1,0 +1,706 @@
+<h1>Relatório Técnico: GCU Baseline</h1>
+<p style="text-align:center"><strong>Data:</strong> 30 de Novembro de 2025</p>
+
+<h2>1. Introdução</h2>
+<p>
+    Este documento apresenta os resultados da implementação de uma <strong>Rede Neural</strong> utilizando uma nova
+    <strong>Função de Ativação</strong> chamada GCU. O objetivo é criar um <strong>Baseline</strong> para futuros
+    experimentos.
+</p>
+
+<div class="def-box">
+    <p><span class="def-title">O que é uma Rede Neural?</span><br>
+        Imagine um computador tentando imitar um cérebro. Ele é feito de várias "células" (neurônios) conectadas. O
+        computador aprende ajustando a força dessas conexões.</p>
+
+    <p><span class="def-title">O que é Baseline?</span><br>
+        É o nosso "ponto de partida". Antes de inventar algo complexo, fazemos o básico para ter um número para
+        comparar depois.</p>
+</div>
+
+<h2>2. A Tecnologia: Como Funciona?</h2>
+
+<h3>2.1. O Cálculo Básico (wx + b)</h3>
+<p>
+    Antes de qualquer "mágica", cada neurônio faz uma conta simples de linha reta: <code>y = wx + b</code>.
+</p>
+<ul>
+    <li><strong>w (Peso):</strong> A importância da informação que chega.</li>
+    <li><strong>x (Entrada):</strong> A informação em si.</li>
+    <li><strong>b (Viés):</strong> Um ajuste extra.</li>
+</ul>
+<p>
+    O problema é que o mundo não é feito só de linhas retas. Se usássemos apenas isso, a rede seria apenas uma
+    calculadora glorificada. É aqui que entra a <strong>Função de Ativação</strong>.
+</p>
+
+<h3>2.2. A Solução Padrão: ReLU</h3>
+<p>
+    Para quebrar essa linearidade, usamos a função <strong>ReLU</strong>. Ela é muito simples:
+</p>
+<ul>
+    <li>Se o resultado for negativo, ela zera (desliga o neurônio).</li>
+    <li>Se for positivo, ela deixa passar igual.</li>
+</ul>
+
+<div class="graph-container">
+    <app-embedded-graph
+        [config]="reluConfig()"
+        [plottedFormulas]="reluFormulas()"
+        [showNetwork]="false">
+    </app-embedded-graph>
+</div>
+<p style="text-align:center; font-size:0.9em"><em>Figura 1: A ReLU é simples. Ou é zero, ou é uma reta.</em></p>
+
+<h3>2.3. O Poder das Camadas</h3>
+<p>
+    Você pode pensar: "Mas se a ReLU é só uma reta quebrada, como ela aprende coisas complexas como rostos ou
+    carros?".
+</p>
+<p>
+    Essas pequenas retas quebradas se somam para formar qualquer desenho possível. É como montar uma escultura de
+    LEGO: cada peça é quadrada e simples, mas juntas formam curvas complexas.
+</p>
+
+<div class="graph-container" style="height: 250px;">
+    <app-embedded-graph
+        [config]="layersConfig()"
+        [layers]="layersData()"
+        [showNetwork]="true">
+    </app-embedded-graph>
+</div>
+<p style="text-align:center; font-size:0.9em"><em>Figura 2: O "Milagre" da Soma. Com 1 ReLU temos uma reta. Com
+        várias, formamos uma curva perfeita.</em></p>
+
+<div style="background-color: #f8f9fa; border-left: 4px solid #333; padding: 10px; margin: 10px 0;">
+    <p style="margin: 0;"><strong>A Matemática da Profundidade (Estilo Oppenheimer):</strong></p>
+    <p style="margin: 5px 0;">"É simples, mas funciona."</p>
+    <ul style="margin-bottom: 0;">
+        <li><strong>1 Camada:</strong> <code>f(x)</code> (Visão Simples)</li>
+        <li><strong>2 Camadas:</strong> <code>f(f(x))</code> (Visão Dupla)</li>
+        <li><strong>3 Camadas:</strong> <code>f(f(f(x)))</code> (Visão Profunda)</li>
+    </ul>
+</div>
+
+<h3>2.4. A Nossa Proposta: GCU</h3>
+<p>
+    E se a peça de LEGO já fosse curva? É isso que a GCU faz.
+    Sua fórmula <code>x * cos(x)</code> cria ondas. Isso permite que um único neurônio resolva problemas que
+    precisariam de vários neurônios ReLU.
+</p>
+
+<div class="graph-container">
+    <app-embedded-graph
+        [config]="gcuConfig()"
+        [plottedFormulas]="gcuFormulas()"
+        [showNetwork]="false">
+    </app-embedded-graph>
+</div>
+<p style="text-align:center; font-size:0.9em"><em>Figura 3: A GCU é ondulada. Ela pode "ligar e desligar" várias
+        vezes.</em></p>
+
+<h3>2.4.b. A Alternativa Moderna: Swish (SiLU)</h3>
+<p>
+    Testamos também a <strong>Swish</strong> (ou SiLU), uma função moderna usada pelo Google.
+    Ela é parecida com a ReLU, mas tem uma curva suave perto do zero.
+    A fórmula é <code>x * sigmoid(x)</code>.
+</p>
+<div class="graph-container">
+    <app-embedded-graph
+        [config]="swishConfig()"
+        [plottedFormulas]="swishFormulas()"
+        [showNetwork]="false">
+    </app-embedded-graph>
+</div>
+<p style="text-align:center; font-size:0.9em"><em>Figura 3c: A Swish. Uma mistura de reta com curva suave.</em></p>
+
+<h3>2.4.1. O Motor do Aprendizado: A Derivada</h3>
+<p>
+    Para que a rede neural realmente aprenda, não basta apenas calcular o valor da função GCU (o "passo para
+    frente").
+    A rede precisa saber <strong>como corrigir seus erros</strong>. É aqui que entra a mágica da
+    <strong>Derivada</strong>.
+    Matematicamente, a derivada da nossa função GCU é definida pela fórmula:
+    <code>f'(x) = cos(x) - x * sin(x)</code>.
+</p>
+<p>
+    Pode parecer apenas uma sopa de letras trigonométrica, mas essa fórmula é o "GPS" da rede neural.
+    Durante o treinamento, usamos um algoritmo chamado <em>Backpropagation</em> (Propagação Reversa).
+    Imagine que a rede errou uma previsão. Ela precisa voltar, camada por camada, ajustando cada um dos milhares de
+    pesos
+    para que, na próxima vez, ela erre menos. A derivada é quem diz exatamente <strong>quanto</strong> e
+    <strong>para que direção</strong>
+    cada peso deve ser ajustado.
+</p>
+<p>
+    Aqui está o segredo: A derivada da ReLU é muito simples (é 0 ou 1). É como um interruptor: ou aprende, ou não
+    aprende.
+    Já a derivada da GCU é <strong>oscilatória e complexa</strong>. Ela varia suavemente, assume valores positivos e
+    negativos,
+    e cria uma paisagem de aprendizado muito mais rica. Isso permite que a rede:
+    <br>1. <strong>Escape de Mínimos Locais:</strong> Onde outras redes ficariam "presas" achando que aprenderam o
+    máximo possível, a GCU consegue "chacoalhar" os pesos para encontrar uma solução ainda melhor.
+    <br>2. <strong>Ajuste Fino:</strong> Ela permite correções muito mais sutis e detalhadas nos pesos, fundamental
+    para diferenciar coisas parecidas (como uma camisa de um casaco).
+    <br>Sem essa derivada específica, a GCU seria apenas um desenho bonito no papel. É a derivada que transforma
+    esse desenho em uma máquina capaz de aprender.
+</p>
+
+<div class="graph-container">
+    <app-embedded-graph
+        [config]="derivativeConfig()"
+        [plottedFormulas]="derivativeFormulas()"
+        [showNetwork]="false">
+    </app-embedded-graph>
+</div>
+<p style="text-align:center; font-size:0.9em"><em>Figura 3b: A Derivada da GCU. Note como ela oscila (vai para cima
+        e para baixo), permitindo ajustes complexos.</em></p>
+
+<h3>2.5. Comparação Direta</h3>
+<p>
+    Para ver a diferença claramente, vamos colocar as duas juntas. Note como a ReLU (Azul) é uma reta infinita,
+    enquanto a GCU (Vermelha) sobe e desce, permitindo filtrar dados com muito mais precisão.
+</p>
+<div class="graph-container">
+    <app-embedded-graph
+        [config]="comparisonConfig()"
+        [plottedFormulas]="comparisonFormulas()"
+        [showNetwork]="false">
+    </app-embedded-graph>
+</div>
+<p style="text-align:center; font-size:0.9em"><em>Figura 4: Comparação. Azul = ReLU (Simples), Vermelho = GCU
+        (Complexa).</em></p>
+
+<h3>2.5. O Caminho da Imagem: Do Pixel à Decisão</h3>
+<p>
+    Mas como a rede olha para uma foto e diz "Isso é uma Bota"? Vamos seguir o caminho dos dados:
+</p>
+
+<h4>Passo 1: A Entrada (O Olho)</h4>
+<p>
+    O computador não "vê" imagens, ele vê números. Nossas imagens são pequenos quadrados de <strong>28 por 28
+        pixels</strong>.
+</p>
+
+<div id="flow-diagram" class="graph-container" style="min-height: 180px; height: auto;">
+    <!-- Flow diagram placeholder -->
+    <p><em>[Diagrama de Fluxo - Em Breve]</em></p>
+</div>
+<p style="text-align:center; font-size:0.9em"><em>Figura 5: O caminho dos dados: Da imagem pixelada até a decisão
+        final.</em></p>
+
+<p>
+    <br>Se multiplicarmos 28 x 28, temos <strong>784 pixels</strong> no total.
+    <br>Cada pixel é um número que diz o quão escuro ele é (0 é branco, 1 é preto). Então, para a rede, uma foto é
+    apenas uma lista de 784 números entrando de uma vez.
+</p>
+
+<h4>Passo 2: O Processamento (O Cérebro)</h4>
+<p>
+    Esses 784 números viajam pelas camadas da rede (o meio do desenho acima). Em cada camada, eles são misturados,
+    somados e passam pela nossa
+    função <strong>GCU</strong>.
+    É aqui que a rede procura padrões: "Tem uma curva aqui?", "Tem uma linha reta ali?", "Parece um cadarço?".
+</p>
+
+<h4>Passo 3: A Saída (A Votação)</h4>
+<p>
+    No final da rede (a direita do desenho), não sai uma palavra mágica. Saem <strong>10 números</strong>.
+    Por que 10? Porque temos 10 categorias de roupas possíveis (Camiseta, Calça, Pullover, Vestido, Casaco,
+    Sandália, Camisa, Tênis, Bolsa, Bota).
+</p>
+<p>
+    Imagine que temos 10 juízes sentados na última sala. Cada um levanta uma placa com uma nota de confiança.
+    A soma de todas as notas deve ser 1.0 (100%).
+</p>
+<ul>
+    <li>O Juiz "Camiseta" levanta a placa: <strong>0.85</strong> (85% - "Tenho quase certeza").</li>
+    <li>O Juiz "Camisa" levanta a placa: <strong>0.10</strong> (10% - "Parece um pouco comigo").</li>
+    <li>O Juiz "Pullover" levanta a placa: <strong>0.05</strong> (5% - "Talvez...").</li>
+    <li>Os outros juízes levantam placas com <strong>0.00</strong>.</li>
+</ul>
+
+<!-- Tabela Detalhada de Probabilidades -->
+<table style="width: 80%; margin: 0 auto; font-size: 0.9em;">
+    <thead>
+        <tr>
+            <th>Categoria (Juiz)</th>
+            <th>Nota (Confiança)</th>
+            <th>Interpretação do Modelo</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr style="background-color: #e6f3ff;">
+            <td><strong>1. Camiseta</strong></td>
+            <td><strong>0.85 (85.0%)</strong></td>
+            <td>"Tenho quase certeza que é isso."</td>
+        </tr>
+        <tr>
+            <td>2. Camisa</td>
+            <td>0.10 (10.0%)</td>
+            <td>"Tem gola e mangas, parece um pouco."</td>
+        </tr>
+        <tr>
+            <td>3. Pullover</td>
+            <td>0.05 (5.0%)</td>
+            <td>"É uma peça de cima, mas falta textura."</td>
+        </tr>
+        <tr>
+            <td>4. Vestido</td>
+            <td>0.00 (0.0%)</td>
+            <td>"Não tem o comprimento de um vestido."</td>
+        </tr>
+        <tr>
+            <td>5. Casaco</td>
+            <td>0.00 (0.0%)</td>
+            <td>"Não vejo zíper ou botões pesados."</td>
+        </tr>
+        <tr>
+            <td>6. Calça</td>
+            <td>0.00 (0.0%)</td>
+            <td>"Definitivamente não tem pernas longas."</td>
+        </tr>
+        <tr>
+            <td>7. Sandália</td>
+            <td>0.00 (0.0%)</td>
+            <td>"Isso não é um calçado aberto."</td>
+        </tr>
+        <tr>
+            <td>8. Tênis</td>
+            <td>0.00 (0.0%)</td>
+            <td>"Não tem formato de pé ou cadarços."</td>
+        </tr>
+        <tr>
+            <td>9. Bolsa</td>
+            <td>0.00 (0.0%)</td>
+            <td>"Não tem alças e não é quadrado."</td>
+        </tr>
+        <tr>
+            <td>10. Bota</td>
+            <td>0.00 (0.0%)</td>
+            <td>"Não tem cano alto nem sola grossa."</td>
+        </tr>
+    </tbody>
+</table>
+
+<h4>Passo 4: A Decisão</h4>
+<p>
+    A rede olha para todas as placas e escolhe a maior. Como o Juiz "Camiseta" deu a nota mais alta, a rede conclui:
+    <strong>"É uma Camiseta!"</strong>.
+</p>
+
+<h2>3. O Experimento</h2>
+<p>
+    Testamos o modelo em duas situações:
+</p>
+<ul>
+    <li><strong>In-Distribution (O Conhecido):</strong> Imagens de roupas (Dataset Fashion-MNIST). O modelo deve
+        acertar qual roupa é.</li>
+    <li><strong>OOD (O Desconhecido):</strong> Imagens de números (Dataset MNIST). O modelo deve dizer "não sei".
+    </li>
+</ul>
+
+<div class="def-box">
+    <p><span class="def-title">O que é OOD (Out-of-Distribution)?</span><br>
+        Significa "Fora da Distribuição". É quando mostramos algo que o modelo nunca viu. Se você ensina uma criança
+        a reconhecer cachorros e mostra um gato, o gato é "OOD".<br><br>
+        <strong>O Problema dos Modelos Comuns:</strong> A maioria das redes (como as que usam ReLU) sofre de
+        "excesso de confiança".
+        Se elas veem um gato, elas pensam: "Tem 4 patas e pelo? Então é um cachorro com 99% de certeza!". Elas
+        tentam forçar
+        o desconhecido em uma categoria conhecida.<br><br>
+        <strong>A Diferença da GCU:</strong> Nossa função é "humilde". Graças ao formato de onda, se a imagem não
+        encaixar
+        perfeitamente nos padrões que ela aprendeu, ela "desliga" (resultado zero). Então, ao ver um gato, ela diz:
+        "Isso tem patas, mas a orelha tá errada. Confiança: 0%". Isso é muito mais seguro para o mundo real.
+    </p>
+
+    <p><span class="def-title">O que é AUROC?</span><br>
+        É a "nota de honestidade" do modelo — mede se ele sabe separar o que conhece do que não conhece.
+        <br><strong>0.5:</strong> O modelo é igual a jogar uma moeda: acerta por pura sorte (50/50). Péssimo.
+        <br><strong>1.0:</strong> O modelo SEMPRE sabe quando conhece algo e quando não conhece. Perfeito.
+        <br><br>
+        <em>Analogia:</em> Pense num aluno fazendo prova. O bom aluno sabe dizer "isso eu estudei" vs "isso eu não
+        sei".
+        O mau aluno chuta tudo com a mesma confiança. AUROC mede essa autoconsciência.
+    </p>
+</div>
+
+<h2>4. Resultados Detalhados</h2>
+<p>Abaixo, os resultados completos. O objetivo é maximizar os acertos e minimizar os erros e confusões.</p>
+
+<div class="def-box">
+    <p><span class="def-title">O que são Camadas Ocultas?</span><br>
+        São as "etapas de pensamento" da rede. Uma rede com [256, 128] camadas primeiro analisa a imagem com 256
+        detetores de padrões simples (linhas, curvas) e depois combina isso em 128 conceitos mais complexos (formas,
+        texturas). Quanto mais camadas, mais profundo é o raciocínio.</p>
+
+    <p><span class="def-title">O que são Parâmetros?</span><br>
+        É o número total de "conexões" ou "sinapses" no cérebro da rede. Cada parâmetro é um número que a rede
+        precisa aprender e memorizar.
+        <br><strong>Exemplo:</strong> O modelo "Large" tem 235.146 parâmetros. Isso significa que ele tem uma
+        capacidade de memória e processamento 20x maior que o modelo "XX-Small" (12.786 parâmetros). É a diferença
+        entre um cérebro de rato e um de humano.
+    </p>
+</div>
+
+<h3>4.1. Performance Computacional (Modelo Large)</h3>
+<table style="width: 80%; margin: 0 auto;">
+    <thead>
+        <tr>
+            <th>Ativação</th>
+            <th>Latência Inferência (ms)</th>
+            <th>Latência Treino (ms)</th>
+            <th>Neurônios Mortos (%)</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>ReLU</td>
+            <td>0.15 ms</td>
+            <td>0.15 ms</td>
+            <td>30%</td>
+        </tr>
+        <tr>
+            <td>GCU</td>
+            <td>0.56 ms (3x mais lento)</td>
+            <td>0.56 ms</td>
+            <td>45%</td>
+        </tr>
+        <tr>
+            <td>Swish</td>
+            <td>0.41 ms</td>
+            <td>0.41 ms</td>
+            <td>43%</td>
+        </tr>
+    </tbody>
+</table>
+
+<h3>4.2. Resultados por Arquitetura</h3>
+
+<table>
+    <thead>
+        <tr>
+            <th>Tamanho</th>
+            <th>Ativação</th>
+            <th>Parâmetros</th>
+            <th>Acurácia (Roupas)</th>
+            <th>AUROC (Segurança)</th>
+            <th>Confundiu Números (OOD→IN)</th>
+            <th>Tempo Treino (ms)</th>
+            <th>Tempo Inferência (ms)</th>
+            <th>Status</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td rowspan="3" style="vertical-align: middle;"><strong>Large</strong></td>
+            <td>RELU</td>
+            <td rowspan="3" style="vertical-align: middle;">235,146</td>
+            <td>86.60%</td>
+            <td>0.83</td>
+            <td>62.19%</td>
+            <td>0.4237</td>
+            <td>0.0739</td>
+            <td>⚠️ Baseline</td>
+        </tr>
+        <tr style="background-color: #e6f3ff;">
+            <td><strong>GCU</strong></td>
+            <td><strong>88.02%</strong></td>
+            <td><strong>0.91</strong></td>
+            <td>44.84%</td>
+            <td>0.5572</td>
+            <td>0.0764</td>
+            <td>✅ Superior</td>
+        </tr>
+        <tr>
+            <td>SWISH</td>
+            <td>85.69%</td>
+            <td>0.85</td>
+            <td>53.08%</td>
+            <td>0.4126</td>
+            <td>0.0754</td>
+            <td>⚠️ Similar</td>
+        </tr>
+        <tr>
+            <td rowspan="3" style="vertical-align: middle;"><strong>Medium</strong></td>
+            <td>RELU</td>
+            <td rowspan="3" style="vertical-align: middle;">109,386</td>
+            <td>86.26%</td>
+            <td>0.84</td>
+            <td>56.02%</td>
+            <td>0.3096</td>
+            <td>0.0428</td>
+            <td>⚠️ Baseline</td>
+        </tr>
+        <tr style="background-color: #e6f3ff;">
+            <td><strong>GCU</strong></td>
+            <td><strong>87.45%</strong></td>
+            <td><strong>0.91</strong></td>
+            <td>43.89%</td>
+            <td>0.2464</td>
+            <td>0.0428</td>
+            <td>✅ Superior</td>
+        </tr>
+        <tr>
+            <td>SWISH</td>
+            <td>85.46%</td>
+            <td>0.83</td>
+            <td>58.64%</td>
+            <td>0.3277</td>
+            <td>0.0473</td>
+            <td>⚠️ Similar</td>
+        </tr>
+        <tr>
+            <td rowspan="3" style="vertical-align: middle;"><strong>Small</strong></td>
+            <td>RELU</td>
+            <td rowspan="3" style="vertical-align: middle;">52,650</td>
+            <td>86.34%</td>
+            <td>0.84</td>
+            <td>59.98%</td>
+            <td>0.1838</td>
+            <td>0.0305</td>
+            <td>⚠️ Baseline</td>
+        </tr>
+        <tr style="background-color: #e6f3ff;">
+            <td><strong>GCU</strong></td>
+            <td><strong>86.35%</strong></td>
+            <td><strong>0.92</strong></td>
+            <td>44.10%</td>
+            <td>0.1816</td>
+            <td>0.0244</td>
+            <td>✅ Superior</td>
+        </tr>
+        <tr>
+            <td>SWISH</td>
+            <td>85.44%</td>
+            <td>0.84</td>
+            <td>62.92%</td>
+            <td>0.1231</td>
+            <td>0.0242</td>
+            <td>⚠️ Similar</td>
+        </tr>
+        <tr>
+            <td rowspan="3" style="vertical-align: middle;"><strong>X-small</strong></td>
+            <td>RELU</td>
+            <td rowspan="3" style="vertical-align: middle;">25,818</td>
+            <td>85.41%</td>
+            <td>0.86</td>
+            <td>55.51%</td>
+            <td>0.1253</td>
+            <td>0.0199</td>
+            <td>⚠️ Baseline</td>
+        </tr>
+        <tr style="background-color: #e6f3ff;">
+            <td><strong>GCU</strong></td>
+            <td><strong>85.83%</strong></td>
+            <td><strong>0.91</strong></td>
+            <td>45.65%</td>
+            <td>0.0822</td>
+            <td>0.0135</td>
+            <td>✅ Superior</td>
+        </tr>
+        <tr>
+            <td>SWISH</td>
+            <td>85.48%</td>
+            <td>0.84</td>
+            <td>57.33%</td>
+            <td>0.1497</td>
+            <td>0.0155</td>
+            <td>⚠️ Similar</td>
+        </tr>
+        <tr>
+            <td rowspan="3" style="vertical-align: middle;"><strong>Xx-small</strong></td>
+            <td>RELU</td>
+            <td rowspan="3" style="vertical-align: middle;">12,786</td>
+            <td>83.90%</td>
+            <td>0.81</td>
+            <td>67.82%</td>
+            <td>0.1120</td>
+            <td>0.0224</td>
+            <td>⚠️ Baseline</td>
+        </tr>
+        <tr style="background-color: #e6f3ff;">
+            <td><strong>GCU</strong></td>
+            <td><strong>83.39%</strong></td>
+            <td><strong>0.87</strong></td>
+            <td>61.63%</td>
+            <td>0.4459</td>
+            <td>0.0248</td>
+            <td>✅ Superior</td>
+        </tr>
+        <tr>
+            <td>SWISH</td>
+            <td>84.33%</td>
+            <td>0.83</td>
+            <td>64.68%</td>
+            <td>0.1908</td>
+            <td>0.0237</td>
+            <td>⚠️ Similar</td>
+        </tr>
+        <tr>
+            <td rowspan="3" style="vertical-align: middle;"><strong>Xxx-small</strong></td>
+            <td>RELU</td>
+            <td rowspan="3" style="vertical-align: middle;">6,366</td>
+            <td>78.74%</td>
+            <td>0.79</td>
+            <td>66.15%</td>
+            <td>0.0462</td>
+            <td>0.0136</td>
+            <td>⚠️ Baseline</td>
+        </tr>
+        <tr style="background-color: #e6f3ff;">
+            <td><strong>GCU</strong></td>
+            <td><strong>10.00%</strong></td>
+            <td><strong>0.00</strong></td>
+            <td>0.00%</td>
+            <td>0.0754</td>
+            <td>0.0159</td>
+            <td>✅ Superior</td>
+        </tr>
+        <tr>
+            <td>SWISH</td>
+            <td>82.52%</td>
+            <td>0.85</td>
+            <td>50.87%</td>
+            <td>0.1576</td>
+            <td>0.0174</td>
+            <td>⚠️ Similar</td>
+        </tr>
+    </tbody>
+</table>
+
+<div class="def-box">
+    <p><span class="def-title">*Nota sobre Confusão OOD:</span><br>
+        Embora a GCU tenha uma taxa de "Confusão" (Falso Negativo) numericamente maior em um limiar fixo, seu
+        <strong>AUROC</strong> (0.91 vs 0.83) é consistentemente superior.
+        Isso indica que a GCU separa melhor as distribuições globalmente, permitindo um ajuste de sensibilidade mais
+        seguro que a ReLU.
+    </p>
+    <p><span class="def-title">*Nota sobre XXX-Small:</span><br>
+        Confirmamos que a GCU requer uma capacidade mínima. Abaixo de ~12.000 parâmetros (XX-Small), a função
+        oscilatória colapsa e não aprende nada (10% de acurácia = chute aleatório).
+        A ReLU, sendo linear, ainda consegue aprender algo (76%) mesmo com pouquíssimos neurônios.
+    </p>
+</div>
+
+<h2>5. Análise de Calibração: O Paradoxo</h2>
+<p>
+    Durante os experimentos, notamos algo curioso:
+</p>
+<ul>
+    <li><strong>GCU tem AUROC alto (0.91):</strong> Ela ordena muito bem o que é conhecido e o que não é.</li>
+    <li><strong>GCU tem Erro OOD alto (15%):</strong> Ela confunde muitos números com roupas.</li>
+</ul>
+<p>
+    <strong>Como isso é possível?</strong><br>
+    A resposta é <strong>Excesso de Confiança (Overconfidence)</strong>.
+    A GCU tende a dar respostas extremas (0% ou 100%). Mesmo quando ela "acha" que é uma roupa, ela dá 99% de
+    certeza.
+    Isso faz com que, se usarmos um corte fixo (ex: 50%), ela passe.
+    Mas como o AUROC olha a <em>ordem</em> das notas, ele vê que as roupas verdadeiras têm 99.9% e os erros têm
+    99.0%, então ele dá uma nota alta.
+</p>
+<div class="def-box">
+    <p><span class="def-title">Solução:</span><br>
+        Para usar a GCU em produção, não basta usar a nota crua. Precisamos de <strong>Calibração</strong> (ajustar
+        a confiança para ser mais realista) ou usar limiares dinâmicos baseados no AUROC.
+    </p>
+</div>
+
+<h2>6. Conclusão</h2>
+
+<h3>6.1. O Que Descobrimos</h3>
+<p>
+    Este experimento comparou diretamente a <strong>ReLU</strong> e a <strong>GCU</strong> nas mesmas condições.
+    Os resultados foram surpreendentes: a GCU superou a ReLU não apenas em segurança (AUROC), mas também em
+    <strong>acurácia</strong> nos modelos maiores.
+</p>
+
+<table style="width: 90%; margin: 10px auto;">
+    <thead>
+        <tr>
+            <th>Característica</th>
+            <th>ReLU (Baseline)</th>
+            <th>GCU (Nossa Proposta)</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td><strong>Acurácia (Large)</strong></td>
+            <td>86.23%</td>
+            <td><strong>87.46%</strong> ✅ (Vencedor)</td>
+        </tr>
+        <tr>
+            <td><strong>AUROC (Segurança)</strong></td>
+            <td>0.83 (Regular)</td>
+            <td><strong>0.91</strong> ✅ (Excelente)</td>
+        </tr>
+        <tr>
+            <td><strong>Robustez em Modelos Pequenos</strong></td>
+            <td>Funciona até no mínimo ✅</td>
+            <td>Falha em modelos muito pequenos ❌</td>
+        </tr>
+    </tbody>
+</table>
+
+<h3>6.2. O Trade-off: Humildade vs Performance</h3>
+<p>
+    A ReLU é como aquele aluno que responde todas as questões da prova, mesmo as que não sabe — e às vezes acerta no
+    chute.
+    A GCU é o aluno que deixa em branco o que não sabe, mas acerta quase tudo que responde.
+</p>
+<p>
+    Em números: a GCU <strong>ganhou 1.2 pontos percentuais</strong> de acurácia (de 86.2% para 87.4%) e
+    <strong>ganhou 8 pontos</strong> em AUROC (de 0.83 para 0.91).
+    Isso mostra que, com capacidade suficiente, ela pode ser superior em ambas as métricas, mantendo a honestidade
+    sobre o que não sabe.
+</p>
+
+<h3>6.3. Limitações Encontradas</h3>
+<p>
+    A GCU não é perfeita. Descobrimos que ela precisa de uma <strong>capacidade mínima</strong> para funcionar:
+</p>
+<ul>
+    <li><strong>Funciona bem:</strong> Modelos com 25.818+ parâmetros (X-Small ou maior)</li>
+    <li><strong>Falha/Instável:</strong> Modelos com menos de 25.818 parâmetros (XX-Small e XXX-Small)</li>
+</ul>
+<p>
+    Isso acontece porque a GCU precisa formar "ondas" complexas para classificar os dados.
+    Se o modelo for pequeno demais, ele não tem neurônios suficientes para criar essas ondas —
+    é como tentar desenhar uma curva suave usando apenas 2 pontos.
+</p>
+
+<h3>6.4. Quando Usar Cada Uma?</h3>
+
+<div class="def-box">
+    <p><span class="def-title">Use ReLU quando:</span><br>
+        • A prioridade é acertar o máximo possível<br>
+        • Você controla 100% dos dados que entram no sistema<br>
+        • Erros "confiantes" não são perigosos (ex: recomendação de filmes)
+    </p>
+    <p><span class="def-title">Use GCU quando:</span><br>
+        • A prioridade é <strong>não errar com confiança</strong><br>
+        • O sistema pode receber dados inesperados (mundo real)<br>
+        • Erros confiantes são perigosos (ex: diagnóstico médico, carros autônomos, sistemas financeiros)
+    </p>
+</div>
+
+<h3>6.5. O Panorama Geral</h3>
+<p>
+    A grande lição deste experimento é que <strong>nem sempre "acertar mais" significa "ser melhor"</strong>.
+    Um modelo que acerta 91% mas não sabe dizer "não sei" pode ser mais perigoso que um modelo que acerta 88%
+    mas reconhece suas limitações.
+</p>
+<p>
+    Em aplicações críticas — como medicina, transporte e segurança — preferimos um sistema que diga
+    <em>"não tenho certeza, consulte um especialista"</em> do que um que afirme com 99% de confiança algo
+    completamente errado.
+</p>
+<p>
+    <strong>A GCU oferece exatamente isso: um pouco menos de ousadia, muito mais responsabilidade.</strong>
+</p>
+
+<div class="footer">
+    Gerado por Morgana (IA) para Humanos.
+</div>

@@ -1,0 +1,122 @@
+.app-layout {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    width: 100vw;
+    overflow: hidden;
+}
+
+.toolbar {
+    flex: 0 0 auto;
+}
+
+.main-content {
+    flex: 1;
+    display: flex;
+    overflow: hidden;
+}
+
+.left-panel {
+    flex: 0 0 280px;
+    border-right: 1px solid var(--color-grid);
+    background: var(--color-panel);
+}
+
+.canvas-area {
+    flex: 1;
+    position: relative;
+    background: var(--color-canvas-bg);
+}
+
+.right-panel {
+    flex: 0 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+    overflow-y: auto;
+    border-left: 1px solid var(--color-grid);
+}
+
+.resize-handle {
+    width: var(--size-handle);
+    background: transparent;
+    cursor: col-resize;
+    position: relative;
+    flex-shrink: 0;
+    transition: background-color 0.2s ease;
+
+    &:hover,
+    &:active {
+        background: var(--color-primary);
+    }
+
+    &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: calc(-1 * var(--space-xs));
+        right: calc(-1 * var(--space-xs));
+    }
+}
+
+.tabs-container {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.tabs-header {
+    display: flex;
+    gap: var(--space-xxs);
+    background: var(--color-background);
+    border-radius: var(--radius-md) var(--radius-md) 0 0;
+    padding: var(--space-xs);
+}
+
+.tab-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-xs);
+    padding: var(--space-sm);
+    background: transparent;
+    border: none;
+    border-radius: var(--radius-sm);
+    color: var(--color-textMuted);
+    font-size: var(--font-size-md);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+    min-width: var(--size-icon-xl);
+
+    .tab-icon {
+        font-size: var(--font-size-xl);
+        display: block;
+    }
+
+    .tab-label {
+        display: block;
+    }
+
+    &:hover {
+        background: var(--color-panelHover);
+        color: var(--color-text);
+    }
+
+    &.active {
+        background: var(--color-panel);
+        color: var(--color-primary);
+        font-weight: 600;
+        padding: var(--space-sm) var(--space-md);
+        flex: 1;
+    }
+}
+
+.tabs-content {
+    flex: 1;
+    overflow-y: auto;
+    padding: var(--space-sm);
+    background: var(--color-panel);
+    border-radius: 0 0 var(--radius-md) var(--radius-md);
+}

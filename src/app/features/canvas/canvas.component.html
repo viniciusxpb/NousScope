@@ -1,5 +1,24 @@
-<div class="canvas-container" appCanvasInteraction (pan)="onPan($event)" (zoom)="onZoom($event)">
-  <canvas #canvas></canvas>
+<div class="canvas-container">
+    <app-canvas-renderer
+        [layers]="network.layers()"
+        [showNetwork]="true"
+        [plottedFormulas]="formula.plottedFormulas()"
+        [plottedCompareFormulas]="compare.plottedFormulas()"
+        [networkOutputs]="networkOutputs()"
+        [config]="rendererConfig()"
+        [scale]="scale()"
+        [offsetX]="offsetX()"
+        [offsetY]="offsetY()"
+        (pan)="onPan($event)"
+        (zoom)="onZoom($event)">
+    </app-canvas-renderer>
+
+    <!-- Controls overlay -->
+    <div class="controls">
+        <button class="btn-icon" (click)="resetView()" title="Reset View">
+            ⟲
+        </button>
+    </div>
 
   @if (showCropBox()) {
   <div class="crop-box-overlay" [style.left.px]="cropBox().x" [style.top.px]="cropBox().y"

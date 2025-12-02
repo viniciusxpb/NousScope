@@ -1,6 +1,7 @@
 import { Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { RouterLink, RouterLinkActive } from '@angular/router';
 import { NetworkService } from '../../core/services/network.service';
 import { PlotService } from '../../core/services/plot.service';
 import { CanvasConfigService } from '../../core/services/canvas-config.service';
@@ -9,7 +10,7 @@ import { FormulaService } from '../formula-plotter/services/formula.service';
 @Component({
     selector: 'app-toolbar',
     standalone: true,
-    imports: [CommonModule, FormsModule],
+    imports: [CommonModule, FormsModule, RouterLink, RouterLinkActive],
     templateUrl: './toolbar.component.html',
     styleUrl: './toolbar.component.scss',
 })

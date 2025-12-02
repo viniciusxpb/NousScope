@@ -1,124 +1,121 @@
 .toolbar {
     display: flex;
-    gap: var(--space-md);
-    padding: var(--space-md);
+    justify-content: space-between;
+    align-items: center;
+    padding: var(--space-sm) var(--space-md);
     background: var(--color-panel);
     border-bottom: 1px solid var(--color-grid);
-    position: relative;
+    height: 60px;
+    box-sizing: border-box;
+}
 
-    .group {
-        display: flex;
-        gap: var(--space-xs);
+.group {
+    display: flex;
+    gap: var(--space-sm);
+    align-items: center;
+}
+
+button, .nav-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-xs);
+    padding: var(--space-xs) var(--space-sm);
+    background: var(--color-inputBg);
+    border: 1px solid var(--color-inputBorder);
+    border-radius: var(--radius-sm);
+    color: var(--color-text);
+    font-family: var(--font-primary);
+    font-size: var(--font-size-sm);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    height: 32px;
+    text-decoration: none;
+
+    &:hover {
+        background: var(--color-panelHover);
+        border-color: var(--color-primary);
     }
 
-    button {
-        padding: var(--space-xs) var(--space-md);
-        background: var(--color-background);
-        border: 1px solid var(--color-grid);
-        border-radius: var(--radius-sm);
-        color: var(--color-text);
-        cursor: pointer;
-        transition: all 0.2s ease;
-        font-size: var(--font-size-md);
+    &.active {
+        background: var(--color-primary);
+        color: #000;
+        border-color: var(--color-primary);
+        font-weight: 600;
+    }
+
+    &.btn-danger {
+        color: var(--color-error);
+        border-color: var(--color-error);
 
         &:hover {
-            background: var(--color-panel);
-            border-color: var(--color-text);
-        }
-
-        &.active {
-            background: var(--color-primary-bg);
-            border-color: var(--color-primary);
-            color: var(--color-primary);
-        }
-
-        &.btn-danger {
-            border-color: var(--color-error);
-            color: var(--color-error);
-
-            &:hover {
-                background: var(--color-error-bg);
-                border-color: var(--color-error);
-            }
+            background: var(--color-error);
+            color: #fff;
         }
     }
 }
 
 .settings-panel {
     position: absolute;
-    top: 100%;
-    right: var(--space-md);
-    margin-top: var(--space-xs);
+    top: 65px;
+    right: 20px;
+    width: 280px;
     background: var(--color-panel);
     border: 1px solid var(--color-grid);
     border-radius: var(--radius-md);
     padding: var(--space-md);
     box-shadow: var(--shadow-lg);
     z-index: 1000;
-    min-width: var(--width-md);
 
     .panel-header {
         display: flex;
-        align-items: center;
         justify-content: space-between;
+        align-items: center;
         margin-bottom: var(--space-md);
+        padding-bottom: var(--space-sm);
+        border-bottom: 1px solid var(--color-grid);
 
         h4 {
             margin: 0;
-            color: var(--color-primary);
             font-size: var(--font-size-md);
-            font-weight: 600;
+            color: var(--color-text);
         }
 
         .close-btn {
-            width: var(--size-icon-lg);
-            height: var(--size-icon-lg);
-            display: flex;
-            align-items: center;
-            justify-content: center;
             background: transparent;
-            border: 1px solid var(--color-grid);
-            border-radius: var(--radius-sm);
-            color: var(--color-text);
-            cursor: pointer;
-            font-size: var(--font-size-xl);
-            line-height: 1;
+            border: none;
+            font-size: var(--font-size-lg);
             padding: 0;
-            transition: all 0.2s ease;
-
+            width: 24px;
+            height: 24px;
+            
             &:hover {
-                background: var(--color-error-bg);
-                border-color: var(--color-error);
                 color: var(--color-error);
+                background: transparent;
             }
         }
     }
 
     .setting-row {
         display: flex;
-        align-items: center;
         justify-content: space-between;
-        gap: var(--space-md);
+        align-items: center;
         margin-bottom: var(--space-sm);
 
-        &:last-child {
-            margin-bottom: 0;
-        }
-
         label {
-            font-size: var(--font-size-md);
-            color: var(--color-text);
+            font-size: var(--font-size-sm);
+            color: var(--color-textMuted);
         }
 
-        .theme-select {
-            padding: var(--space-xs) var(--space-sm);
-            background: var(--color-background);
-            border: 1px solid var(--color-grid);
-            border-radius: var(--radius-sm);
+        select, input[type="color"] {
+            background: var(--color-inputBg);
+            border: 1px solid var(--color-inputBorder);
             color: var(--color-text);
-            font-size: var(--font-size-md);
+            padding: 4px 8px;
+            border-radius: var(--radius-sm);
+            font-family: var(--font-mono);
+            font-size: var(--font-size-sm);
             cursor: pointer;
-            min-width: var(--width-sm);
 
             &:focus {
                 outline: none;
@@ -127,28 +124,16 @@
         }
 
         input[type="color"] {
-            width: var(--width-xs);
-            height: var(--size-icon-xl);
-            padding: var(--space-xxs);
-            border: 1px solid var(--color-grid);
-            border-radius: var(--radius-sm);
-            background: var(--color-background);
-            cursor: pointer;
-
-            &::-webkit-color-swatch-wrapper {
-                padding: var(--space-xxs);
-            }
-
-            &::-webkit-color-swatch {
-                border: none;
-                border-radius: var(--radius-xs);
-            }
+            padding: 0;
+            width: 40px;
+            height: 24px;
+            border: none;
         }
     }
 
     .custom-colors {
         margin-top: var(--space-sm);
         padding-top: var(--space-sm);
-        border-top: 1px solid var(--color-grid);
+        border-top: 1px dashed var(--color-grid);
     }
 }

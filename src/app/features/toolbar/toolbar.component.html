@@ -1,5 +1,14 @@
 <div class="toolbar">
     <div class="group">
+        <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" class="nav-btn" title="Documentação">
+            📄 Docs
+        </a>
+        <a routerLink="/playground" routerLinkActive="active" class="nav-btn" title="Playground">
+            🎮 Quadro
+        </a>
+    </div>
+
+    <div class="group">
         <button (click)="randomize()" title="Aleatorizar Pesos">
             🎲 Aleatorizar
         </button>

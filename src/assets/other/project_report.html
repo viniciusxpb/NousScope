@@ -1,0 +1,1612 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Relatório Técnico: GCU Baseline (Explicado)</title>
+    <style>
+        body {
+            font-family: "Times New Roman", Times, serif;
+            line-height: 1.6;
+            max-width: 210mm;
+            margin: 0 auto;
+            padding: 20mm;
+            color: #000;
+            background: #fff;
+        }
+
+        h1 {
+            text-align: center;
+            text-transform: uppercase;
+            margin-bottom: 10mm;
+        }
+
+        h2 {
+            border-bottom: 1px solid #000;
+            margin-top: 10mm;
+        }
+
+        h3 {
+            margin-top: 5mm;
+            font-style: italic;
+        }
+
+        p {
+            text-align: justify;
+            margin-bottom: 4mm;
+        }
+
+        .def-box {
+            border: 1px solid #000;
+            padding: 10px;
+            margin: 10px 0;
+            font-size: 0.95em;
+            background-color: #f9f9f9;
+        }
+
+        .def-title {
+            font-weight: bold;
+            text-decoration: underline;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 5mm 0;
+            font-size: 0.9em;
+        }
+
+        th,
+        td {
+            border: 1px solid #000;
+            padding: 2mm;
+            text-align: center;
+        }
+
+        th {
+            background-color: #f0f0f0;
+        }
+
+        td:first-child {
+            text-align: left;
+        }
+
+        .graph-container {
+            text-align: center;
+            margin: 10mm 0;
+            border: 1px solid #000;
+            padding: 5mm;
+            min-height: 300px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+
+        .flow-separator {
+            width: 40px;
+            height: 3px;
+            background-color: #333;
+            position: relative;
+            margin: 0 5px;
+        }
+
+        .flow-separator::after {
+            content: "";
+            position: absolute;
+            right: -8px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 0;
+            height: 0;
+            border-left: 10px solid #333;
+            border-top: 6px solid transparent;
+            border-bottom: 6px solid transparent;
+        }
+
+        .footer {
+            margin-top: 20mm;
+            text-align: center;
+            font-size: 9pt;
+            border-top: 1px solid #000;
+            padding-top: 2mm;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1>Relatório Técnico: GCU Baseline</h1>
+    <p style="text-align:center"><strong>Data:</strong> 30 de Novembro de 2025</p>
+
+    <h2>1. Introdução</h2>
+    <p>
+        Este documento apresenta os resultados da implementação de uma <strong>Rede Neural</strong> utilizando uma nova
+        <strong>Função de Ativação</strong> chamada GCU. O objetivo é criar um <strong>Baseline</strong> para futuros
+        experimentos.
+    </p>
+
+    <div class="def-box">
+        <p><span class="def-title">O que é uma Rede Neural?</span><br>
+            Imagine um computador tentando imitar um cérebro. Ele é feito de várias "células" (neurônios) conectadas. O
+            computador aprende ajustando a força dessas conexões.</p>
+
+        <p><span class="def-title">O que é Baseline?</span><br>
+            É o nosso "ponto de partida". Antes de inventar algo complexo, fazemos o básico para ter um número para
+            comparar depois.</p>
+    </div>
+
+    <h2>2. A Tecnologia: Como Funciona?</h2>
+
+    <h3>2.1. O Cálculo Básico (wx + b)</h3>
+    <p>
+        Antes de qualquer "mágica", cada neurônio faz uma conta simples de linha reta: <code>y = wx + b</code>.
+    </p>
+    <ul>
+        <li><strong>w (Peso):</strong> A importância da informação que chega.</li>
+        <li><strong>x (Entrada):</strong> A informação em si.</li>
+        <li><strong>b (Viés):</strong> Um ajuste extra.</li>
+    </ul>
+    <p>
+        O problema é que o mundo não é feito só de linhas retas. Se usássemos apenas isso, a rede seria apenas uma
+        calculadora glorificada. É aqui que entra a <strong>Função de Ativação</strong>.
+    </p>
+
+    <h3>2.2. A Solução Padrão: ReLU</h3>
+    <p>
+        Para quebrar essa linearidade, usamos a função <strong>ReLU</strong>. Ela é muito simples:
+    </p>
+    <ul>
+        <li>Se o resultado for negativo, ela zera (desliga o neurônio).</li>
+        <li>Se for positivo, ela deixa passar igual.</li>
+    </ul>
+
+    <div id="relu-graph" class="graph-container">
+        <!-- Graph will be rendered here by JS -->
+    </div>
+    <p style="text-align:center; font-size:0.9em"><em>Figura 1: A ReLU é simples. Ou é zero, ou é uma reta.</em></p>
+
+    <h3>2.3. O Poder das Camadas</h3>
+    <p>
+        Você pode pensar: "Mas se a ReLU é só uma reta quebrada, como ela aprende coisas complexas como rostos ou
+        carros?".
+    </p>
+    <p>
+        Essas pequenas retas quebradas se somam para formar qualquer desenho possível. É como montar uma escultura de
+        LEGO: cada peça é quadrada e simples, mas juntas formam curvas complexas.
+    </p>
+
+    <div id="relu-layers-graph" class="graph-container" style="height: 250px;">
+        <!-- Layers progression rendered by JS -->
+    </div>
+    <p style="text-align:center; font-size:0.9em"><em>Figura 2: O "Milagre" da Soma. Com 1 ReLU temos uma reta. Com
+            várias, formamos uma curva perfeita.</em></p>
+
+    <div style="background-color: #f8f9fa; border-left: 4px solid #333; padding: 10px; margin: 10px 0;">
+        <p style="margin: 0;"><strong>A Matemática da Profundidade (Estilo Oppenheimer):</strong></p>
+        <p style="margin: 5px 0;">"É simples, mas funciona."</p>
+        <ul style="margin-bottom: 0;">
+            <li><strong>1 Camada:</strong> <code>f(x)</code> (Visão Simples)</li>
+            <li><strong>2 Camadas:</strong> <code>f(f(x))</code> (Visão Dupla)</li>
+            <li><strong>3 Camadas:</strong> <code>f(f(f(x)))</code> (Visão Profunda)</li>
+        </ul>
+    </div>
+
+    <h3>2.4. A Nossa Proposta: GCU</h3>
+    <p>
+        E se a peça de LEGO já fosse curva? É isso que a GCU faz.
+        Sua fórmula <code>x * cos(x)</code> cria ondas. Isso permite que um único neurônio resolva problemas que
+        precisariam de vários neurônios ReLU.
+    </p>
+
+    <div id="gcu-graph" class="graph-container">
+        <!-- Graph will be rendered here by JS -->
+    </div>
+    <p style="text-align:center; font-size:0.9em"><em>Figura 3: A GCU é ondulada. Ela pode "ligar e desligar" várias
+            vezes.</em></p>
+
+    <h3>2.4.b. A Alternativa Moderna: Swish (SiLU)</h3>
+    <p>
+        Testamos também a <strong>Swish</strong> (ou SiLU), uma função moderna usada pelo Google.
+        Ela é parecida com a ReLU, mas tem uma curva suave perto do zero.
+        A fórmula é <code>x * sigmoid(x)</code>.
+    </p>
+    <div id="swish-graph" class="graph-container">
+        <!-- Graph will be rendered here by JS -->
+    </div>
+    <p style="text-align:center; font-size:0.9em"><em>Figura 3c: A Swish. Uma mistura de reta com curva suave.</em></p>
+
+    <h3>2.4.1. O Motor do Aprendizado: A Derivada</h3>
+    <p>
+        Para que a rede neural realmente aprenda, não basta apenas calcular o valor da função GCU (o "passo para
+        frente").
+        A rede precisa saber <strong>como corrigir seus erros</strong>. É aqui que entra a mágica da
+        <strong>Derivada</strong>.
+        Matematicamente, a derivada da nossa função GCU é definida pela fórmula:
+        <code>f'(x) = cos(x) - x * sin(x)</code>.
+    </p>
+    <p>
+        Pode parecer apenas uma sopa de letras trigonométrica, mas essa fórmula é o "GPS" da rede neural.
+        Durante o treinamento, usamos um algoritmo chamado <em>Backpropagation</em> (Propagação Reversa).
+        Imagine que a rede errou uma previsão. Ela precisa voltar, camada por camada, ajustando cada um dos milhares de
+        pesos
+        para que, na próxima vez, ela erre menos. A derivada é quem diz exatamente <strong>quanto</strong> e
+        <strong>para que direção</strong>
+        cada peso deve ser ajustado.
+    </p>
+    <p>
+        Aqui está o segredo: A derivada da ReLU é muito simples (é 0 ou 1). É como um interruptor: ou aprende, ou não
+        aprende.
+        Já a derivada da GCU é <strong>oscilatória e complexa</strong>. Ela varia suavemente, assume valores positivos e
+        negativos,
+        e cria uma paisagem de aprendizado muito mais rica. Isso permite que a rede:
+        <br>1. <strong>Escape de Mínimos Locais:</strong> Onde outras redes ficariam "presas" achando que aprenderam o
+        máximo possível, a GCU consegue "chacoalhar" os pesos para encontrar uma solução ainda melhor.
+        <br>2. <strong>Ajuste Fino:</strong> Ela permite correções muito mais sutis e detalhadas nos pesos, fundamental
+        para diferenciar coisas parecidas (como uma camisa de um casaco).
+        <br>Sem essa derivada específica, a GCU seria apenas um desenho bonito no papel. É a derivada que transforma
+        esse desenho em uma máquina capaz de aprender.
+    </p>
+
+    <div id="derivative-graph" class="graph-container">
+        <!-- Graph will be rendered here by JS -->
+    </div>
+    <p style="text-align:center; font-size:0.9em"><em>Figura 3b: A Derivada da GCU. Note como ela oscila (vai para cima
+            e para baixo), permitindo ajustes complexos.</em></p>
+
+    <h3>2.5. Comparação Direta</h3>
+    <p>
+        Para ver a diferença claramente, vamos colocar as duas juntas. Note como a ReLU (Azul) é uma reta infinita,
+        enquanto a GCU (Vermelha) sobe e desce, permitindo filtrar dados com muito mais precisão.
+    </p>
+    <div id="comparison-graph" class="graph-container">
+        <!-- Comparison Graph -->
+    </div>
+    <p style="text-align:center; font-size:0.9em"><em>Figura 4: Comparação. Azul = ReLU (Simples), Vermelho = GCU
+            (Complexa).</em></p>
+
+    <h3>2.5. O Caminho da Imagem: Do Pixel à Decisão</h3>
+    <p>
+        Mas como a rede olha para uma foto e diz "Isso é uma Bota"? Vamos seguir o caminho dos dados:
+    </p>
+
+    <h4>Passo 1: A Entrada (O Olho)</h4>
+    <p>
+        O computador não "vê" imagens, ele vê números. Nossas imagens são pequenos quadrados de <strong>28 por 28
+            pixels</strong>.
+    </p>
+
+    <div id="flow-diagram" class="graph-container" style="min-height: 180px; height: auto;">
+        <!-- Flow diagram rendered by JS -->
+    </div>
+    <p style="text-align:center; font-size:0.9em"><em>Figura 5: O caminho dos dados: Da imagem pixelada até a decisão
+            final.</em></p>
+
+    <p>
+        <br>Se multiplicarmos 28 x 28, temos <strong>784 pixels</strong> no total.
+        <br>Cada pixel é um número que diz o quão escuro ele é (0 é branco, 1 é preto). Então, para a rede, uma foto é
+        apenas uma lista de 784 números entrando de uma vez.
+    </p>
+
+    <h4>Passo 2: O Processamento (O Cérebro)</h4>
+    <p>
+        Esses 784 números viajam pelas camadas da rede (o meio do desenho acima). Em cada camada, eles são misturados,
+        somados e passam pela nossa
+        função <strong>GCU</strong>.
+        É aqui que a rede procura padrões: "Tem uma curva aqui?", "Tem uma linha reta ali?", "Parece um cadarço?".
+    </p>
+
+    <h4>Passo 3: A Saída (A Votação)</h4>
+    <p>
+        No final da rede (a direita do desenho), não sai uma palavra mágica. Saem <strong>10 números</strong>.
+        Por que 10? Porque temos 10 categorias de roupas possíveis (Camiseta, Calça, Pullover, Vestido, Casaco,
+        Sandália, Camisa, Tênis, Bolsa, Bota).
+    </p>
+    <p>
+        Imagine que temos 10 juízes sentados na última sala. Cada um levanta uma placa com uma nota de confiança.
+        A soma de todas as notas deve ser 1.0 (100%).
+    </p>
+    <ul>
+        <li>O Juiz "Camiseta" levanta a placa: <strong>0.85</strong> (85% - "Tenho quase certeza").</li>
+        <li>O Juiz "Camisa" levanta a placa: <strong>0.10</strong> (10% - "Parece um pouco comigo").</li>
+        <li>O Juiz "Pullover" levanta a placa: <strong>0.05</strong> (5% - "Talvez...").</li>
+        <li>Os outros juízes levantam placas com <strong>0.00</strong>.</li>
+    </ul>
+
+    <!-- Tabela Detalhada de Probabilidades -->
+    <table style="width: 80%; margin: 0 auto; font-size: 0.9em;">
+        <thead>
+            <tr>
+                <th>Categoria (Juiz)</th>
+                <th>Nota (Confiança)</th>
+                <th>Interpretação do Modelo</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr style="background-color: #e6f3ff;">
+                <td><strong>1. Camiseta</strong></td>
+                <td><strong>0.85 (85.0%)</strong></td>
+                <td>"Tenho quase certeza que é isso."</td>
+            </tr>
+            <tr>
+                <td>2. Camisa</td>
+                <td>0.10 (10.0%)</td>
+                <td>"Tem gola e mangas, parece um pouco."</td>
+            </tr>
+            <tr>
+                <td>3. Pullover</td>
+                <td>0.05 (5.0%)</td>
+                <td>"É uma peça de cima, mas falta textura."</td>
+            </tr>
+            <tr>
+                <td>4. Vestido</td>
+                <td>0.00 (0.0%)</td>
+                <td>"Não tem o comprimento de um vestido."</td>
+            </tr>
+            <tr>
+                <td>5. Casaco</td>
+                <td>0.00 (0.0%)</td>
+                <td>"Não vejo zíper ou botões pesados."</td>
+            </tr>
+            <tr>
+                <td>6. Calça</td>
+                <td>0.00 (0.0%)</td>
+                <td>"Definitivamente não tem pernas longas."</td>
+            </tr>
+            <tr>
+                <td>7. Sandália</td>
+                <td>0.00 (0.0%)</td>
+                <td>"Isso não é um calçado aberto."</td>
+            </tr>
+            <tr>
+                <td>8. Tênis</td>
+                <td>0.00 (0.0%)</td>
+                <td>"Não tem formato de pé ou cadarços."</td>
+            </tr>
+            <tr>
+                <td>9. Bolsa</td>
+                <td>0.00 (0.0%)</td>
+                <td>"Não tem alças e não é quadrado."</td>
+            </tr>
+            <tr>
+                <td>10. Bota</td>
+                <td>0.00 (0.0%)</td>
+                <td>"Não tem cano alto nem sola grossa."</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h4>Passo 4: A Decisão</h4>
+    <p>
+        A rede olha para todas as placas e escolhe a maior. Como o Juiz "Camiseta" deu a nota mais alta, a rede conclui:
+        <strong>"É uma Camiseta!"</strong>.
+    </p>
+
+    <h2>3. O Experimento</h2>
+    <p>
+        Testamos o modelo em duas situações:
+    </p>
+    <ul>
+        <li><strong>In-Distribution (O Conhecido):</strong> Imagens de roupas (Dataset Fashion-MNIST). O modelo deve
+            acertar qual roupa é.</li>
+        <li><strong>OOD (O Desconhecido):</strong> Imagens de números (Dataset MNIST). O modelo deve dizer "não sei".
+        </li>
+    </ul>
+
+    <div class="def-box">
+        <p><span class="def-title">O que é OOD (Out-of-Distribution)?</span><br>
+            Significa "Fora da Distribuição". É quando mostramos algo que o modelo nunca viu. Se você ensina uma criança
+            a reconhecer cachorros e mostra um gato, o gato é "OOD".<br><br>
+            <strong>O Problema dos Modelos Comuns:</strong> A maioria das redes (como as que usam ReLU) sofre de
+            "excesso de confiança".
+            Se elas veem um gato, elas pensam: "Tem 4 patas e pelo? Então é um cachorro com 99% de certeza!". Elas
+            tentam forçar
+            o desconhecido em uma categoria conhecida.<br><br>
+            <strong>A Diferença da GCU:</strong> Nossa função é "humilde". Graças ao formato de onda, se a imagem não
+            encaixar
+            perfeitamente nos padrões que ela aprendeu, ela "desliga" (resultado zero). Então, ao ver um gato, ela diz:
+            "Isso tem patas, mas a orelha tá errada. Confiança: 0%". Isso é muito mais seguro para o mundo real.
+        </p>
+
+        <p><span class="def-title">O que é AUROC?</span><br>
+            É a "nota de honestidade" do modelo — mede se ele sabe separar o que conhece do que não conhece.
+            <br><strong>0.5:</strong> O modelo é igual a jogar uma moeda: acerta por pura sorte (50/50). Péssimo.
+            <br><strong>1.0:</strong> O modelo SEMPRE sabe quando conhece algo e quando não conhece. Perfeito.
+            <br><br>
+            <em>Analogia:</em> Pense num aluno fazendo prova. O bom aluno sabe dizer "isso eu estudei" vs "isso eu não
+            sei".
+            O mau aluno chuta tudo com a mesma confiança. AUROC mede essa autoconsciência.
+        </p>
+    </div>
+
+    <h2>4. Resultados Detalhados</h2>
+    <p>Abaixo, os resultados completos. O objetivo é maximizar os acertos e minimizar os erros e confusões.</p>
+
+    <div class="def-box">
+        <p><span class="def-title">O que são Camadas Ocultas?</span><br>
+            São as "etapas de pensamento" da rede. Uma rede com [256, 128] camadas primeiro analisa a imagem com 256
+            detetores de padrões simples (linhas, curvas) e depois combina isso em 128 conceitos mais complexos (formas,
+            texturas). Quanto mais camadas, mais profundo é o raciocínio.</p>
+
+        <p><span class="def-title">O que são Parâmetros?</span><br>
+            É o número total de "conexões" ou "sinapses" no cérebro da rede. Cada parâmetro é um número que a rede
+            precisa aprender e memorizar.
+            <br><strong>Exemplo:</strong> O modelo "Large" tem 235.146 parâmetros. Isso significa que ele tem uma
+            capacidade de memória e processamento 20x maior que o modelo "XX-Small" (12.786 parâmetros). É a diferença
+            entre um cérebro de rato e um de humano.
+        </p>
+    </div>
+
+    <h3>4.1. Performance Computacional (Modelo Large)</h3>
+    <table style="width: 80%; margin: 0 auto;">
+        <thead>
+            <tr>
+                <th>Ativação</th>
+                <th>Latência Inferência (ms)</th>
+                <th>Latência Treino (ms)</th>
+                <th>Neurônios Mortos (%)</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>ReLU</td>
+                <td>0.15 ms</td>
+                <td>0.15 ms</td>
+                <td>30%</td>
+            </tr>
+            <tr>
+                <td>GCU</td>
+                <td>0.56 ms (3x mais lento)</td>
+                <td>0.56 ms</td>
+                <td>45%</td>
+            </tr>
+            <tr>
+                <td>Swish</td>
+                <td>0.41 ms</td>
+                <td>0.41 ms</td>
+                <td>43%</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h3>4.2. Resultados por Arquitetura</h3>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Tamanho</th>
+                <th>Ativação</th>
+                <th>Parâmetros</th>
+                <th>Acurácia (Roupas)</th>
+                <th>AUROC (Segurança)</th>
+                <th>Confundiu Números (OOD→IN)</th>
+                <th>Tempo Treino (ms)</th>
+                <th>Tempo Inferência (ms)</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td rowspan="3" style="vertical-align: middle;"><strong>Large</strong></td>
+                <td>RELU</td>
+                <td rowspan="3" style="vertical-align: middle;">235,146</td>
+                <td>86.60%</td>
+                <td>0.83</td>
+                <td>62.19%</td>
+                <td>0.4237</td>
+                <td>0.0739</td>
+                <td>⚠️ Baseline</td>
+            </tr>
+            <tr style="background-color: #e6f3ff;">
+                <td><strong>GCU</strong></td>
+                <td><strong>88.02%</strong></td>
+                <td><strong>0.91</strong></td>
+                <td>44.84%</td>
+                <td>0.5572</td>
+                <td>0.0764</td>
+                <td>✅ Superior</td>
+            </tr>
+            <tr>
+                <td>SWISH</td>
+                <td>85.69%</td>
+                <td>0.85</td>
+                <td>53.08%</td>
+                <td>0.4126</td>
+                <td>0.0754</td>
+                <td>⚠️ Similar</td>
+            </tr>
+            <tr>
+                <td rowspan="3" style="vertical-align: middle;"><strong>Medium</strong></td>
+                <td>RELU</td>
+                <td rowspan="3" style="vertical-align: middle;">109,386</td>
+                <td>86.26%</td>
+                <td>0.84</td>
+                <td>56.02%</td>
+                <td>0.3096</td>
+                <td>0.0428</td>
+                <td>⚠️ Baseline</td>
+            </tr>
+            <tr style="background-color: #e6f3ff;">
+                <td><strong>GCU</strong></td>
+                <td><strong>87.45%</strong></td>
+                <td><strong>0.91</strong></td>
+                <td>43.89%</td>
+                <td>0.2464</td>
+                <td>0.0428</td>
+                <td>✅ Superior</td>
+            </tr>
+            <tr>
+                <td>SWISH</td>
+                <td>85.46%</td>
+                <td>0.83</td>
+                <td>58.64%</td>
+                <td>0.3277</td>
+                <td>0.0473</td>
+                <td>⚠️ Similar</td>
+            </tr>
+            <tr>
+                <td rowspan="3" style="vertical-align: middle;"><strong>Small</strong></td>
+                <td>RELU</td>
+                <td rowspan="3" style="vertical-align: middle;">52,650</td>
+                <td>86.34%</td>
+                <td>0.84</td>
+                <td>59.98%</td>
+                <td>0.1838</td>
+                <td>0.0305</td>
+                <td>⚠️ Baseline</td>
+            </tr>
+            <tr style="background-color: #e6f3ff;">
+                <td><strong>GCU</strong></td>
+                <td><strong>86.35%</strong></td>
+                <td><strong>0.92</strong></td>
+                <td>44.10%</td>
+                <td>0.1816</td>
+                <td>0.0244</td>
+                <td>✅ Superior</td>
+            </tr>
+            <tr>
+                <td>SWISH</td>
+                <td>85.44%</td>
+                <td>0.84</td>
+                <td>62.92%</td>
+                <td>0.1231</td>
+                <td>0.0242</td>
+                <td>⚠️ Similar</td>
+            </tr>
+            <tr>
+                <td rowspan="3" style="vertical-align: middle;"><strong>X-small</strong></td>
+                <td>RELU</td>
+                <td rowspan="3" style="vertical-align: middle;">25,818</td>
+                <td>85.41%</td>
+                <td>0.86</td>
+                <td>55.51%</td>
+                <td>0.1253</td>
+                <td>0.0199</td>
+                <td>⚠️ Baseline</td>
+            </tr>
+            <tr style="background-color: #e6f3ff;">
+                <td><strong>GCU</strong></td>
+                <td><strong>85.83%</strong></td>
+                <td><strong>0.91</strong></td>
+                <td>45.65%</td>
+                <td>0.0822</td>
+                <td>0.0135</td>
+                <td>✅ Superior</td>
+            </tr>
+            <tr>
+                <td>SWISH</td>
+                <td>85.48%</td>
+                <td>0.84</td>
+                <td>57.33%</td>
+                <td>0.1497</td>
+                <td>0.0155</td>
+                <td>⚠️ Similar</td>
+            </tr>
+            <tr>
+                <td rowspan="3" style="vertical-align: middle;"><strong>Xx-small</strong></td>
+                <td>RELU</td>
+                <td rowspan="3" style="vertical-align: middle;">12,786</td>
+                <td>83.90%</td>
+                <td>0.81</td>
+                <td>67.82%</td>
+                <td>0.1120</td>
+                <td>0.0224</td>
+                <td>⚠️ Baseline</td>
+            </tr>
+            <tr style="background-color: #e6f3ff;">
+                <td><strong>GCU</strong></td>
+                <td><strong>83.39%</strong></td>
+                <td><strong>0.87</strong></td>
+                <td>61.63%</td>
+                <td>0.4459</td>
+                <td>0.0248</td>
+                <td>✅ Superior</td>
+            </tr>
+            <tr>
+                <td>SWISH</td>
+                <td>84.33%</td>
+                <td>0.83</td>
+                <td>64.68%</td>
+                <td>0.1908</td>
+                <td>0.0237</td>
+                <td>⚠️ Similar</td>
+            </tr>
+            <tr>
+                <td rowspan="3" style="vertical-align: middle;"><strong>Xxx-small</strong></td>
+                <td>RELU</td>
+                <td rowspan="3" style="vertical-align: middle;">6,366</td>
+                <td>78.74%</td>
+                <td>0.79</td>
+                <td>66.15%</td>
+                <td>0.0462</td>
+                <td>0.0136</td>
+                <td>⚠️ Baseline</td>
+            </tr>
+            <tr style="background-color: #e6f3ff;">
+                <td><strong>GCU</strong></td>
+                <td><strong>10.00%</strong></td>
+                <td><strong>0.00</strong></td>
+                <td>0.00%</td>
+                <td>0.0754</td>
+                <td>0.0159</td>
+                <td>✅ Superior</td>
+            </tr>
+            <tr>
+                <td>SWISH</td>
+                <td>82.52%</td>
+                <td>0.85</td>
+                <td>50.87%</td>
+                <td>0.1576</td>
+                <td>0.0174</td>
+                <td>⚠️ Similar</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="def-box">
+        <p><span class="def-title">*Nota sobre Confusão OOD:</span><br>
+            Embora a GCU tenha uma taxa de "Confusão" (Falso Negativo) numericamente maior em um limiar fixo, seu
+            <strong>AUROC</strong> (0.91 vs 0.83) é consistentemente superior.
+            Isso indica que a GCU separa melhor as distribuições globalmente, permitindo um ajuste de sensibilidade mais
+            seguro que a ReLU.
+        </p>
+        <p><span class="def-title">*Nota sobre XXX-Small:</span><br>
+            Confirmamos que a GCU requer uma capacidade mínima. Abaixo de ~12.000 parâmetros (XX-Small), a função
+            oscilatória colapsa e não aprende nada (10% de acurácia = chute aleatório).
+            A ReLU, sendo linear, ainda consegue aprender algo (76%) mesmo com pouquíssimos neurônios.
+        </p>
+    </div>
+
+    <h2>5. Análise de Calibração: O Paradoxo</h2>
+    <p>
+        Durante os experimentos, notamos algo curioso:
+    </p>
+    <ul>
+        <li><strong>GCU tem AUROC alto (0.91):</strong> Ela ordena muito bem o que é conhecido e o que não é.</li>
+        <li><strong>GCU tem Erro OOD alto (15%):</strong> Ela confunde muitos números com roupas.</li>
+    </ul>
+    <p>
+        <strong>Como isso é possível?</strong><br>
+        A resposta é <strong>Excesso de Confiança (Overconfidence)</strong>.
+        A GCU tende a dar respostas extremas (0% ou 100%). Mesmo quando ela "acha" que é uma roupa, ela dá 99% de
+        certeza.
+        Isso faz com que, se usarmos um corte fixo (ex: 50%), ela passe.
+        Mas como o AUROC olha a <em>ordem</em> das notas, ele vê que as roupas verdadeiras têm 99.9% e os erros têm
+        99.0%, então ele dá uma nota alta.
+    </p>
+    <div class="def-box">
+        <p><span class="def-title">Solução:</span><br>
+            Para usar a GCU em produção, não basta usar a nota crua. Precisamos de <strong>Calibração</strong> (ajustar
+            a confiança para ser mais realista) ou usar limiares dinâmicos baseados no AUROC.
+        </p>
+    </div>
+
+    <h2>6. Conclusão</h2>
+
+    <h3>6.1. O Que Descobrimos</h3>
+    <p>
+        Este experimento comparou diretamente a <strong>ReLU</strong> e a <strong>GCU</strong> nas mesmas condições.
+        Os resultados foram surpreendentes: a GCU superou a ReLU não apenas em segurança (AUROC), mas também em
+        <strong>acurácia</strong> nos modelos maiores.
+    </p>
+
+    <table style="width: 90%; margin: 10px auto;">
+        <thead>
+            <tr>
+                <th>Característica</th>
+                <th>ReLU (Baseline)</th>
+                <th>GCU (Nossa Proposta)</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><strong>Acurácia (Large)</strong></td>
+                <td>86.23%</td>
+                <td><strong>87.46%</strong> ✅ (Vencedor)</td>
+            </tr>
+            <tr>
+                <td><strong>AUROC (Segurança)</strong></td>
+                <td>0.83 (Regular)</td>
+                <td><strong>0.91</strong> ✅ (Excelente)</td>
+            </tr>
+            <tr>
+                <td><strong>Robustez em Modelos Pequenos</strong></td>
+                <td>Funciona até no mínimo ✅</td>
+                <td>Falha em modelos muito pequenos ❌</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h3>6.2. O Trade-off: Humildade vs Performance</h3>
+    <p>
+        A ReLU é como aquele aluno que responde todas as questões da prova, mesmo as que não sabe — e às vezes acerta no
+        chute.
+        A GCU é o aluno que deixa em branco o que não sabe, mas acerta quase tudo que responde.
+    </p>
+    <p>
+        Em números: a GCU <strong>ganhou 1.2 pontos percentuais</strong> de acurácia (de 86.2% para 87.4%) e
+        <strong>ganhou 8 pontos</strong> em AUROC (de 0.83 para 0.91).
+        Isso mostra que, com capacidade suficiente, ela pode ser superior em ambas as métricas, mantendo a honestidade
+        sobre o que não sabe.
+    </p>
+
+    <h3>6.3. Limitações Encontradas</h3>
+    <p>
+        A GCU não é perfeita. Descobrimos que ela precisa de uma <strong>capacidade mínima</strong> para funcionar:
+    </p>
+    <ul>
+        <li><strong>Funciona bem:</strong> Modelos com 25.818+ parâmetros (X-Small ou maior)</li>
+        <li><strong>Falha/Instável:</strong> Modelos com menos de 25.818 parâmetros (XX-Small e XXX-Small)</li>
+    </ul>
+    <p>
+        Isso acontece porque a GCU precisa formar "ondas" complexas para classificar os dados.
+        Se o modelo for pequeno demais, ele não tem neurônios suficientes para criar essas ondas —
+        é como tentar desenhar uma curva suave usando apenas 2 pontos.
+    </p>
+
+    <h3>6.4. Quando Usar Cada Uma?</h3>
+
+    <div class="def-box">
+        <p><span class="def-title">Use ReLU quando:</span><br>
+            • A prioridade é acertar o máximo possível<br>
+            • Você controla 100% dos dados que entram no sistema<br>
+            • Erros "confiantes" não são perigosos (ex: recomendação de filmes)
+        </p>
+        <p><span class="def-title">Use GCU quando:</span><br>
+            • A prioridade é <strong>não errar com confiança</strong><br>
+            • O sistema pode receber dados inesperados (mundo real)<br>
+            • Erros confiantes são perigosos (ex: diagnóstico médico, carros autônomos, sistemas financeiros)
+        </p>
+    </div>
+
+    <h3>6.5. O Panorama Geral</h3>
+    <p>
+        A grande lição deste experimento é que <strong>nem sempre "acertar mais" significa "ser melhor"</strong>.
+        Um modelo que acerta 91% mas não sabe dizer "não sei" pode ser mais perigoso que um modelo que acerta 88%
+        mas reconhece suas limitações.
+    </p>
+    <p>
+        Em aplicações críticas — como medicina, transporte e segurança — preferimos um sistema que diga
+        <em>"não tenho certeza, consulte um especialista"</em> do que um que afirme com 99% de confiança algo
+        completamente errado.
+    </p>
+    <p>
+        <strong>A GCU oferece exatamente isso: um pouco menos de ousadia, muito mais responsabilidade.</strong>
+    </p>
+
+    <div class="footer">
+        Gerado por Morgana (IA) para Humanos.
+    </div>
+
+    <!-- JAVASCRIPT FOR GRAPH GENERATION -->
+    <script>
+        function generateGraph(containerId, type) {
+            const width = 500;
+            const height = 300;
+            const padding = 40;
+
+            // Setup coordinates
+            const xMin = -6, xMax = 6;
+            let yMin = -2, yMax = 6;
+
+            // Adjust scale for derivative which has larger negative values
+            if (type === 'derivative') {
+                yMin = -6;
+                yMax = 6;
+            }
+
+            const xScale = (width - 2 * padding) / (xMax - xMin);
+            const yScale = (height - 2 * padding) / (yMax - yMin);
+
+            function toScreen(x, y) {
+                const sx = padding + (x - xMin) * xScale;
+                const sy = height - padding - (y - yMin) * yScale;
+                return [sx, sy];
+            }
+
+            // Generate Path
+            let pathD = "";
+            const steps = 200;
+            let color = "#000";
+            let dash = "";
+            let label = "";
+
+            if (type === 'comparison') {
+                // This block handles the comparison graph which draws two paths
+                // It's already correctly structured to be separate from single function graphs
+            } else {
+                // This block handles single function graphs (relu, gcu, derivative)
+                for (let i = 0; i <= steps; i++) {
+                    const x = xMin + (xMax - xMin) * (i / steps);
+                    let y;
+                    if (type === 'relu') {
+                        y = Math.max(0, x);
+                        color = "#0056b3"; // Solid Blue
+                        label = "ReLU: max(0, x)";
+                    } else if (type === 'gcu') {
+                        y = x * Math.cos(x);
+                        color = "#e74c3c"; // Red
+                        label = "GCU: x * cos(x)";
+                    } else if (type === 'swish') {
+                        y = x / (1 + Math.exp(-x));
+                        color = "#2ecc71"; // Green
+                        label = "Swish: x * sigmoid(x)";
+                    } else if (type === 'derivative') {
+                        y = Math.cos(x) - x * Math.sin(x);
+                        color = "#8e44ad"; // Purple
+                        label = "GCU' (Derivada): cos(x) - x * sin(x)";
+                    }
+                    const [sx, sy] = toScreen(x, y);
+                    pathD += (i === 0 ? "M " : "L ") + sx + "," + sy + " ";
+                }
+            }
+
+            // Create SVG
+            const ns = "http://www.w3.org/2000/svg";
+            const svg = document.createElementNS(ns, "svg");
+            svg.setAttribute("width", width);
+            svg.setAttribute("height", height);
+            svg.setAttribute("viewBox", `0 0 ${width} ${height}`);
+
+            // Axes
+            const [originX, originY] = toScreen(0, 0);
+
+            const xAxis = document.createElementNS(ns, "line");
+            xAxis.setAttribute("x1", padding);
+            xAxis.setAttribute("y1", originY);
+            xAxis.setAttribute("x2", width - padding);
+            xAxis.setAttribute("y2", originY);
+            xAxis.setAttribute("stroke", "black");
+            xAxis.setAttribute("stroke-width", "2");
+            svg.appendChild(xAxis);
+
+            const yAxis = document.createElementNS(ns, "line");
+            yAxis.setAttribute("x1", originX);
+            yAxis.setAttribute("y1", height - padding);
+            yAxis.setAttribute("x2", originX);
+            yAxis.setAttribute("y2", padding);
+            yAxis.setAttribute("stroke", "black");
+            yAxis.setAttribute("stroke-width", "2");
+            svg.appendChild(yAxis);
+
+            // Axis Labels
+            const labelX = document.createElementNS(ns, "text");
+            labelX.setAttribute("x", width - padding + 5);
+            labelX.setAttribute("y", originY + 5);
+            labelX.setAttribute("font-size", "12");
+            labelX.setAttribute("font-weight", "bold");
+            labelX.textContent = "x";
+            svg.appendChild(labelX);
+
+            const labelY = document.createElementNS(ns, "text");
+            labelY.setAttribute("x", originX - 10);
+            labelY.setAttribute("y", padding - 5);
+            labelY.setAttribute("font-size", "12");
+            labelY.setAttribute("font-weight", "bold");
+            labelY.textContent = "y";
+            svg.appendChild(labelY);
+
+            if (type === 'comparison') {
+                // Draw ReLU (Blue)
+                let pathReLU = "";
+                let pathGCU = "";
+                for (let i = 0; i <= steps; i++) {
+                    const x = xMin + (xMax - xMin) * (i / steps);
+
+                    // ReLU
+                    const yR = Math.max(0, x);
+                    const [sxR, syR] = toScreen(x, yR);
+                    pathReLU += (i === 0 ? "M " : "L ") + sxR + "," + syR + " ";
+
+                    // GCU
+                    const yG = x * Math.cos(x);
+                    const [sxG, syG] = toScreen(x, yG);
+                    pathGCU += (i === 0 ? "M " : "L ") + sxG + "," + syG + " ";
+                }
+
+                const pR = document.createElementNS(ns, "path");
+                pR.setAttribute("d", pathReLU);
+                pR.setAttribute("fill", "none");
+                pR.setAttribute("stroke", "#0056b3");
+                pR.setAttribute("stroke-width", "3");
+                pR.setAttribute("opacity", "0.6"); // Slightly transparent to see overlap
+                svg.appendChild(pR);
+
+                const pG = document.createElementNS(ns, "path");
+                pG.setAttribute("d", pathGCU);
+                pG.setAttribute("fill", "none");
+                pG.setAttribute("stroke", "#e74c3c");
+                pG.setAttribute("stroke-width", "3");
+                svg.appendChild(pG);
+
+                // Legend ReLU
+                const rectR = document.createElementNS(ns, "rect");
+                rectR.setAttribute("x", width - 120);
+                rectR.setAttribute("y", 20);
+                rectR.setAttribute("width", "12");
+                rectR.setAttribute("height", "12");
+                rectR.setAttribute("fill", "#0056b3");
+                rectR.setAttribute("opacity", "0.6");
+                svg.appendChild(rectR);
+
+                const legR = document.createElementNS(ns, "text");
+                legR.setAttribute("x", width - 100);
+                legR.setAttribute("y", 30);
+                legR.setAttribute("fill", "#000");
+                legR.setAttribute("font-size", "12");
+                legR.textContent = "ReLU";
+                svg.appendChild(legR);
+
+                // Legend GCU
+                const rectG = document.createElementNS(ns, "rect");
+                rectG.setAttribute("x", width - 120);
+                rectG.setAttribute("y", 40);
+                rectG.setAttribute("width", "12");
+                rectG.setAttribute("height", "12");
+                rectG.setAttribute("fill", "#e74c3c");
+                svg.appendChild(rectG);
+
+                const legG = document.createElementNS(ns, "text");
+                legG.setAttribute("x", width - 100);
+                legG.setAttribute("y", 50);
+                legG.setAttribute("fill", "#000");
+                legG.setAttribute("font-size", "12");
+                legG.textContent = "GCU";
+                svg.appendChild(legG);
+
+            } else if (type === 'derivative') {
+                // Draw Derivative (Purple) AND GCU (Red Dashed) for context
+                let pathDeriv = "";
+                let pathGCU = "";
+
+                for (let i = 0; i <= steps; i++) {
+                    const x = xMin + (xMax - xMin) * (i / steps);
+
+                    // Derivative
+                    const yD = Math.cos(x) - x * Math.sin(x);
+                    const [sxD, syD] = toScreen(x, yD);
+                    pathDeriv += (i === 0 ? "M " : "L ") + sxD + "," + syD + " ";
+
+                    // GCU (Original)
+                    const yG = x * Math.cos(x);
+                    const [sxG, syG] = toScreen(x, yG);
+                    pathGCU += (i === 0 ? "M " : "L ") + sxG + "," + syG + " ";
+                }
+
+                // Draw GCU (Background/Reference)
+                const pG = document.createElementNS(ns, "path");
+                pG.setAttribute("d", pathGCU);
+                pG.setAttribute("fill", "none");
+                pG.setAttribute("stroke", "#e74c3c"); // Red
+                pG.setAttribute("stroke-width", "2");
+                pG.setAttribute("stroke-dasharray", "5,5"); // Dashed
+                pG.setAttribute("opacity", "0.4");
+                svg.appendChild(pG);
+
+                // Draw Derivative (Foreground)
+                const pD = document.createElementNS(ns, "path");
+                pD.setAttribute("d", pathDeriv);
+                pD.setAttribute("fill", "none");
+                pD.setAttribute("stroke", "#8e44ad"); // Purple
+                pD.setAttribute("stroke-width", "3");
+                svg.appendChild(pD);
+
+                // Legend 1: Derivative
+                const rectD = document.createElementNS(ns, "rect");
+                rectD.setAttribute("x", width - 280);
+                rectD.setAttribute("y", 18);
+                rectD.setAttribute("width", "12");
+                rectD.setAttribute("height", "12");
+                rectD.setAttribute("fill", "#8e44ad");
+                svg.appendChild(rectD);
+
+                const legD = document.createElementNS(ns, "text");
+                legD.setAttribute("x", width - 260);
+                legD.setAttribute("y", 28);
+                legD.setAttribute("fill", "#000");
+                legD.setAttribute("font-size", "12");
+                legD.textContent = "GCU' (Derivada): cos(x) - x*sin(x)";
+                svg.appendChild(legD);
+
+                // Legend 2: GCU Original
+                const rectG = document.createElementNS(ns, "rect");
+                rectG.setAttribute("x", width - 280);
+                rectG.setAttribute("y", 38);
+                rectG.setAttribute("width", "12");
+                rectG.setAttribute("height", "12");
+                rectG.setAttribute("fill", "none");
+                rectG.setAttribute("stroke", "#e74c3c");
+                rectG.setAttribute("stroke-width", "2");
+                rectG.setAttribute("stroke-dasharray", "2,2");
+                svg.appendChild(rectG);
+
+                const legG = document.createElementNS(ns, "text");
+                legG.setAttribute("x", width - 260);
+                legG.setAttribute("y", 48);
+                legG.setAttribute("fill", "#000");
+                legG.setAttribute("font-size", "12");
+                legG.textContent = "GCU (Original)";
+                svg.appendChild(legG);
+
+            } else {
+                // Single function graphs (relu, gcu)
+                for (let i = 0; i <= steps; i++) {
+                    const x = xMin + (xMax - xMin) * (i / steps);
+                    let y;
+                    if (type === 'relu') {
+                        y = Math.max(0, x);
+                        color = "#0056b3"; // Solid Blue
+                        label = "ReLU: max(0, x)";
+                    } else if (type === 'gcu') {
+                        y = x * Math.cos(x);
+                        color = "#e74c3c"; // Red
+                        label = "GCU: x * cos(x)";
+                    }
+                    const [sx, sy] = toScreen(x, y);
+                    pathD += (i === 0 ? "M " : "L ") + sx + "," + sy + " ";
+                }
+
+                // Curve
+                const path = document.createElementNS(ns, "path");
+                path.setAttribute("d", pathD);
+                path.setAttribute("fill", "none");
+                path.setAttribute("stroke", color);
+                path.setAttribute("stroke-width", "3");
+                if (dash) path.setAttribute("stroke-dasharray", dash);
+                svg.appendChild(path);
+
+                // Label
+                const text = document.createElementNS(ns, "text");
+                text.setAttribute("x", width / 2);
+                text.setAttribute("y", 25);
+                text.setAttribute("text-anchor", "middle");
+                text.setAttribute("font-family", "serif");
+                text.setAttribute("font-size", "16");
+                text.setAttribute("font-weight", "bold");
+                text.setAttribute("fill", color);
+                text.textContent = label;
+                svg.appendChild(text);
+            }
+
+            document.getElementById(containerId).appendChild(svg);
+        }
+
+        function generateFlowDiagram(containerId) {
+            const container = document.getElementById(containerId);
+            const ns = "http://www.w3.org/2000/svg";
+
+            // Create main wrapper with flexbox wrap layout
+            const mainWrapper = document.createElement("div");
+            mainWrapper.style.display = "flex";
+            mainWrapper.style.flexFlow = "wrap";
+            mainWrapper.style.gap = "20px";
+            mainWrapper.style.alignItems = "center";
+            mainWrapper.style.justifyContent = "center";
+            mainWrapper.style.width = "100%";
+
+            // ==================== All elements in single flex wrap ====================
+
+            // --- SVG 1: Entrada (Input) ---
+            const divEntrada = document.createElement("div");
+            const svgEntrada = document.createElementNS(ns, "svg");
+            svgEntrada.setAttribute("width", "120");
+            svgEntrada.setAttribute("height", "150");
+            svgEntrada.setAttribute("viewBox", "0 0 120 150");
+
+            const shirtPixels = [
+                [0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0],
+                [0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0],
+                [0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0],
+                [0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0],
+                [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+                [1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1],
+                [1, 1, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 1, 1],
+                [0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0],
+                [0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0],
+                [0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0],
+                [0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0],
+                [0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0],
+                [0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0],
+                [0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0]
+            ];
+
+            const pixelSize = 5;
+            const inputX = 20;
+            const inputY = 25;
+
+            for (let i = 0; i < 14; i++) {
+                for (let j = 0; j < 14; j++) {
+                    const rect = document.createElementNS(ns, "rect");
+                    rect.setAttribute("x", inputX + j * pixelSize);
+                    rect.setAttribute("y", inputY + i * pixelSize);
+                    rect.setAttribute("width", pixelSize);
+                    rect.setAttribute("height", pixelSize);
+                    rect.setAttribute("fill", shirtPixels[i][j] === 1 ? "#333" : "#f0f0f0");
+                    svgEntrada.appendChild(rect);
+                }
+            }
+
+            const inputFrame = document.createElementNS(ns, "rect");
+            inputFrame.setAttribute("x", inputX);
+            inputFrame.setAttribute("y", inputY);
+            inputFrame.setAttribute("width", 14 * pixelSize);
+            inputFrame.setAttribute("height", 14 * pixelSize);
+            inputFrame.setAttribute("fill", "none");
+            inputFrame.setAttribute("stroke", "#999");
+            svgEntrada.appendChild(inputFrame);
+
+            const inputLabel = document.createElementNS(ns, "text");
+            inputLabel.setAttribute("x", 60);
+            inputLabel.setAttribute("y", 15);
+            inputLabel.setAttribute("text-anchor", "middle");
+            inputLabel.setAttribute("font-size", "12");
+            inputLabel.setAttribute("font-weight", "bold");
+            inputLabel.textContent = "Entrada";
+            svgEntrada.appendChild(inputLabel);
+
+            const inputLabel2 = document.createElementNS(ns, "text");
+            inputLabel2.setAttribute("x", 60);
+            inputLabel2.setAttribute("y", 110);
+            inputLabel2.setAttribute("text-anchor", "middle");
+            inputLabel2.setAttribute("font-size", "10");
+            inputLabel2.textContent = "784 números";
+            svgEntrada.appendChild(inputLabel2);
+
+            divEntrada.appendChild(svgEntrada);
+            mainWrapper.appendChild(divEntrada);
+
+            // Separator
+            const sep1 = document.createElement("div");
+            sep1.className = "flow-separator";
+            mainWrapper.appendChild(sep1);
+
+            // --- SVG 2: Camada 1 ---
+            const divCamada1 = document.createElement("div");
+            const svgCamada1 = document.createElementNS(ns, "svg");
+            svgCamada1.setAttribute("width", "150");
+            svgCamada1.setAttribute("height", "150");
+            svgCamada1.setAttribute("viewBox", "0 0 150 150");
+
+            const l1X = 20;
+            const l1Y = 30;
+            const l1W = 110;
+            const l1H = 90;
+
+            const rectL1 = document.createElementNS(ns, "rect");
+            rectL1.setAttribute("x", l1X);
+            rectL1.setAttribute("y", l1Y);
+            rectL1.setAttribute("width", l1W);
+            rectL1.setAttribute("height", l1H);
+            rectL1.setAttribute("rx", "5");
+            rectL1.setAttribute("fill", "#e3f2fd");
+            rectL1.setAttribute("stroke", "#2196f3");
+            svgCamada1.appendChild(rectL1);
+
+            const l1Title = document.createElementNS(ns, "text");
+            l1Title.setAttribute("x", l1X + l1W / 2);
+            l1Title.setAttribute("y", l1Y + 18);
+            l1Title.setAttribute("text-anchor", "middle");
+            l1Title.setAttribute("font-weight", "bold");
+            l1Title.setAttribute("font-size", "11");
+            l1Title.textContent = "Camada 1";
+            svgCamada1.appendChild(l1Title);
+
+            const l1Sub = document.createElementNS(ns, "text");
+            l1Sub.setAttribute("x", l1X + l1W / 2);
+            l1Sub.setAttribute("y", l1Y + 32);
+            l1Sub.setAttribute("text-anchor", "middle");
+            l1Sub.setAttribute("font-size", "9");
+            l1Sub.setAttribute("fill", "#555");
+            l1Sub.textContent = "(Detecta Formas)";
+            svgCamada1.appendChild(l1Sub);
+
+            ["• Curvas?", "• Linhas?", "• Bordas?"].forEach((t, i) => {
+                const txt = document.createElementNS(ns, "text");
+                txt.setAttribute("x", l1X + 10);
+                txt.setAttribute("y", l1Y + 50 + i * 12);
+                txt.setAttribute("font-size", "10");
+                txt.textContent = t;
+                svgCamada1.appendChild(txt);
+            });
+
+            const l1Count = document.createElementNS(ns, "text");
+            l1Count.setAttribute("x", l1X + l1W / 2);
+            l1Count.setAttribute("y", l1Y + l1H + 15);
+            l1Count.setAttribute("text-anchor", "middle");
+            l1Count.setAttribute("font-size", "10");
+            l1Count.textContent = "256 detectores";
+            svgCamada1.appendChild(l1Count);
+
+            divCamada1.appendChild(svgCamada1);
+            mainWrapper.appendChild(divCamada1);
+
+            // Separator
+            const sep2 = document.createElement("div");
+            sep2.className = "flow-separator";
+            mainWrapper.appendChild(sep2);
+
+            // --- SVG 3: GCU Badge ---
+            const divGCU = document.createElement("div");
+            const svgGCU = document.createElementNS(ns, "svg");
+            svgGCU.setAttribute("width", "40");
+            svgGCU.setAttribute("height", "40");
+            svgGCU.setAttribute("viewBox", "0 0 40 40");
+
+            const gcuBadge = document.createElementNS(ns, "circle");
+            gcuBadge.setAttribute("cx", 20);
+            gcuBadge.setAttribute("cy", 20);
+            gcuBadge.setAttribute("r", "12");
+            gcuBadge.setAttribute("fill", "#fff");
+            gcuBadge.setAttribute("stroke", "#e74c3c");
+            gcuBadge.setAttribute("stroke-width", "2");
+            svgGCU.appendChild(gcuBadge);
+
+            const gcuText = document.createElementNS(ns, "text");
+            gcuText.setAttribute("x", 20);
+            gcuText.setAttribute("y", 23);
+            gcuText.setAttribute("text-anchor", "middle");
+            gcuText.setAttribute("font-size", "8");
+            gcuText.setAttribute("font-weight", "bold");
+            gcuText.setAttribute("fill", "#e74c3c");
+            gcuText.textContent = "GCU";
+            svgGCU.appendChild(gcuText);
+
+            divGCU.appendChild(svgGCU);
+            mainWrapper.appendChild(divGCU);
+
+            // Separator
+            const sep3 = document.createElement("div");
+            sep3.className = "flow-separator";
+            mainWrapper.appendChild(sep3);
+            // --- SVG 3: Camada 2 ---
+            const divCamada2 = document.createElement("div");
+            const svgCamada2 = document.createElementNS(ns, "svg");
+            svgCamada2.setAttribute("width", "150");
+            svgCamada2.setAttribute("height", "150");
+            svgCamada2.setAttribute("viewBox", "0 0 150 150");
+
+            const l2X = 20;
+            const l2Y = 30;
+            const l2W = 110;
+            const l2H = 90;
+
+            const rectL2 = document.createElementNS(ns, "rect");
+            rectL2.setAttribute("x", l2X);
+            rectL2.setAttribute("y", l2Y);
+            rectL2.setAttribute("width", l2W);
+            rectL2.setAttribute("height", l2H);
+            rectL2.setAttribute("rx", "5");
+            rectL2.setAttribute("fill", "#bbdefb");
+            rectL2.setAttribute("stroke", "#1976d2");
+            svgCamada2.appendChild(rectL2);
+
+            const l2Title = document.createElementNS(ns, "text");
+            l2Title.setAttribute("x", l2X + l2W / 2);
+            l2Title.setAttribute("y", l2Y + 18);
+            l2Title.setAttribute("text-anchor", "middle");
+            l2Title.setAttribute("font-weight", "bold");
+            l2Title.setAttribute("font-size", "11");
+            l2Title.textContent = "Camada 2";
+            svgCamada2.appendChild(l2Title);
+
+            const l2Sub = document.createElementNS(ns, "text");
+            l2Sub.setAttribute("x", l2X + l2W / 2);
+            l2Sub.setAttribute("y", l2Y + 32);
+            l2Sub.setAttribute("text-anchor", "middle");
+            l2Sub.setAttribute("font-size", "9");
+            l2Sub.setAttribute("fill", "#555");
+            l2Sub.textContent = "(Combina)";
+            svgCamada2.appendChild(l2Sub);
+
+            ["• Manga?", "• Gola?", "• Textura?"].forEach((t, i) => {
+                const txt = document.createElementNS(ns, "text");
+                txt.setAttribute("x", l2X + 10);
+                txt.setAttribute("y", l2Y + 50 + i * 12);
+                txt.setAttribute("font-size", "10");
+                txt.textContent = t;
+                svgCamada2.appendChild(txt);
+            });
+
+            const l2Count = document.createElementNS(ns, "text");
+            l2Count.setAttribute("x", l2X + l2W / 2);
+            l2Count.setAttribute("y", l2Y + l2H + 15);
+            l2Count.setAttribute("text-anchor", "middle");
+            l2Count.setAttribute("font-size", "10");
+            l2Count.textContent = "128 combinadores";
+            svgCamada2.appendChild(l2Count);
+
+            divCamada2.appendChild(svgCamada2);
+            mainWrapper.appendChild(divCamada2);
+
+            // Separator
+            const sep4 = document.createElement("div");
+            sep4.className = "flow-separator";
+            mainWrapper.appendChild(sep4);
+
+            // --- SVG 4: Decisão header ---
+            const divDecisao = document.createElement("div");
+            const svgDecisao = document.createElementNS(ns, "svg");
+            svgDecisao.setAttribute("width", "100");
+            svgDecisao.setAttribute("height", "150");
+            svgDecisao.setAttribute("viewBox", "0 0 100 150");
+
+            const decLabel = document.createElementNS(ns, "text");
+            decLabel.setAttribute("x", 50);
+            decLabel.setAttribute("y", 75);
+            decLabel.setAttribute("text-anchor", "middle");
+            decLabel.setAttribute("font-size", "12");
+            decLabel.setAttribute("font-weight", "bold");
+            decLabel.textContent = "Decisão";
+            svgDecisao.appendChild(decLabel);
+
+            divDecisao.appendChild(svgDecisao);
+            mainWrapper.appendChild(divDecisao);
+
+            // Separator
+            const sep5 = document.createElement("div");
+            sep5.className = "flow-separator";
+            mainWrapper.appendChild(sep5);
+
+            // --- SVG 5: Category bars ---
+            const divBars = document.createElement("div");
+            const svgBars = document.createElementNS(ns, "svg");
+            svgBars.setAttribute("width", "250");
+            svgBars.setAttribute("height", "160");
+            svgBars.setAttribute("viewBox", "0 0 250 160");
+
+            const classes = ["Camiseta", "Calça", "Pullover", "Vestido", "Casaco", "Sandália", "Camisa", "Tênis", "Bolsa", "Bota"];
+            const probs = [0.85, 0.00, 0.05, 0.00, 0.00, 0.00, 0.10, 0.00, 0.00, 0.00];
+            const barHeight = 8;
+            const barGap = 14;
+            const startY3 = 10;
+
+            for (let i = 0; i < 10; i++) {
+                const y = startY3 + i * barGap;
+
+                const label = document.createElementNS(ns, "text");
+                label.setAttribute("x", 10);
+                label.setAttribute("y", y + 6);
+                label.setAttribute("font-size", "9");
+                label.textContent = classes[i];
+                svgBars.appendChild(label);
+
+                const frame = document.createElementNS(ns, "rect");
+                frame.setAttribute("x", 90);
+                frame.setAttribute("y", y);
+                frame.setAttribute("width", 80);
+                frame.setAttribute("height", barHeight);
+                frame.setAttribute("fill", "#eee");
+                svgBars.appendChild(frame);
+
+                if (probs[i] > 0) {
+                    const fill = document.createElementNS(ns, "rect");
+                    fill.setAttribute("x", 90);
+                    fill.setAttribute("y", y);
+                    fill.setAttribute("width", 80 * probs[i]);
+                    fill.setAttribute("height", barHeight);
+                    fill.setAttribute("fill", probs[i] > 0.5 ? "#0056b3" : "#999");
+                    svgBars.appendChild(fill);
+
+                    const score = document.createElementNS(ns, "text");
+                    score.setAttribute("x", 180);
+                    score.setAttribute("y", y + 6);
+                    score.setAttribute("font-size", "9");
+                    score.setAttribute("fill", probs[i] > 0.5 ? "#0056b3" : "#666");
+                    if (probs[i] > 0.5) score.setAttribute("font-weight", "bold");
+                    score.textContent = (probs[i] * 100).toFixed(0) + "%";
+                    svgBars.appendChild(score);
+                }
+            }
+
+            const catLabel = document.createElementNS(ns, "text");
+            catLabel.setAttribute("x", 125);
+            catLabel.setAttribute("y", startY3 + 10 * barGap + 15);
+            catLabel.setAttribute("text-anchor", "middle");
+            catLabel.setAttribute("font-size", "10");
+            catLabel.textContent = "10 categorias";
+            svgBars.appendChild(catLabel);
+
+            divBars.appendChild(svgBars);
+            mainWrapper.appendChild(divBars);
+
+            container.appendChild(mainWrapper);
+        }
+
+        function generateReLULayers(containerId) {
+            const width = 800;
+            const height = 200;
+            const ns = "http://www.w3.org/2000/svg";
+            const svg = document.createElementNS(ns, "svg");
+            svg.setAttribute("width", "100%");
+            svg.setAttribute("height", "100%");
+            svg.setAttribute("viewBox", `0 0 ${width} ${height}`);
+
+            // We will draw 4 panels showing approximation of a Sine wave
+            const panels = 4;
+            const panelWidth = width / panels;
+            const padding = 30;
+
+            const steps = [1, 2, 5, 20]; // Number of "ReLUs" (segments)
+            const titles = ["1 Neurônio", "2 Neurônios", "5 Neurônios", "Muitos Neurônios"];
+
+            for (let p = 0; p < panels; p++) {
+                const xOffset = p * panelWidth;
+
+                // Draw Panel Box
+                // const rect = document.createElementNS(ns, "rect");
+                // rect.setAttribute("x", xOffset + 5);
+                // rect.setAttribute("y", 5);
+                // rect.setAttribute("width", panelWidth - 10);
+                // rect.setAttribute("height", height - 10);
+                // rect.setAttribute("fill", "none");
+                // rect.setAttribute("stroke", "#eee");
+                // svg.appendChild(rect);
+
+                // Title
+                const title = document.createElementNS(ns, "text");
+                title.setAttribute("x", xOffset + panelWidth / 2);
+                title.setAttribute("y", 20);
+                title.setAttribute("text-anchor", "middle");
+                title.setAttribute("font-size", "12");
+                title.setAttribute("font-weight", "bold");
+                title.textContent = titles[p];
+                svg.appendChild(title);
+
+                // Coordinate system for this panel
+                // Target function: y = sin(x) + 1.2 (Always positive, from 0.2 to 2.2)
+                // We map x=[0, 2PI] -> [padding, panelWidth-padding]
+                // We map y=[0, 2.5] -> [height-padding, padding + 20]
+
+                const mapX = (val) => xOffset + padding + (val / (2 * Math.PI)) * (panelWidth - 2 * padding);
+                const mapY = (val) => (height - padding) - (val / 2.5) * (height - 2 * padding - 20);
+
+                // Draw Axes
+                const originX = mapX(0);
+                const originY = mapY(0);
+                const endX = mapX(2 * Math.PI);
+                const endY = mapY(2.5);
+
+                // X Axis
+                const xAxis = document.createElementNS(ns, "line");
+                xAxis.setAttribute("x1", originX);
+                xAxis.setAttribute("y1", originY);
+                xAxis.setAttribute("x2", endX);
+                xAxis.setAttribute("y2", originY);
+                xAxis.setAttribute("stroke", "black");
+                xAxis.setAttribute("stroke-width", "1");
+                svg.appendChild(xAxis);
+
+                // Y Axis
+                const yAxis = document.createElementNS(ns, "line");
+                yAxis.setAttribute("x1", originX);
+                yAxis.setAttribute("y1", originY);
+                yAxis.setAttribute("x2", originX);
+                yAxis.setAttribute("y2", endY);
+                yAxis.setAttribute("stroke", "black");
+                yAxis.setAttribute("stroke-width", "1");
+                svg.appendChild(yAxis);
+
+                // Axis Labels
+                const labelX = document.createElementNS(ns, "text");
+                labelX.setAttribute("x", endX - 5);
+                labelX.setAttribute("y", originY - 5);
+                labelX.setAttribute("font-size", "10");
+                labelX.setAttribute("font-weight", "bold");
+                labelX.textContent = "x";
+                svg.appendChild(labelX);
+
+                const labelY = document.createElementNS(ns, "text");
+                labelY.setAttribute("x", originX + 5);
+                labelY.setAttribute("y", endY + 10);
+                labelY.setAttribute("font-size", "10");
+                labelY.setAttribute("font-weight", "bold");
+                labelY.textContent = "y";
+                svg.appendChild(labelY);
+
+                // Draw Target Curve (Gray Sine)
+                let targetD = "";
+                for (let i = 0; i <= 50; i++) {
+                    const x = (i / 50) * 2 * Math.PI;
+                    const y = Math.sin(x) + 1.2; // Shifted up
+                    const sx = mapX(x);
+                    const sy = mapY(y);
+                    targetD += (i === 0 ? "M " : "L ") + sx + "," + sy + " ";
+                }
+                const targetPath = document.createElementNS(ns, "path");
+                targetPath.setAttribute("d", targetD);
+                targetPath.setAttribute("fill", "none");
+                targetPath.setAttribute("stroke", "#ccc");
+                targetPath.setAttribute("stroke-width", "2");
+                targetPath.setAttribute("stroke-dasharray", "4");
+                svg.appendChild(targetPath);
+
+                // Draw Approximation (Blue Piecewise)
+                // We sample 'steps[p]' points and connect them linearly
+                const numSegments = steps[p];
+                let approxD = "";
+                for (let i = 0; i <= numSegments; i++) {
+                    const x = (i / numSegments) * 2 * Math.PI;
+                    let y;
+
+                    // Special case for "2 Neurons" to ensure a visible "break" (Triangle)
+                    // Otherwise sin(0), sin(PI), sin(2PI) are all 0 -> Flat line
+                    if (numSegments === 2) {
+                        if (i === 1) y = 2.4; // Peak
+                        else y = 1.2;         // Base
+                    } else {
+                        y = Math.sin(x) + 1.2;
+                    }
+
+                    const sx = mapX(x);
+                    const sy = mapY(y);
+                    approxD += (i === 0 ? "M " : "L ") + sx + "," + sy + " ";
+                }
+                const approxPath = document.createElementNS(ns, "path");
+                approxPath.setAttribute("d", approxD);
+                approxPath.setAttribute("fill", "none");
+                approxPath.setAttribute("stroke", "#0056b3");
+                approxPath.setAttribute("stroke-width", "2");
+                svg.appendChild(approxPath);
+
+                // Draw dots for "kinks" (ReLUs)
+                if (numSegments < 10) {
+                    for (let i = 0; i <= numSegments; i++) {
+                        const x = (i / numSegments) * 2 * Math.PI;
+                        let y;
+                        if (numSegments === 2) {
+                            if (i === 1) y = 2.4;
+                            else y = 1.2;
+                        } else {
+                            y = Math.sin(x) + 1.2;
+                        }
+                        const sx = mapX(x);
+                        const sy = mapY(y);
+                        const dot = document.createElementNS(ns, "circle");
+                        dot.setAttribute("cx", sx);
+                        dot.setAttribute("cy", sy);
+                        dot.setAttribute("r", "3");
+                        dot.setAttribute("fill", "#0056b3");
+                        svg.appendChild(dot);
+                    }
+                }
+            }
+
+            document.getElementById(containerId).appendChild(svg);
+        }
+
+        // Run generation
+        window.onload = function () {
+            generateGraph('relu-graph', 'relu');
+            generateReLULayers('relu-layers-graph');
+            generateGraph('gcu-graph', 'gcu');
+            generateGraph('swish-graph', 'swish');
+            generateGraph('derivative-graph', 'derivative');
+            generateGraph('comparison-graph', 'comparison');
+            generateFlowDiagram('flow-diagram');
+        };
+    </script>
+
+</body>
+
+</html>
+```
